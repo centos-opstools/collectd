@@ -3,7 +3,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.5.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: http://collectd.org/
@@ -178,16 +178,6 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 This plugin collects data provided by JMX.
 
 
-%package gmond
-Summary:       Gmond plugin for collectd
-Group:         System Environment/Daemons
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: ganglia-devel
-%description gmond
-This plugin receives multicast traffic sent by gmond,
-the statistics collection daemon of Ganglia.
-
-
 %package ipmi
 Summary:       IPMI plugin for collectd
 Group:         System Environment/Daemons
@@ -258,15 +248,6 @@ This plugin connects to a memcached server, queries one or more
 given pages and parses the returned data according to user specification.
 
 
-%package modbus
-Summary:       Modbus plugin for collectd
-Group:         System Environment/Daemons
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: libmodbus-devel
-%description modbus
-This plugin connects to a Modbus "slave" via Modbus/TCP
-and reads register values.
-
 
 %package mysql
 Summary:       MySQL plugin for collectd
@@ -315,27 +296,6 @@ BuildRequires: libesmtp-devel
 This plugin uses the ESMTP library to send
 notifications to a configured email address.
 
-
-%ifnarch s390 s390x
-%package nut
-Summary:       Network UPS Tools plugin for collectd
-Group:         System Environment/Daemons
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: nut-devel
-%description nut
-This plugin for collectd provides Network UPS Tools support.
-%endif
-
-
-%package onewire
-Summary:       OneWire bus plugin for collectd
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: owfs-devel
-%description onewire
-The experimental OneWire plugin collects temperature information
-from sensors connected to the computer over the OneWire bus.
-
-
 %package openldap
 Summary:       OpenLDAP plugin for collectd
 Group:         System Environment/Daemons
@@ -382,16 +342,6 @@ BuildRequires: postgresql-devel
 %description postgresql
 PostgreSQL querying plugin. This plugins provides data of issued commands,
 called handlers and database traffic.
-
-
-%package redis
-Summary:       Redis plugin for collectd
-Group:         System Environment/Daemons
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: hiredis-devel
-%description redis
-The Redis plugin connects to one or more instances of Redis, a key-value store,
-and collects usage information using the hiredis library.
 
 
 %package rrdcached
@@ -456,15 +406,6 @@ on modern Intel turbo-capable processors.
 %endif
 
 
-%package varnish
-Summary:       Varnish plugin for collectd
-Group:         System Environment/Daemons
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: varnish-libs-devel
-%description varnish
-This plugin collects information about Varnish, an HTTP accelerator.
-
-
 %ifnarch ppc sparc sparc64
 %package virt
 Summary:       Libvirt plugin for collectd
@@ -497,15 +438,6 @@ BuildRequires: curl-devel
 This plugin can send data to Redis.
 
 
-%package write_redis
-Summary:       Redis output plugin for collectd
-Group:         System Environment/Daemons
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: hiredis-devel
-%description write_redis
-This plugin can send data to Redis.
-
-
 %package write_riemann
 Summary:       Riemann output plugin for collectd
 Group:         System Environment/Daemons
@@ -530,16 +462,6 @@ Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description write_tsdb
 This plugin can send data to OpenTSDB.
-
-
-%package xmms
-Summary:       XMMS plugin for collectd
-Group:         System Environment/Daemons
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: xmms-devel
-%description xmms
-This is a collectd plugin for the XMMS music player.
-It graphs the bit-rate and sampling rate as you play songs.
 
 
 %package zookeeper
@@ -571,9 +493,7 @@ touch src/riemann.proto src/pinba.proto
     --disable-lpar \
     --disable-mic \
     --disable-netapp \
-%ifarch s390 s390x
     --disable-nut \
-%endif
     --disable-oracle \
     --disable-pf \
     --disable-routeros \
@@ -592,6 +512,13 @@ touch src/riemann.proto src/pinba.proto
     --with-java=%{java_home}/ \
     --with-python \
     --with-perl-bindings=INSTALLDIRS=vendor \
+    --disable-gmond \
+    --disable-xmms \
+    --disable-modbus \
+    --disable-onewire \
+    --disable-redis \
+    --disable-write-redis \
+    --disable-varnish \
     AR_FLAGS="-cr" \
 
 make %{?_smp_mflags}
@@ -638,7 +565,7 @@ cp %{SOURCE98} %{buildroot}%{_sysconfdir}/collectd.d/onewire.conf
 
 # configs for subpackaged plugins
 %ifnarch s390 s390x
-for p in dns ipmi libvirt nut perl ping postgresql
+for p in dns ipmi libvirt perl ping postgresql
 %else
 for p in dns ipmi libvirt perl ping postgresql
 %endif
@@ -686,10 +613,6 @@ make check
 %exclude %{_sysconfdir}/collectd.d/libvirt.conf
 %exclude %{_sysconfdir}/collectd.d/mysql.conf
 %exclude %{_sysconfdir}/collectd.d/nginx.conf
-%ifnarch s390 s390x
-%exclude %{_sysconfdir}/collectd.d/nut.conf
-%endif
-%exclude %{_sysconfdir}/collectd.d/onewire.conf
 %exclude %{_sysconfdir}/collectd.d/perl.conf
 %exclude %{_sysconfdir}/collectd.d/ping.conf
 %exclude %{_sysconfdir}/collectd.d/postgresql.conf
@@ -870,10 +793,6 @@ make check
 %{_datadir}/collectd/java/generic-jmx.jar
 
 
-%files gmond
-%{_libdir}/collectd/gmond.so
-
-
 %files ipmi
 %{_libdir}/collectd/ipmi.so
 %config(noreplace) %{_sysconfdir}/collectd.d/ipmi.conf
@@ -901,10 +820,6 @@ make check
 %{_libdir}/collectd/memcachec.so
 
 
-%files modbus
-%{_libdir}/collectd/modbus.so
-
-
 %files mysql
 %{_libdir}/collectd/mysql.so
 %config(noreplace) %{_sysconfdir}/collectd.d/mysql.conf
@@ -925,19 +840,6 @@ make check
 
 %files notify_email
 %{_libdir}/collectd/notify_email.so
-
-
-%ifnarch s390 s390x
-%files nut
-%{_libdir}/collectd/nut.so
-%config(noreplace) %{_sysconfdir}/collectd.d/nut.conf
-%endif
-
-
-%files onewire
-%{_libdir}/collectd/onewire.so
-%config(noreplace) %{_sysconfdir}/collectd.d/onewire.conf
-
 
 %files openldap
 %{_libdir}/collectd/openldap.so
@@ -966,10 +868,6 @@ make check
 %{_libdir}/collectd/postgresql.so
 %config(noreplace) %{_sysconfdir}/collectd.d/postgresql.conf
 %{_datadir}/collectd/postgresql_default.conf
-
-
-%files redis
-%{_libdir}/collectd/redis.so
 
 
 %files rrdcached
@@ -1004,9 +902,6 @@ make check
 %endif
 
 
-%files varnish
-%{_libdir}/collectd/varnish.so
-
 
 %ifnarch ppc sparc sparc64
 %files virt
@@ -1025,9 +920,6 @@ make check
 %{_libdir}/collectd/write_http.so
 
 
-%files write_redis
-%{_libdir}/collectd/write_redis.so
-
 
 %files write_riemann
 %{_libdir}/collectd/write_riemann.so
@@ -1041,16 +933,15 @@ make check
 %{_libdir}/collectd/write_tsdb.so
 
 
-%files xmms
-%{_libdir}/collectd/xmms.so
-
-
 %files zookeeper
 %{_libdir}/collectd/zookeeper.so
 
 
 
 %changelog
+* Wed May 11 2016 Matthias Runge <mrunge@redhat.com> - 5.5.1-9
+- disable ganglia, modbus, xmms, nut, onewire, redis, varnish  plugins
+
 * Sat Apr 30 2016 Kevin Fenzi <kevin@scrye.com> - 5.5.1-8
 - Rebuild for librrd
 
