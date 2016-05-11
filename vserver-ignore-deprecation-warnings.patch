@@ -1,0 +1,14 @@
+diff -up collectd-5.5.1/src/vserver.c.orig collectd-5.5.1/src/vserver.c
+--- collectd-5.5.1/src/vserver.c.orig	2016-02-27 14:40:54.295000000 +0100
++++ collectd-5.5.1/src/vserver.c	2016-02-27 14:41:18.267000000 +0100
+@@ -30,7 +30,10 @@
+ #include "common.h"
+ #include "plugin.h"
+ 
++#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+ #include <dirent.h>
++#pragma GCC diagnostic warning "-Wdeprecated-declarations"
++
+ #include <sys/types.h>
+ 
+ #define BUFSIZE 512
