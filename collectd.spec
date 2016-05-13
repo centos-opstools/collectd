@@ -3,7 +3,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.5.1
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: http://collectd.org/
@@ -18,7 +18,6 @@ Source94: nginx.conf
 Source95: sensors.conf
 Source96: snmp.conf
 Source97: rrdtool.conf
-Source98: onewire.conf
 
 Patch0: %{name}-include-collectd.d.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
@@ -561,7 +560,6 @@ cp %{SOURCE94} %{buildroot}%{_sysconfdir}/collectd.d/nginx.conf
 cp %{SOURCE95} %{buildroot}%{_sysconfdir}/collectd.d/sensors.conf
 cp %{SOURCE96} %{buildroot}%{_sysconfdir}/collectd.d/snmp.conf
 cp %{SOURCE97} %{buildroot}%{_sysconfdir}/collectd.d/rrdtool.conf
-cp %{SOURCE98} %{buildroot}%{_sysconfdir}/collectd.d/onewire.conf
 
 # configs for subpackaged plugins
 %ifnarch s390 s390x
@@ -939,6 +937,9 @@ make check
 
 
 %changelog
+* Fri May 13 2016 Matthias Runge <mrunge@redhat.com> - 5.5.1-10
+- remove onewire.conf to avoid false error on start
+
 * Wed May 11 2016 Matthias Runge <mrunge@redhat.com> - 5.5.1-9
 - disable ganglia, modbus, xmms, nut, onewire, redis, varnish  plugins
 
