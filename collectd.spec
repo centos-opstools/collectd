@@ -3,7 +3,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.5.1
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: http://collectd.org/
@@ -38,15 +38,6 @@ Since the daemon doesn't need to startup every time it wants to update the
 files it's very fast and easy on the system. Also, the statistics are very
 fine grained since the files are updated every 10 seconds.
 
-
-%package amqp
-Summary:       AMQP plugin for collectd
-Group:         System Environment/Daemons
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: librabbitmq-devel
-%description amqp
-This plugin can be used to communicate with other instances of collectd
-or third party applications using an AMQP message broker.
 
 
 %package apache
@@ -518,6 +509,7 @@ touch src/riemann.proto src/pinba.proto
     --disable-redis \
     --disable-write-redis \
     --disable-varnish \
+    --disable-amqp \
     AR_FLAGS="-cr" \
 
 make %{?_smp_mflags}
@@ -731,9 +723,6 @@ make check
 %{_mandir}/man1/collectd-nagios.1*
 %{_mandir}/man1/collectd-tg.1*
 
-%files amqp
-%{_libdir}/collectd/amqp.so
-
 
 %files apache
 %{_libdir}/collectd/apache.so
@@ -937,6 +926,9 @@ make check
 
 
 %changelog
+* Tue May 17 2016 Matthias Runge <mrunge@redhat.com> - 5.5.1-11
+- disable librabbit support
+
 * Fri May 13 2016 Matthias Runge <mrunge@redhat.com> - 5.5.1-10
 - remove onewire.conf to avoid false error on start
 
