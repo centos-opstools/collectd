@@ -3,7 +3,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.5.1
-Release: 11%{?dist}
+Release: 12%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: http://collectd.org/
@@ -22,6 +22,7 @@ Source97: rrdtool.conf
 Patch0: %{name}-include-collectd.d.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
 Patch2: modbus-avoid-enabling-libmodbus-s-debug-flag-by-defa.patch
+Patch3: Suppress-successful-putval-responses-to-exec-plugin.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
@@ -926,6 +927,10 @@ make check
 
 
 %changelog
+* Wed Jun 15 2016 Matthias Runge <mrunge@redhat.com> - 5.5.1-12
+- Suppress spammy debug messages of exec plugin
+  Upstream commit 53de2cf4
+
 * Tue May 17 2016 Matthias Runge <mrunge@redhat.com> - 5.5.1-11
 - disable librabbit support
 
