@@ -1,12 +1,14 @@
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
 
+%global enable_riemann 0
+
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
-Version: 5.5.1
-Release: 12%{?dist}
+Version: 5.6.1
+Release: 1%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
-URL: http://collectd.org/
+URL: https://collectd.org/
 
 Source: http://collectd.org/files/%{name}-%{version}.tar.bz2
 Source1: collectd-httpd.conf
@@ -21,8 +23,8 @@ Source97: rrdtool.conf
 
 Patch0: %{name}-include-collectd.d.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
-Patch2: modbus-avoid-enabling-libmodbus-s-debug-flag-by-defa.patch
-Patch3: Suppress-successful-putval-responses-to-exec-plugin.patch
+#Patch2: modbus-avoid-enabling-libmodbus-s-debug-flag-by-defa.patch
+#Patch3: Suppress-successful-putval-responses-to-exec-plugin.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
@@ -77,6 +79,14 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: yajl-devel
 %description ceph
 This plugin collects data from Ceph.
+
+
+%package chrony
+Summary:       Chrony plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+%description chrony
+Chrony plugin for collectd
 
 
 %package -n collectd-utils
@@ -176,6 +186,15 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: OpenIPMI-devel
 %description ipmi
 This plugin for collectd provides IPMI support.
+
+
+%package iptables
+Summary:       Iptables plugin for collectd
+Group:         System Environment/Daemons
+Requires:      collectd = %{version}-%{release}
+BuildRequires: iptables-devel
+%description iptables
+This plugin collects data from iptables counters.
 
 
 %package ipvs
@@ -335,6 +354,18 @@ PostgreSQL querying plugin. This plugins provides data of issued commands,
 called handlers and database traffic.
 
 
+%package python
+Summary:       Python plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: python-devel
+%description python
+The Python plugin embeds a Python interpreter into Collectd and exposes the
+application programming interface (API) to Python-scripts.
+
+
+
+
 %package rrdcached
 Summary:       RRDCacheD plugin for collectd
 Group:         System Environment/Daemons
@@ -428,7 +459,7 @@ BuildRequires: curl-devel
 %description write_http
 This plugin can send data to Redis.
 
-
+%if 0%{?enable_riemann}
 %package write_riemann
 Summary:       Riemann output plugin for collectd
 Group:         System Environment/Daemons
@@ -437,6 +468,7 @@ BuildRequires: protobuf-c-devel
 BuildRequires: libtool-ltdl-devel
 %description write_riemann
 This plugin can send data to Riemann.
+%endif
 
 
 %package write_sensu
@@ -467,7 +499,7 @@ This is a collectd plugin that reads data from Zookeeper's MNTR command.
 %autosetup -v -p1
 
 # recompile generated files
-touch src/riemann.proto src/pinba.proto
+touch src/pinba.proto
 
 
 %build
@@ -480,7 +512,6 @@ touch src/riemann.proto src/pinba.proto
     --disable-apple_sensors \
     --disable-aquaero \
     --disable-barometer \
-    --disable-iptables \
     --disable-lpar \
     --disable-mic \
     --disable-netapp \
@@ -511,9 +542,19 @@ touch src/riemann.proto src/pinba.proto
     --disable-write-redis \
     --disable-varnish \
     --disable-amqp \
+    --disable-xencpu \
+    --disable-zone \
+%if 0%{?enable_riemann}==0
+    --disable-write_riemann \
+%endif
+    --disable-mqtt \
+    --disable-lua \
+    --disable-gps \
+    --disable-grpc \
     AR_FLAGS="-cr" \
 
 make %{?_smp_mflags}
+
 
 
 %install
@@ -568,6 +609,9 @@ done
 
 # *.la files shouldn't be distributed.
 rm -f %{buildroot}/%{_libdir}/{collectd/,}*.la
+
+# we do not distribute lua bindings currently
+rm %{buildroot}%{_mandir}/man5/%{name}-lua*
 
 
 %check
@@ -627,6 +671,7 @@ make check
 %{_libdir}/collectd/contextswitch.so
 %{_libdir}/collectd/cpu.so
 %{_libdir}/collectd/cpufreq.so
+%{_libdir}/collectd/cpusleep.so
 %{_libdir}/collectd/csv.so
 %{_libdir}/collectd/df.so
 %{_libdir}/collectd/entropy.so
@@ -654,6 +699,7 @@ make check
 %{_libdir}/collectd/multimeter.so
 %{_libdir}/collectd/network.so
 %{_libdir}/collectd/nfs.so
+%{_libdir}/collectd/notify_nagios.so
 %{_libdir}/collectd/ntpd.so
 %{_libdir}/collectd/numa.so
 %{_libdir}/collectd/olsrd.so
@@ -661,7 +707,6 @@ make check
 %{_libdir}/collectd/powerdns.so
 %{_libdir}/collectd/processes.so
 %{_libdir}/collectd/protocols.so
-%{_libdir}/collectd/python.so
 %{_libdir}/collectd/serial.so
 %{_libdir}/collectd/statsd.so
 %{_libdir}/collectd/swap.so
@@ -696,7 +741,6 @@ make check
 %doc %{_mandir}/man1/collectdmon.1*
 %doc %{_mandir}/man5/collectd.conf.5*
 %doc %{_mandir}/man5/collectd-exec.5*
-%doc %{_mandir}/man5/collectd-python.5*
 %doc %{_mandir}/man5/collectd-threshold.5*
 %doc %{_mandir}/man5/collectd-unixsock.5*
 %doc %{_mandir}/man5/types.db.5*
@@ -742,6 +786,10 @@ make check
 %{_libdir}/collectd/ceph.so
 
 
+%files chrony
+%{_libdir}/collectd/chrony.so
+
+
 %files curl
 %{_libdir}/collectd/curl.so
 
@@ -784,6 +832,10 @@ make check
 %files ipmi
 %{_libdir}/collectd/ipmi.so
 %config(noreplace) %{_sysconfdir}/collectd.d/ipmi.conf
+
+
+%files iptables
+%{_libdir}/collectd/iptables.so
 
 
 %files ipvs
@@ -858,6 +910,11 @@ make check
 %{_datadir}/collectd/postgresql_default.conf
 
 
+%files python
+%{_libdir}/collectd/python.so
+%doc %{_mandir}/man5/collectd-python.5*
+
+
 %files rrdcached
 %{_libdir}/collectd/rrdcached.so
 
@@ -909,8 +966,10 @@ make check
 
 
 
+%if 0%{?enable_riemann}
 %files write_riemann
 %{_libdir}/collectd/write_riemann.so
+%endif
 
 
 %files write_sensu
@@ -927,6 +986,9 @@ make check
 
 
 %changelog
+* Mon Nov 07 2016 Matthias Runge <mrunge@redhat.com> - 5.6.1-1
+- rebase to 5.6.1
+
 * Wed Jun 15 2016 Matthias Runge <mrunge@redhat.com> - 5.5.1-12
 - Suppress spammy debug messages of exec plugin
   Upstream commit 53de2cf4
