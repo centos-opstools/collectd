@@ -1,10 +1,16 @@
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
 
+%global enable_dpdk 0
+%global enable_ganglia 0
+%global enable_intel_mic 0
+%global enable_intel_rdt 0
+%global enable_libaquaero5 0
+%global enable_prometheus 0
 %global enable_riemann 0
 
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
-Version: 5.6.2
+Version: 5.7.0
 Release: 1%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
@@ -23,8 +29,6 @@ Source97: rrdtool.conf
 
 Patch0: %{name}-include-collectd.d.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
-#Patch2: modbus-avoid-enabling-libmodbus-s-debug-flag-by-defa.patch
-#Patch3: Suppress-successful-putval-responses-to-exec-plugin.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
@@ -154,6 +158,14 @@ BuildRequires: libpcap-devel
 %description dns
 This plugin collects DNS traffic data.
 
+%if 0%{?enable_dpdk} == 1
+%package dpdk
+Summary:       DPDK plugin for collectd
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: dpdk-devel
+%description  dpdk
+This plugin collects data from dpdk
+%endif
 
 %package drbd
 Summary:       DRBD plugin for collectd
@@ -177,6 +189,11 @@ Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description generic-jmx
 This plugin collects data provided by JMX.
+
+%package hugepages
+Summary:       Number of hugepages on Linux
+%description hugepages
+This plugin reports the number of used and free hugepages on Linux.
 
 
 %package ipmi
@@ -542,10 +559,22 @@ touch src/pinba.proto
     --disable-write-redis \
     --disable-varnish \
     --disable-amqp \
+%if 0%{?enable_dpdk}==0
+    --disable-dpdkstat \
+%endif
     --disable-xencpu \
+%if 0%{?enable_prometheus}==0
+    --disable-write_prometheus \
+%endif
     --disable-zone \
 %if 0%{?enable_riemann}==0
     --disable-write_riemann \
+%endif
+%if 0%{?enable_intel_mic}==0
+    --disable-mic \
+%endif
+%if 0%{?enable_intel_rdt}==0
+    --disable-intel_rdt \
 %endif
     --disable-mqtt \
     --disable-lua \
@@ -809,11 +838,14 @@ make check
 %files dbi
 %{_libdir}/collectd/dbi.so
 
-
 %files dns
 %{_libdir}/collectd/dns.so
 %config(noreplace) %{_sysconfdir}/collectd.d/dns.conf
 
+%if 0%{?enable_dpdk} > 0
+%files dpdk
+%{_libdir}/collectd/dpdk.so
+%endif
 
 %files drbd
 %{_libdir}/collectd/drbd.so
@@ -828,6 +860,8 @@ make check
 %files generic-jmx
 %{_datadir}/collectd/java/generic-jmx.jar
 
+%files hugepages
+%{_libdir}/collectd/hugepages.so
 
 %files ipmi
 %{_libdir}/collectd/ipmi.so
