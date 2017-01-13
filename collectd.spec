@@ -6,12 +6,13 @@
 %global enable_intel_rdt 0
 %global enable_libaquaero5 0
 %global enable_prometheus 0
-%global enable_riemann 0
+%global enable_riemann 1
+%global enable_web 1
 
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.7.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -457,6 +458,7 @@ This plugin collects information from virtualized guests.
 %endif
 
 
+%if 0%{?enable_web}
 %package web
 Summary:       Contrib web interface to viewing rrd files
 Group:         System Environment/Daemons
@@ -466,6 +468,7 @@ Requires:      perl-HTML-Parser, perl-Regexp-Common, rrdtool-perl, httpd
 %description web
 This package will allow for a simple web interface to view rrd files created by
 collectd.
+%endif
 
 
 %package write_http
@@ -483,6 +486,7 @@ Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: protobuf-c-devel
 BuildRequires: libtool-ltdl-devel
+BuildRequires: riemann-c-client-devel
 %description write_riemann
 This plugin can send data to Riemann.
 %endif
@@ -989,10 +993,12 @@ make check
 %endif
 
 
+%if 0%{?enable_web}
 %files web
 %{_datadir}/collectd/collection3/
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/collectd.conf
 %config(noreplace) %{_sysconfdir}/collection.conf
+%endif
 
 
 %files write_http
@@ -1020,6 +1026,9 @@ make check
 
 
 %changelog
+* Fri Jan 13 2017 Matthias Runge <mrunge@redhat.com> - 5.7.0-2
+- enable write_riemann
+
 * Fri Dec 09 2016 Matthias Runge <mrunge@redhat.com> - 5.6.2-1
 - rebase to 5.6.2
 
