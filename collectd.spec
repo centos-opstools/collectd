@@ -1,6 +1,11 @@
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
 
-%global enable_dpdk 0
+%ifarch %ix86 x86_64
+%global enable_dpdkstat 1
+%else
+%global enable_dpdkstat 0
+%endif
+
 %global enable_ganglia 0
 %global enable_intel_mic 0
 %global enable_intel_rdt 0
@@ -159,13 +164,13 @@ BuildRequires: libpcap-devel
 %description dns
 This plugin collects DNS traffic data.
 
-%if 0%{?enable_dpdk} == 1
-%package dpdk
-Summary:       DPDK plugin for collectd
+%if 0%{?enable_dpdkstat} == 1
+%package dpdkstat
+Summary:       DPDKstat plugin for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: dpdk-devel
-%description  dpdk
-This plugin collects data from dpdk
+%description  dpdkstat
+This plugin collects data from dpdkstat
 %endif
 
 %package drbd
@@ -563,7 +568,7 @@ touch src/pinba.proto
     --disable-write-redis \
     --disable-varnish \
     --disable-amqp \
-%if 0%{?enable_dpdk}==0
+%if 0%{?enable_dpdkstat}==0
     --disable-dpdkstat \
 %endif
     --disable-xencpu \
@@ -584,9 +589,14 @@ touch src/pinba.proto
     --disable-lua \
     --disable-gps \
     --disable-grpc \
-    AR_FLAGS="-cr" \
+    AR_FLAGS="-cr"
 
+%if 0%{?enable_dpdkstat} > 0
+# dpdkstat plugin requires ssse3 instruction set
+make -j CFLAGS+='-mssse3' %{?_smp_mflags}
+%else
 make %{?_smp_mflags}
+%endif
 
 
 
@@ -846,9 +856,9 @@ make check
 %{_libdir}/collectd/dns.so
 %config(noreplace) %{_sysconfdir}/collectd.d/dns.conf
 
-%if 0%{?enable_dpdk} > 0
-%files dpdk
-%{_libdir}/collectd/dpdk.so
+%if 0%{?enable_dpdkstat} > 0
+%files dpdkstat
+%{_libdir}/collectd/dpdkstat.so
 %endif
 
 %files drbd
