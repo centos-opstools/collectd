@@ -1,23 +1,33 @@
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
 
-%ifarch %ix86 x86_64
+# x86_64 required for building dpdk
+# dpdkstat feature requires dpdk >= 16.11
+%ifarch x86_64
 %global enable_dpdkstat 1
 %else
 %global enable_dpdkstat 0
 %endif
+%global enable_dpdkstat 0
 
 %global enable_ganglia 0
-%global enable_intel_mic 0
+
+# mic disabled, MicAccessAPI required
+%global enable_mic 0
+# update for intel-cmt-cat required
+#
 %global enable_intel_rdt 0
 %global enable_libaquaero5 0
+# ovs_events compilation is currently not detected
+# requires collectd > 5.7.x
+%global enable_ovs_events 0
 %global enable_prometheus 0
 %global enable_riemann 1
 %global enable_web 1
 
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
-Version: 5.7.0
-Release: 2%{?dist}
+Version: 5.7.1
+Release: 1%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -201,6 +211,17 @@ Summary:       Number of hugepages on Linux
 %description hugepages
 This plugin reports the number of used and free hugepages on Linux.
 
+%if %{?enable_intel_rdt} > 0
+%package intel_rdt
+Summary:	Intel RDT plugin for collectd
+Group:		System Environment/Daemons
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+BuildRequires:	intel-cmt-cat
+%description intel_rdt
+The intel_rdt plugin collects information provided by monitoring features of
+Intel Resource Director Technology (Intel(R) RDT).
+%endif
+
 
 %package ipmi
 Summary:       IPMI plugin for collectd
@@ -281,6 +302,18 @@ This plugin connects to a memcached server, queries one or more
 given pages and parses the returned data according to user specification.
 
 
+%if 0%{?enable_mic} > 0
+%package mic
+Summary:	mic plugin for collectd
+Group:		System Environment/Daemons
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+# BuildRequires: MicAccessApi
+%description mic
+The mic plugin collects CPU usage, memory usage, temperatures and power
+consumption from Intel Many Integrated Core (MIC) CPUs.
+%endif
+
+
 
 %package mysql
 Summary:       MySQL plugin for collectd
@@ -337,6 +370,19 @@ BuildRequires: openldap-devel
 %description openldap
 This plugin for collectd reads monitoring information
 from OpenLDAP's cn=Monitor subtree.
+
+
+%if 0%{?enable_ovs_events} > 0
+%package ovs_events
+Summary:       Open vSwitch events plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: yajl-devel
+%description ovs_events
+This plugin monitors the link status of Open vSwitch (OVS) connected
+interfaces, dispatches the values to collectd and sends notifications
+whenever a link state change occurs in the OVS database.
+%endif
 
 
 %package -n perl-Collectd
@@ -521,6 +567,17 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 This is a collectd plugin that reads data from Zookeeper's MNTR command.
 
 
+%package collection3
+Summary:	Web-based viewer for collectd
+Group:		System Environment/Daemons
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+Requires: httpd
+%description collection3
+collection3 is a graphing front-end for the RRD files created by and filled
+with collectd. It is written in Perl and should be run as an CGI-script.
+Graphs are generated on-the-fly, so no cron job or similar is necessary.
+
+
 %prep
 %autosetup -v -p1
 
@@ -539,7 +596,6 @@ touch src/pinba.proto
     --disable-aquaero \
     --disable-barometer \
     --disable-lpar \
-    --disable-mic \
     --disable-netapp \
     --disable-nut \
     --disable-oracle \
@@ -571,19 +627,33 @@ touch src/pinba.proto
 %if 0%{?enable_dpdkstat}==0
     --disable-dpdkstat \
 %endif
+%if 0%{?enable_intel_rdt}==0
+    --disable-intel-rtd \
+%else
+    --enable-intel-rtd \
+%endif
     --disable-xencpu \
 %if 0%{?enable_prometheus}==0
     --disable-write_prometheus \
+%endif
+%if 0%{?enable_ovs_events}==0
+    --disable-ovs_events \
+%else
+    --enable-ovs_events \
 %endif
     --disable-zone \
 %if 0%{?enable_riemann}==0
     --disable-write_riemann \
 %endif
-%if 0%{?enable_intel_mic}==0
+%if 0%{?enable_mic}==0
     --disable-mic \
+%else
+    --enable-mic \
 %endif
 %if 0%{?enable_intel_rdt}==0
     --disable-intel_rdt \
+%else
+    --enable-intel_rdt \
 %endif
     --disable-mqtt \
     --disable-lua \
@@ -932,6 +1002,12 @@ make check
 %files openldap
 %{_libdir}/collectd/openldap.so
 
+%if 0%{?with_ovs_events} > 0
+%files ovs_events
+%{_libdir}/%{name}/ovs_events.so
+%endif
+
+
 
 %files -n perl-Collectd
 %doc perl-examples/*
@@ -1036,6 +1112,10 @@ make check
 
 
 %changelog
+* Thu Feb 09 2017 Matthias Runge <mrunge@redhat.com> - 5.7.1-1
+- rebase to 5.7.1
+- enable dpdkstats
+
 * Fri Jan 13 2017 Matthias Runge <mrunge@redhat.com> - 5.7.0-2
 - enable write_riemann
 
