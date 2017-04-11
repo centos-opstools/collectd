@@ -27,7 +27,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.7.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -232,13 +232,15 @@ BuildRequires: OpenIPMI-devel
 This plugin for collectd provides IPMI support.
 
 
+%ifnarch aarch64
 %package iptables
 Summary:       Iptables plugin for collectd
 Group:         System Environment/Daemons
-Requires:      collectd = %{version}-%{release}
+Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: iptables-devel
 %description iptables
 This plugin collects data from iptables counters.
+%endif
 
 
 %package ipvs
@@ -595,6 +597,9 @@ touch src/pinba.proto
     --disable-apple_sensors \
     --disable-aquaero \
     --disable-barometer \
+%ifarch aarch64
+    --disable-iptables \
+%endif
     --disable-lpar \
     --disable-netapp \
     --disable-nut \
@@ -952,8 +957,10 @@ make check
 %config(noreplace) %{_sysconfdir}/collectd.d/ipmi.conf
 
 
+%ifnarch aarch64
 %files iptables
 %{_libdir}/collectd/iptables.so
+%endif
 
 
 %files ipvs
@@ -1112,6 +1119,9 @@ make check
 
 
 %changelog
+* Tue Apr 11 2017 Sandro Bonazzola <sbonazzo@redhat.com> - 5.7.1-2
+- Disabled iptables plugin on aarch64 for now. Kernel headers issue.
+
 * Thu Feb 09 2017 Matthias Runge <mrunge@redhat.com> - 5.7.1-1
 - rebase to 5.7.1
 - enable dpdkstats
