@@ -43,7 +43,7 @@ Source95: sensors.conf
 Source96: snmp.conf
 Source97: rrdtool.conf
 
-Patch0: %{name}-include-collectd.d.patch
+Patch0: %{name}-include-collectd.d-disable-rrdtool.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
