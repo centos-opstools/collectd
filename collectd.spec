@@ -27,7 +27,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.7.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -45,6 +45,8 @@ Source97: rrdtool.conf
 
 Patch0: %{name}-include-collectd.d.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
+# https://github.com/collectd/collectd/commit/f6be4f9b49b949b379326c3d7002476e6ce4f211.patch
+Patch2: collectd-network-DOS.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
@@ -1119,6 +1121,9 @@ make check
 
 
 %changelog
+* Tue Apr 18 2017 Matthias Runge <mrunge@redhat.com> - 5.7.1-3
+- Fix endless loop DOS in parse_packet() (CVE-2017-7401)
+
 * Tue Apr 11 2017 Sandro Bonazzola <sbonazzo@redhat.com> - 5.7.1-2
 - Disabled iptables plugin on aarch64 for now. Kernel headers issue.
 
