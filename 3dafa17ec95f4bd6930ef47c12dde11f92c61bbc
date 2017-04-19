@@ -16,6 +16,24 @@
       "revId": "3dafa17ec95f4bd6930ef47c12dde11f92c61bbc",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa98f980_0a96ba94",
+        "filename": "collectd-include-collectd.d-disable-rrdtool.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 343
+      },
+      "writtenOn": "2017-04-19T06:01:49Z",
+      "side": 1,
+      "message": "I agree such an explanation is useful, but is unrelated to current patch. I didn\u0027t change any functionality, only clarified it.\n\nrrdtool is optional, packaged in collectd-rrdtool, and the plugin is loaded in rrdtool.conf. So the main default conf does not need to load it.\n\nThe patch doing this went through lots of changes, earliest introduction of it I could find is:\n\nhttp://pkgs.fedoraproject.org/cgit/rpms/collectd.git/commit/?id\u003d1c7c5991b96218e1f4c4e72c842ee75420173633\n\nIn current (opstools) repo it appeared since initial commit. It would have been useful if the initial commit included a reference to how it was created (e.g. where it was copied from and with what other changes).",
+      "parentUuid": "fa98f980_0702333e",
+      "revId": "3dafa17ec95f4bd6930ef47c12dde11f92c61bbc",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
     }
   ]
 }
