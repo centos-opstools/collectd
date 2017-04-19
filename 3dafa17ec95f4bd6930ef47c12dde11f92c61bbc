@@ -34,6 +34,24 @@
       "revId": "3dafa17ec95f4bd6930ef47c12dde11f92c61bbc",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa98f980_4a0362b8",
+        "filename": "collectd-include-collectd.d-disable-rrdtool.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 314
+      },
+      "writtenOn": "2017-04-19T09:15:09Z",
+      "side": 1,
+      "message": "Right, you did not added the patch, but I believe that adding \"rrdtool is optional, packaged in collectd-rrdtool, and the plugin is loaded in rrdtool.conf. So the main default conf does not need to load it.\"  to a patch commit message would give a hint for newbie package maintainer. If you agree that it would be useful, why it is a problem to add the description?",
+      "parentUuid": "fa98f980_0a96ba94",
+      "revId": "3dafa17ec95f4bd6930ef47c12dde11f92c61bbc",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
     }
   ]
 }
