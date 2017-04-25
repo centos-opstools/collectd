@@ -1106,18 +1106,14 @@ make check
 %{_libdir}/collectd/write_riemann.so
 %endif
 
-
 %files write_sensu
 %{_libdir}/collectd/write_sensu.so
-
 
 %files write_tsdb
 %{_libdir}/collectd/write_tsdb.so
 
-
 %files zookeeper
 %{_libdir}/collectd/zookeeper.so
-
 
 
 %changelog
