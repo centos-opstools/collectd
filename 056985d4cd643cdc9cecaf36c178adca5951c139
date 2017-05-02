@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa201ad_25dd8415",
+        "filename": "collectd.spec",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2017-05-02T09:37:28Z",
+      "side": 1,
+      "message": "you\u0027ll need to bump this too in order to build in CBS / BREW",
+      "revId": "056985d4cd643cdc9cecaf36c178adca5951c139",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    }
+  ]
+}
