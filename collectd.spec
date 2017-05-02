@@ -1,3 +1,4 @@
+%global _hardened_build 1 
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
 
 # x86_64 required for building dpdk
