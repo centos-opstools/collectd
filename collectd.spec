@@ -1,3 +1,4 @@
+%global _hardened_build 1
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
 
 # x86_64 required for building dpdk
@@ -27,7 +28,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.7.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -1121,6 +1122,9 @@ make check
 
 
 %changelog
+* Tue May 02 2017 Matthias Runge <mrunge@redhat.com> - 5.7.1-4
+- harden build
+
 * Tue Apr 18 2017 Matthias Runge <mrunge@redhat.com> - 5.7.1-3
 - Fix endless loop DOS in parse_packet() (CVE-2017-7401)
 
