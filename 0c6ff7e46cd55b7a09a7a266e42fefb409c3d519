@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa201ad_a5a25498",
+        "filename": "collectd.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2017-05-02T09:02:37Z",
+      "side": 1,
+      "message": "Trailing space",
+      "revId": "0c6ff7e46cd55b7a09a7a266e42fefb409c3d519",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    }
+  ]
+}
