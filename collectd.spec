@@ -25,10 +25,13 @@
 %global enable_riemann 1
 %global enable_web 1
 
+# pulls in X as dep
+%global enable_notify_desktop 0
+
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.7.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -347,7 +350,7 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description nginx
 This plugin collects data provided by Nginx.
 
-
+%if 0%{?enable_notify_desktop} > 0
 %package notify_desktop
 Summary:       Notify desktop plugin for collectd
 Group:         System Environment/Daemons
@@ -356,6 +359,8 @@ BuildRequires: libnotify-devel
 %description notify_desktop
 This plugin sends a desktop notification to a notification daemon,
 as defined in the Desktop Notification Specification.
+
+%endif
 
 
 %package notify_email
@@ -617,6 +622,11 @@ touch src/pinba.proto
     --disable-tokyotyrant \
 %ifnarch %ix86 x86_64
     --disable-turbostat \
+%endif
+%if 0%{?enable_notify_desktop} > 0
+    --enable-notify_desktop \
+%else
+    --disable-notify_desktop \
 %endif
     --disable-write_kafka \
     --disable-write_mongodb \
@@ -1001,9 +1011,10 @@ make check
 %{_libdir}/collectd/nginx.so
 %config(noreplace) %{_sysconfdir}/collectd.d/nginx.conf
 
-
+%if 0%{?enable_notify_desktop} > 0
 %files notify_desktop
 %{_libdir}/collectd/notify_desktop.so
+%endif
 
 
 %files notify_email
@@ -1122,6 +1133,9 @@ make check
 
 
 %changelog
+* Thu May 04 2017 Matthias Runge <mrunge@redhat.com> - 5.7.1-5
+- disable desktop notifications
+
 * Tue May 02 2017 Matthias Runge <mrunge@redhat.com> - 5.7.1-4
 - harden build
 
