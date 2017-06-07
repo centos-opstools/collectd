@@ -30,8 +30,8 @@
 
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
-Version: 5.7.1
-Release: 5%{?dist}
+Version: 5.7.2
+Release: 1%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -50,7 +50,6 @@ Source97: rrdtool.conf
 Patch0: %{name}-include-collectd.d-disable-rrdtool.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
 # https://github.com/collectd/collectd/commit/f6be4f9b49b949b379326c3d7002476e6ce4f211.patch
-Patch2: collectd-network-DOS.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
@@ -1133,6 +1132,9 @@ make check
 
 
 %changelog
+* Wed Jun 07 2017 Matthias Runge <mrunge@redhat.com> - 5.7.2-1
+- rebase to 5.7.2
+
 * Thu May 04 2017 Matthias Runge <mrunge@redhat.com> - 5.7.1-5
 - disable desktop notifications
 
