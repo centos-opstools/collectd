@@ -16,7 +16,12 @@
 %global enable_mic 0
 # update for intel-cmt-cat required
 #
+%ifarch x86_64
+%global enable_intel_rdt 1
+%else
 %global enable_intel_rdt 0
+%endif
+
 %global enable_libaquaero5 0
 # ovs_events compilation is currently not detected
 # requires collectd > 5.7.x
@@ -216,15 +221,17 @@ Summary:       Number of hugepages on Linux
 %description hugepages
 This plugin reports the number of used and free hugepages on Linux.
 
+%ifarch x86_64
 %if %{?enable_intel_rdt} > 0
-%package intel_rdt
+%package rdt
 Summary:	Intel RDT plugin for collectd
 Group:		System Environment/Daemons
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-BuildRequires:	intel-cmt-cat
-%description intel_rdt
+BuildRequires:	intel-cmt-cat-devel
+%description rdt
 The intel_rdt plugin collects information provided by monitoring features of
 Intel Resource Director Technology (Intel(R) RDT).
+%endif
 %endif
 
 
@@ -440,8 +447,6 @@ BuildRequires: python-devel
 %description python
 The Python plugin embeds a Python interpreter into Collectd and exposes the
 application programming interface (API) to Python-scripts.
-
-
 
 
 %package rrdcached
@@ -1058,6 +1063,10 @@ make check
 %{_libdir}/collectd/python.so
 %doc %{_mandir}/man5/collectd-python.5*
 
+%if 0%{?enable_intel_rdt} > 0
+%files rdt
+%{_libdir}/collectd/intel_rdt.so
+%endif
 
 %files rrdcached
 %{_libdir}/collectd/rrdcached.so
@@ -1132,6 +1141,9 @@ make check
 
 
 %changelog
+* Mon Jul 17 2017 Matthias Runge <mrunge@redhat.com> - 5.7.2-2
+- enable RDT monitoring
+
 * Wed Jun 07 2017 Matthias Runge <mrunge@redhat.com> - 5.7.2-1
 - rebase to 5.7.2
 
