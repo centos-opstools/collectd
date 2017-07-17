@@ -16,7 +16,7 @@
 %global enable_mic 0
 # update for intel-cmt-cat required
 #
-%global enable_intel_rdt 0
+%global enable_intel_rdt 1
 %global enable_libaquaero5 0
 # ovs_events compilation is currently not detected
 # requires collectd > 5.7.x
@@ -221,7 +221,7 @@ This plugin reports the number of used and free hugepages on Linux.
 Summary:	Intel RDT plugin for collectd
 Group:		System Environment/Daemons
 Requires:	%{name}%{?_isa} = %{version}-%{release}
-BuildRequires:	intel-cmt-cat
+BuildRequires:	intel-cmt-cat-devel
 %description intel_rdt
 The intel_rdt plugin collects information provided by monitoring features of
 Intel Resource Director Technology (Intel(R) RDT).
