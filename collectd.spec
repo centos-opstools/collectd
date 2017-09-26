@@ -44,6 +44,7 @@ URL: https://collectd.org/
 Source: http://collectd.org/files/%{name}-%{version}.tar.bz2
 Source1: collectd-httpd.conf
 Source2: collectd.service
+Source3: default-plugins.conf
 Source91: apache.conf
 Source92: email.conf
 Source93: mysql.conf
@@ -55,6 +56,7 @@ Source97: rrdtool.conf
 Patch0: %{name}-include-collectd.d-disable-rrdtool.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
 # https://github.com/collectd/collectd/commit/f6be4f9b49b949b379326c3d7002476e6ce4f211.patch
+Patch2: collectd-do-not-load-default-plugins.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
@@ -722,6 +724,7 @@ find contrib -name '*.p[lm]' -exec mv {} perl-examples/ \;
 
 # Move config contribs
 mkdir -p %{buildroot}%{_sysconfdir}/collectd.d/
+cp %{SOURCE3} %{buildroot}%{_sysconfdir}/collectd.d/default-plugins.conf
 cp %{SOURCE91} %{buildroot}%{_sysconfdir}/collectd.d/apache.conf
 cp %{SOURCE92} %{buildroot}%{_sysconfdir}/collectd.d/email.conf
 cp %{SOURCE93} %{buildroot}%{_sysconfdir}/collectd.d/mysql.conf
