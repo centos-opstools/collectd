@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa81d914_799e5358",
+        "filename": "collectd.spec",
+        "patchSetId": 2
+      },
+      "lineNbr": 1144,
+      "author": {
+        "id": 343
+      },
+      "writtenOn": "2017-10-01T12:15:06Z",
+      "side": 0,
+      "message": "\"5.7.2-2\" here seems to be a bug - release wasn\u0027t bumped. So bumped now.",
+      "revId": "4ab9d908872a18e5c403c84f4d06fb32909505a9",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    }
+  ]
+}
