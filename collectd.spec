@@ -36,7 +36,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.7.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
