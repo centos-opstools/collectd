@@ -36,7 +36,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.7.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -1152,6 +1152,9 @@ make check
 
 
 %changelog
+* Mon Oct 30 2017 - Yedidyah Bar David <didi@redhat.com> - 5.7.2-3
+- build 5.7.2-3
+
 * Sun Oct 01 2017 - Yedidyah Bar David <didi@redhat.com> - 5.7.2-2
 - Move LoadPlugin of default plugins to .d
 
