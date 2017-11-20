@@ -5,12 +5,25 @@
 # dpdkstat feature requires dpdk >= 16.11
 %ifarch x86_64
 %global enable_dpdkstat 1
+%global enable_dpdkevents 1
 %else
 %global enable_dpdkstat 0
+%global enable_dpdkevents 0
 %endif
-%global enable_dpdkstat 0
+
 
 %global enable_ganglia 0
+
+%global enable_ovs_events 1
+%global enable_ovs_stats 1
+
+# lvm uses deprecated interface
+%global enable_lvm 1
+
+
+
+# requires a very recent kernel (>> 4.10)
+%global enable_intel_pmu 0
 
 # mic disabled, MicAccessAPI required
 %global enable_mic 0
@@ -23,9 +36,6 @@
 %endif
 
 %global enable_libaquaero5 0
-# ovs_events compilation is currently not detected
-# requires collectd > 5.7.x
-%global enable_ovs_events 0
 %global enable_prometheus 0
 %global enable_riemann 1
 %global enable_web 1
@@ -35,9 +45,9 @@
 
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
-Version: 5.7.2
-Release: 3%{?dist}
-License: GPLv2
+Version: 5.8.0
+Release: 1%{?dist}
+License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
 
@@ -199,6 +209,19 @@ BuildRequires: dpdk-devel
 This plugin collects data from dpdkstat
 %endif
 
+%if 0%{?enable_dpdkevents} == 1
+%package dpdkevents
+Summary:       DPDKevents plugin for collectd
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: dpdk-devel >= 16.07
+%description  dpdkevents
+Dpdkevents plugin collects and reports following events from DPDK based
+applications:
+- link status of network ports bound with DPDK
+- keep alive events related to DPDK logical cores
+%endif
+
+
 %package drbd
 Summary:       DRBD plugin for collectd
 Group:         System Environment/Daemons
@@ -303,6 +326,7 @@ BuildRequires: yajl-devel
 This plugin formats messages as JSON events for Logstash
 
 
+%if 0%{?enable_lvm}
 %package lvm
 Summary:       LVM plugin for collectd
 Group:         System Environment/Daemons
@@ -310,6 +334,12 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: lvm2-devel
 %description lvm
 This plugin collects information from lvm
+%endif
+
+%package mcelog
+Summary:       Machine Check Exceptions notifications
+%description mcelog
+Machine Check Exceptions notifications for collectd
 
 
 %package memcachec
@@ -395,15 +425,25 @@ from OpenLDAP's cn=Monitor subtree.
 
 
 %if 0%{?enable_ovs_events} > 0
-%package ovs_events
+%package ovs-events
 Summary:       Open vSwitch events plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: yajl-devel
-%description ovs_events
+%description ovs-events
 This plugin monitors the link status of Open vSwitch (OVS) connected
 interfaces, dispatches the values to collectd and sends notifications
 whenever a link state change occurs in the OVS database.
+%endif
+
+%if 0%{?enable_ovs_stats} > 0
+%package ovs-stats
+Summary:       Open vSwitch statsevents plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: yajl-devel
+%description ovs-stats
+The plugin collects the statistics of OVS connected bridges and interfaces.
 %endif
 
 
@@ -503,6 +543,18 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: net-snmp-devel
 %description snmp
 This plugin for collectd provides querying of net-snmp.
+
+%package snmp-agent
+Summary:       SNMP agent module for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: net-snmp-devel
+%description snmp-agent
+Receives and handles queries from SNMP master agent and returns the data
+collected by read plugins. Handles requests only for OIDs specified in
+configuration file. To handle SNMP queries the plugin gets data from
+collectd and translates requested values from collectd's internal format
+to SNMP format.
 
 
 %ifarch %ix86 x86_64
@@ -615,6 +667,12 @@ touch src/pinba.proto
     --disable-apple_sensors \
     --disable-aquaero \
     --disable-barometer \
+    --disable-synproxy \
+%if 0%{?enable_lvm}
+    --enable-lvm \
+%else
+    --disable-lvm \
+%endif
 %ifarch aarch64
     --disable-iptables \
 %endif
@@ -652,8 +710,16 @@ touch src/pinba.proto
     --disable-write-redis \
     --disable-varnish \
     --disable-amqp \
+%if 0%{?enable_dpdkevents}==0
+    --disable-dpdkevents \
+%endif
 %if 0%{?enable_dpdkstat}==0
     --disable-dpdkstat \
+%endif
+%if 0%{?enable_intel_pmu}==0
+    --disable-intel-pmu \
+%else
+    --enable-intel-pmu \
 %endif
 %if 0%{?enable_intel_rdt}==0
     --disable-intel-rtd \
@@ -668,6 +734,11 @@ touch src/pinba.proto
     --disable-ovs_events \
 %else
     --enable-ovs_events \
+%endif
+%if 0%{?enable_ovs_stats}==0
+    --disable-ovs_stats \
+%else
+    --enable-ovs_stats \
 %endif
     --disable-zone \
 %if 0%{?enable_riemann}==0
@@ -896,14 +967,17 @@ make check
 %{_includedir}/collectd/client.h
 %{_includedir}/collectd/network.h
 %{_includedir}/collectd/network_buffer.h
+%{_includedir}/collectd/network_parse.h
 %{_includedir}/collectd/lcc_features.h
+%{_includedir}/collectd/server.h
+%{_includedir}/collectd/types.h
 %{_libdir}/pkgconfig/libcollectdclient.pc
 %{_libdir}/libcollectdclient.so
 
 
 %files -n libcollectdclient
 %{_libdir}/libcollectdclient.so.1
-%{_libdir}/libcollectdclient.so.1.0.0
+%{_libdir}/libcollectdclient.so.1.1.0
 
 
 %files -n collectd-utils
@@ -959,6 +1033,11 @@ make check
 %{_libdir}/collectd/dns.so
 %config(noreplace) %{_sysconfdir}/collectd.d/dns.conf
 
+%if 0%{?enable_dpdkevents} > 0
+%files dpdkevents
+%{_libdir}/collectd/dpdkevents.so
+%endif
+
 %if 0%{?enable_dpdkstat} > 0
 %files dpdkstat
 %{_libdir}/collectd/dpdkstat.so
@@ -1004,10 +1083,13 @@ make check
 %files log_logstash
 %{_libdir}/collectd/log_logstash.so
 
-
+%if 0%{?enable_lvm}
 %files lvm
 %{_libdir}/collectd/lvm.so
+%endif
 
+%files mcelog
+%{_libdir}/collectd/mcelog.so
 
 %files memcachec
 %{_libdir}/collectd/memcachec.so
@@ -1038,11 +1120,18 @@ make check
 %files openldap
 %{_libdir}/collectd/openldap.so
 
-%if 0%{?with_ovs_events} > 0
-%files ovs_events
+%if 0%{?enable_ovs_events} > 0
+%files ovs-events
 %{_libdir}/%{name}/ovs_events.so
+
+#%files ovs-events-debug
+#%{_libdir}/%{name}/ovs_events.so
 %endif
 
+%if 0%{?enable_ovs_stats} > 0
+%files ovs-stats
+%{_libdir}/%{name}/ovs_stats.so
+%endif
 
 
 %files -n perl-Collectd
@@ -1104,6 +1193,9 @@ make check
 %config(noreplace) %{_sysconfdir}/collectd.d/snmp.conf
 %doc %{_mandir}/man5/collectd-snmp.5*
 
+%files snmp-agent
+%{_libdir}/collectd/snmp_agent.so
+
 
 %ifarch %ix86 x86_64
 %files turbostat
@@ -1152,6 +1244,11 @@ make check
 
 
 %changelog
+* Mon Nov 20 2017 Matthias Runge <mrunge@redhat.com> - 5.8.0-1
+- enable ovs_stats,  ovs_events
+- disable lvm
+- 
+
 * Mon Oct 30 2017 - Yedidyah Bar David <didi@redhat.com> - 5.7.2-3
 - build 5.7.2-3
 
