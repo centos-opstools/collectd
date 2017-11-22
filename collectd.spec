@@ -54,11 +54,6 @@ URL: https://collectd.org/
 Source: http://collectd.org/files/%{name}-%{version}.tar.bz2
 Source1: collectd-httpd.conf
 Source2: collectd.service
-Source11: default-plugins-cpu.conf
-Source12: default-plugins-interface.conf
-Source13: default-plugins-load.conf
-Source14: default-plugins-memory.conf
-Source15: default-plugins-syslog.conf
 Source91: apache.conf
 Source92: email.conf
 Source93: mysql.conf
@@ -70,7 +65,6 @@ Source97: rrdtool.conf
 Patch0: %{name}-include-collectd.d-disable-rrdtool.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
 # https://github.com/collectd/collectd/commit/f6be4f9b49b949b379326c3d7002476e6ce4f211.patch
-Patch2: collectd-do-not-load-default-plugins.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
@@ -799,11 +793,6 @@ find contrib -name '*.p[lm]' -exec mv {} perl-examples/ \;
 
 # Move config contribs
 mkdir -p %{buildroot}%{_sysconfdir}/collectd.d/
-cp %{SOURCE11} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-cpu.conf
-cp %{SOURCE12} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-interface.conf
-cp %{SOURCE13} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-load.conf
-cp %{SOURCE14} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-memory.conf
-cp %{SOURCE15} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-syslog.conf
 cp %{SOURCE91} %{buildroot}%{_sysconfdir}/collectd.d/apache.conf
 cp %{SOURCE92} %{buildroot}%{_sysconfdir}/collectd.d/email.conf
 cp %{SOURCE93} %{buildroot}%{_sysconfdir}/collectd.d/mysql.conf
@@ -1244,6 +1233,9 @@ make check
 
 
 %changelog
+* Wed Nov 22 2017 Matthias Runge <mrunge@redhat.com> - 5.8.0-2
+- revert loadplugin shuffles
+
 * Mon Nov 20 2017 Matthias Runge <mrunge@redhat.com> - 5.8.0-1
 - enable ovs_stats,  ovs_events
 - disable lvm
@@ -1251,6 +1243,9 @@ make check
 
 * Mon Oct 30 2017 - Yedidyah Bar David <didi@redhat.com> - 5.7.2-3
 - build 5.7.2-3
+
+* Sun Oct 01 2017 - Yedidyah Bar David <didi@redhat.com> - 5.7.2-2
+- Move LoadPlugin of default plugins to .d
 
 * Sun Oct 01 2017 - Yedidyah Bar David <didi@redhat.com> - 5.7.2-2
 - Move LoadPlugin of default plugins to .d
