@@ -71,6 +71,7 @@ Patch0: %{name}-include-collectd.d-disable-rrdtool.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
 # https://github.com/collectd/collectd/commit/f6be4f9b49b949b379326c3d7002476e6ce4f211.patch
 Patch2: collectd-do-not-load-default-plugins.patch
+Patch3: collectd-comment-about-collectd.d.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
