@@ -1,0 +1,29 @@
+From bf648f17c1f156577170053ef88787015ecd6116 Mon Sep 17 00:00:00 2001
+From: Yedidyah Bar David <didi@redhat.com>
+Date: Wed, 22 Nov 2017 11:09:51 +0200
+Subject: [PATCH] Add a comment in collectd.conf about collectd.d
+
+Change-Id: I318cbc6afcf6d1965dff87a5feaa57eda4cfb5be
+Signed-off-by: Yedidyah Bar David <didi@redhat.com>
+---
+ src/collectd.conf.in | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/collectd.conf.in b/src/collectd.conf.in
+index 4efa29e..29deca4 100644
+--- a/src/collectd.conf.in
++++ b/src/collectd.conf.in
+@@ -4,6 +4,10 @@
+ # http://collectd.org/
+ #
+ 
++# If you edit this file, it will not be updated during upgrades.
++# It might be better to refer to it as an example only, and add your own
++# configuration snippets to new files under /etc/collectd.d.
++
+ ##############################################################################
+ # Global                                                                     #
+ #----------------------------------------------------------------------------#
+-- 
+1.8.3.1
+
