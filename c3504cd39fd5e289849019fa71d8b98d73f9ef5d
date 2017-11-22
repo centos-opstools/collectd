@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba7be1f8_cb2e89a5",
+        "filename": "collectd.spec",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2017-11-22T07:46:55Z",
+      "side": 0,
+      "message": "can\u0027t we fix this patch for working with 5.8 too?",
+      "revId": "c3504cd39fd5e289849019fa71d8b98d73f9ef5d",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    }
+  ]
+}
