@@ -46,7 +46,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -69,8 +69,12 @@ Source97: rrdtool.conf
 
 Patch0: %{name}-include-collectd.d-disable-rrdtool.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
-# https://github.com/collectd/collectd/commit/f6be4f9b49b949b379326c3d7002476e6ce4f211.patch
 Patch2: collectd-do-not-load-default-plugins.patch
+
+# https://github.com/collectd/collectd/commit/8dba589c3665a3f4925bfca2844e973771bda1cc
+Patch3: collectd-5.8-poll-thread-was-trying.patch
+# https://github.com/collectd/collectd/commit/de05fb53fad6bc998f585b704ca0caeadc14a035.patch
+Patch4: collectd-5.8-ceph.patch
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
@@ -1244,6 +1248,10 @@ make check
 
 
 %changelog
+* Wed Dec 06 2017 Matthias Runge <mrunge@redhat.com> - 5.8.0-2
+- fix ovs_stats and ovs_events crash
+- fix crash with ceph (rhbz#1516285)
+
 * Mon Nov 20 2017 Matthias Runge <mrunge@redhat.com> - 5.8.0-1
 - enable ovs_stats,  ovs_events
 - disable lvm
