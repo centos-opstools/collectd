@@ -4,8 +4,10 @@
 # x86_64 required for building dpdk
 # dpdkstat feature requires dpdk >= 16.11
 %ifarch x86_64
-%global enable_dpdkstat 1
-%global enable_dpdkevents 1
+# dpdk-* disabled, it's not recommended to use in combintation with
+# ovs https://github.com/collectd/collectd/pull/2613
+%global enable_dpdkstat 0
+%global enable_dpdkevents 0
 %else
 %global enable_dpdkstat 0
 %global enable_dpdkevents 0
@@ -46,7 +48,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -643,7 +645,7 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description zookeeper
 This is a collectd plugin that reads data from Zookeeper's MNTR command.
 
-
+%if 0%{?enable_web}
 %package collection3
 Summary:    Web-based viewer for collectd
 Group:      System Environment/Daemons
@@ -653,6 +655,8 @@ Requires: httpd
 collection3 is a graphing front-end for the RRD files created by and filled
 with collectd. It is written in Perl and should be run as an CGI-script.
 Graphs are generated on-the-fly, so no cron job or similar is necessary.
+
+%endif
 
 
 %prep
@@ -791,12 +795,14 @@ find %{buildroot} -name .packlist -delete
 # Remove Perl temporary file perllocal.pod
 find %{buildroot} -name perllocal.pod -delete
 
+%if 0%{?enable_web}
 # copy web interface
 cp -ad contrib/collection3/* %{buildroot}%{_datadir}/collectd/collection3/
 cp -pv %{buildroot}%{_datadir}/collectd/collection3/etc/collection.conf %{buildroot}%{_sysconfdir}/collection.conf
 ln -rsf %{_sysconfdir}/collection.conf %{buildroot}%{_datadir}/collectd/collection3/etc/collection.conf
 cp -pv %{SOURCE1} %{buildroot}%{_sysconfdir}/httpd/conf.d/collectd.conf
 chmod +x %{buildroot}%{_datadir}/collectd/collection3/bin/*.cgi
+%endif
 
 # Move the Perl examples to a separate directory.
 mkdir perl-examples
@@ -1246,6 +1252,9 @@ make check
 
 
 %changelog
+* Thu Dec 21 2017 Matthias Runge <mrunge@redhat.com> - 5.8.0-3
+- disable dpdk- plugins (rhbz#1528273)
+
 * Wed Dec 06 2017 Matthias Runge <mrunge@redhat.com> - 5.8.0-2
 - fix ovs_stats and ovs_events crash
 - fix crash with ceph (rhbz#1516285)
