@@ -1,0 +1,8 @@
+Code-Review+2: Matthias Runge <mrunge@redhat.com>
+Workflow+1: Sandro Bonazzola <sandro.bonazzola@gmail.com>
+Verified+2: Jenkins CI <admin@rpmfactory.beta.rdoproject.org>
+Submitted-by: Jenkins CI <admin@rpmfactory.beta.rdoproject.org>
+Submitted-at: Fri, 19 Jan 2018 13:30:50 +0000
+Reviewed-on: https://review.rdoproject.org/r/11494
+Project: centos-opstools/collectd
+Branch: refs/heads/master
