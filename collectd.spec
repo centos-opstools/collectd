@@ -48,7 +48,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.0
-Release: 3%{?dist}
+Release: 3.1%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -61,6 +61,7 @@ Source12: default-plugins-interface.conf
 Source13: default-plugins-load.conf
 Source14: default-plugins-memory.conf
 Source15: default-plugins-syslog.conf
+Source90: rdt.conf
 Source91: apache.conf
 Source92: email.conf
 Source93: mysql.conf
@@ -815,6 +816,7 @@ cp %{SOURCE12} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-interfac
 cp %{SOURCE13} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-load.conf
 cp %{SOURCE14} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-memory.conf
 cp %{SOURCE15} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-syslog.conf
+cp %{SOURCE90} %{buildroot}%{_sysconfdir}/collectd.d/rdt.conf
 cp %{SOURCE91} %{buildroot}%{_sysconfdir}/collectd.d/apache.conf
 cp %{SOURCE92} %{buildroot}%{_sysconfdir}/collectd.d/email.conf
 cp %{SOURCE93} %{buildroot}%{_sysconfdir}/collectd.d/mysql.conf
@@ -1174,6 +1176,7 @@ make check
 %if 0%{?enable_intel_rdt} > 0
 %files rdt
 %{_libdir}/collectd/intel_rdt.so
+%config(noreplace) %{_sysconfdir}/collectd.d/rdt.conf
 %endif
 
 %files rrdcached
@@ -1252,6 +1255,9 @@ make check
 
 
 %changelog
+* Thu Jan 25 2018 Matthias Runge <mrunge@redhat.com> - 5.8.0-3.1
+- add config for rdt plugin
+
 * Thu Dec 21 2017 Matthias Runge <mrunge@redhat.com> - 5.8.0-3
 - disable dpdk- plugins (rhbz#1528273)
 
