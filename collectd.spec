@@ -61,6 +61,8 @@ Source12: default-plugins-interface.conf
 Source13: default-plugins-load.conf
 Source14: default-plugins-memory.conf
 Source15: default-plugins-syslog.conf
+Source88: ovs-events.conf
+Source89: ovs-stats.conf
 Source90: rdt.conf
 Source91: apache.conf
 Source92: email.conf
@@ -816,6 +818,8 @@ cp %{SOURCE12} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-interfac
 cp %{SOURCE13} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-load.conf
 cp %{SOURCE14} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-memory.conf
 cp %{SOURCE15} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-syslog.conf
+cp %{SOURCE88} %{buildroot}%{_sysconfdir}/collectd.d/ovs-events.conf
+cp %{SOURCE89} %{buildroot}%{_sysconfdir}/collectd.d/ovs-stats.conf
 cp %{SOURCE90} %{buildroot}%{_sysconfdir}/collectd.d/rdt.conf
 cp %{SOURCE91} %{buildroot}%{_sysconfdir}/collectd.d/apache.conf
 cp %{SOURCE92} %{buildroot}%{_sysconfdir}/collectd.d/email.conf
@@ -1136,11 +1140,13 @@ make check
 %if 0%{?enable_ovs_events} > 0
 %files ovs-events
 %{_libdir}/%{name}/ovs_events.so
+%config(noreplace) %{_sysconfdir}/collectd.d/ovs-events.conf
 %endif
 
 %if 0%{?enable_ovs_stats} > 0
 %files ovs-stats
 %{_libdir}/%{name}/ovs_stats.so
+%config(noreplace) %{_sysconfdir}/collectd.d/ovs-stats.conf
 %endif
 
 
