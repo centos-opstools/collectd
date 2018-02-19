@@ -61,6 +61,7 @@ Source12: default-plugins-interface.conf
 Source13: default-plugins-load.conf
 Source14: default-plugins-memory.conf
 Source15: default-plugins-syslog.conf
+Source87: hugepages.conf
 Source88: ovs-events.conf
 Source89: ovs-stats.conf
 Source90: rdt.conf
@@ -818,6 +819,7 @@ cp %{SOURCE12} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-interfac
 cp %{SOURCE13} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-load.conf
 cp %{SOURCE14} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-memory.conf
 cp %{SOURCE15} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-syslog.conf
+cp %{SOURCE87} %{buildroot}%{_sysconfdir}/collectd.d/hugepages.conf
 cp %{SOURCE88} %{buildroot}%{_sysconfdir}/collectd.d/ovs-events.conf
 cp %{SOURCE89} %{buildroot}%{_sysconfdir}/collectd.d/ovs-stats.conf
 cp %{SOURCE90} %{buildroot}%{_sysconfdir}/collectd.d/rdt.conf
@@ -1075,6 +1077,7 @@ make check
 
 %files hugepages
 %{_libdir}/collectd/hugepages.so
+%config(noreplace) %{_sysconfdir}/collectd.d/hugepages.conf
 
 %files ipmi
 %{_libdir}/collectd/ipmi.so
