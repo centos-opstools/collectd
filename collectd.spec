@@ -730,14 +730,14 @@ touch src/pinba.proto
     --disable-dpdkstat \
 %endif
 %if 0%{?enable_intel_pmu}==0
-    --disable-intel-pmu \
+    --disable-intel_pmu \
 %else
-    --enable-intel-pmu \
+    --enable-intel_pmu \
 %endif
 %if 0%{?enable_intel_rdt}==0
-    --disable-intel-rtd \
+    --disable-intel_rdt \
 %else
-    --enable-intel-rtd \
+    --enable-intel_rdt \
 %endif
     --disable-xencpu \
 %if 0%{?enable_prometheus}==0
@@ -880,10 +880,14 @@ make check
 %exclude %{_sysconfdir}/collectd.d/apache.conf
 %exclude %{_sysconfdir}/collectd.d/dns.conf
 %exclude %{_sysconfdir}/collectd.d/email.conf
+%exclude %{_sysconfdir}/collectd.d/hugepages.conf
 %exclude %{_sysconfdir}/collectd.d/ipmi.conf
 %exclude %{_sysconfdir}/collectd.d/libvirt.conf
 %exclude %{_sysconfdir}/collectd.d/mysql.conf
 %exclude %{_sysconfdir}/collectd.d/nginx.conf
+%exclude %{_sysconfdir}/collectd.d/ovs-events.conf
+%exclude %{_sysconfdir}/collectd.d/ovs-stats.conf
+%exclude %{_sysconfdir}/collectd.d/rdt.conf
 %exclude %{_sysconfdir}/collectd.d/perl.conf
 %exclude %{_sysconfdir}/collectd.d/ping.conf
 %exclude %{_sysconfdir}/collectd.d/postgresql.conf
