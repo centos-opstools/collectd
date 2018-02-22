@@ -880,10 +880,14 @@ make check
 %exclude %{_sysconfdir}/collectd.d/apache.conf
 %exclude %{_sysconfdir}/collectd.d/dns.conf
 %exclude %{_sysconfdir}/collectd.d/email.conf
+%exclude %{_sysconfdir}/collectd.d/hugepages.conf
 %exclude %{_sysconfdir}/collectd.d/ipmi.conf
 %exclude %{_sysconfdir}/collectd.d/libvirt.conf
 %exclude %{_sysconfdir}/collectd.d/mysql.conf
 %exclude %{_sysconfdir}/collectd.d/nginx.conf
+%exclude %{_sysconfdir}/collectd.d/ovs-events.conf
+%exclude %{_sysconfdir}/collectd.d/ovs-stats.conf
+%exclude %{_sysconfdir}/collectd.d/rtd.conf
 %exclude %{_sysconfdir}/collectd.d/perl.conf
 %exclude %{_sysconfdir}/collectd.d/ping.conf
 %exclude %{_sysconfdir}/collectd.d/postgresql.conf
