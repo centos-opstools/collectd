@@ -20,7 +20,10 @@
 %global enable_ovs_stats 1
 
 # lvm uses deprecated interface
-%global enable_lvm 1
+%global enable_lvm 0
+
+# pinba plugin collects stuff from specific php extension
+%global enable_pinba 0
 
 
 
@@ -467,6 +470,7 @@ Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versio
 This package contains the Perl bindings and plugin for collectd.
 
 
+%if 0%{?enable_pinba} > 0
 %package pinba
 Summary:       Pinba plugin for collectd
 Group:         System Environment/Daemons
@@ -475,6 +479,8 @@ BuildRequires: protobuf-c-devel
 %description pinba
 This plugin receives profiling information from Pinba,
 an extension for the PHP interpreter.
+
+%endif
 
 
 %package ping
@@ -713,6 +719,11 @@ touch src/pinba.proto
     --disable-write_mongodb \
     --with-libiptc \
     --with-java=%{java_home}/ \
+%if 0%{?enable_pinba} > 0
+    --with-pinba \
+%else
+    --disable-pinba \
+%endif
     --with-python \
     --with-perl-bindings=INSTALLDIRS=vendor \
     --disable-gmond \
@@ -1163,8 +1174,10 @@ make check
 %doc %{_mandir}/man3/Collectd::Unixsock.3pm*
 
 
+%if 0%{?enable_pinba} > 0
 %files pinba
 %{_libdir}/collectd/pinba.so
+%endif
 
 
 %files ping
