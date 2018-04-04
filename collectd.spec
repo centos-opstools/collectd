@@ -61,6 +61,7 @@ Source12: default-plugins-interface.conf
 Source13: default-plugins-load.conf
 Source14: default-plugins-memory.conf
 Source15: default-plugins-syslog.conf
+Source86: libvirt.conf
 Source87: hugepages.conf
 Source88: ovs-events.conf
 Source89: ovs-stats.conf
@@ -819,6 +820,7 @@ cp %{SOURCE12} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-interfac
 cp %{SOURCE13} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-load.conf
 cp %{SOURCE14} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-memory.conf
 cp %{SOURCE15} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-syslog.conf
+cp %{SOURCE86} %{buildroot}%{_sysconfdir}/collectd.d/libvirt.conf
 cp %{SOURCE87} %{buildroot}%{_sysconfdir}/collectd.d/hugepages.conf
 cp %{SOURCE88} %{buildroot}%{_sysconfdir}/collectd.d/ovs-events.conf
 cp %{SOURCE89} %{buildroot}%{_sysconfdir}/collectd.d/ovs-stats.conf
@@ -833,7 +835,7 @@ cp %{SOURCE97} %{buildroot}%{_sysconfdir}/collectd.d/rrdtool.conf
 
 # configs for subpackaged plugins
 %ifnarch s390 s390x
-for p in dns ipmi libvirt perl ping postgresql
+for p in dns ipmi perl ping postgresql
 %else
 for p in dns ipmi libvirt perl ping postgresql
 %endif
