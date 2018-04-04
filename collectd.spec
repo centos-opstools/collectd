@@ -833,7 +833,7 @@ cp %{SOURCE97} %{buildroot}%{_sysconfdir}/collectd.d/rrdtool.conf
 
 # configs for subpackaged plugins
 %ifnarch s390 s390x
-for p in dns ipmi libvirt perl ping postgresql
+for p in dns ipmi perl ping postgresql
 %else
 for p in dns ipmi libvirt perl ping postgresql
 %endif
