@@ -1,0 +1,40 @@
+From a37cf26bbd532c1308f504925f0aee9084ea529f Mon Sep 17 00:00:00 2001
+From: Pavel Rochnyack <pavel2000@ngs.ru>
+Date: Sat, 10 Feb 2018 17:46:30 +0700
+Subject: [PATCH 10/10] write_prometheus: Set SO_REUSEADDR on listening socket
+
+Otherwise Collectd fails to bind the socket after restart.
+
+Thanks to Richard Weinberger and Brandon Hume for reporting.
+
+Closes: #2570
+Closes: #2673
+(cherry picked from commit 2c78bdf94c0fdd6240d5d202cf5aba12ac8c5a20)
+---
+ src/write_prometheus.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/write_prometheus.c b/src/write_prometheus.c
+index 9e9ed2e8..7c4e59e7 100644
+--- a/src/write_prometheus.c
++++ b/src/write_prometheus.c
+@@ -764,6 +764,16 @@ static int prom_open_socket(int addrfamily) {
+     if (fd == -1)
+       continue;
+ 
++    int tmp = 1;
++    if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof(tmp)) != 0) {
++      char errbuf[1024];
++      WARNING("write_prometheus: setsockopt(SO_REUSEADDR) failed: %s",
++              sstrerror(errno, errbuf, sizeof(errbuf)));
++      close(fd);
++      fd = -1;
++      continue;
++    }
++
+     if (bind(fd, ai->ai_addr, ai->ai_addrlen) != 0) {
+       close(fd);
+       fd = -1;
+-- 
+2.17.0
+
