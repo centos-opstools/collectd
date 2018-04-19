@@ -1,6 +1,9 @@
 %global _hardened_build 1
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
 
+# skip building amqp-0.9
+%global enable_amqp_09 0
+
 # x86_64 required for building dpdk
 # dpdkstat feature requires dpdk >= 16.11
 %ifarch x86_64
@@ -16,8 +19,8 @@
 
 %global enable_ganglia 0
 
-%global enable_ovs_events 1
-%global enable_ovs_stats 1
+# pmu requires libjevents to be available
+%global enable_intel_pmu 0
 
 # lvm uses deprecated interface
 %global enable_lvm 0
@@ -25,15 +28,13 @@
 # pinba plugin collects stuff from specific php extension
 %global enable_pinba 0
 
+%global enable_ovs_events 1
+%global enable_ovs_stats 1
 
-
-# requires a very recent kernel (>> 4.10)
-%global enable_intel_pmu 0
+%global enable_service_assurance 1
 
 # mic disabled, MicAccessAPI required
 %global enable_mic 0
-# update for intel-cmt-cat required
-#
 %ifarch x86_64
 %global enable_intel_rdt 1
 %else
@@ -41,9 +42,9 @@
 %endif
 
 %global enable_libaquaero5 0
-%global enable_prometheus 0
-%global enable_riemann 1
-%global enable_web 1
+%global enable_prometheus 1
+%global enable_riemann 0
+%global enable_web 0
 
 # pulls in X as dep
 %global enable_notify_desktop 0
@@ -51,12 +52,12 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
 
-Source: http://collectd.org/files/%{name}-%{version}.tar.bz2
+Source: https://collectd.org/files/%{name}-%{version}.tar.bz2
 Source1: collectd-httpd.conf
 Source2: collectd.service
 Source11: default-plugins-cpu.conf
@@ -64,6 +65,9 @@ Source12: default-plugins-interface.conf
 Source13: default-plugins-load.conf
 Source14: default-plugins-memory.conf
 Source15: default-plugins-syslog.conf
+Source83: mcelog.conf
+Source84: pmu.conf
+Source85: write_prometheus.conf
 Source86: libvirt.conf
 Source87: hugepages.conf
 Source88: ovs-events.conf
@@ -77,20 +81,54 @@ Source95: sensors.conf
 Source96: snmp.conf
 Source97: rrdtool.conf
 
+# https://github.com/collectd/collectd/commit/8dba589c3665a3f4925bfca2844e973771bda1cc
+Patch01: 0001-utils_ovs-fix-2574.patch
+# https://github.com/collectd/collectd/commit/de05fb53fad6bc998f585b704ca0caeadc14a035.patch
+Patch02: 0002-ceph-plugin-Fix-2572.patch
+
+%if 0%{?enable_service_assurance} > 0
+# https://github.com/redhat-nfvpe/collectd/commit/14c41b2d8cdc02d7e2ed76e651ceeae905f32044.patch
+Patch03: 0003-2618-Write-amqp1-plugin-9.patch
+
+# https://github.com/redhat-nfvpe/collectd/commit/ea83311b7e1614a71efd7a68daaae4038eb705f1.patch
+Patch04: 0004-2622-Red-Hat-NFVPE-Connectivity-Plugin-6.patch
+
+# https://github.com/redhat-nfvpe/collectd/commit/0c6a9a63955dd4efc767a680c334a81c4be515ce.patch
+Patch05: 0005-2623-Red-Hat-NFVPE-Procevent-Plugin-7.patch
+
+# https://github.com/redhat-nfvpe/collectd/commit/c63d754a73b0bda09e3cd89d90b2ab26deb06323.patch
+Patch06: 0006-2624-Red-Hat-NFVPE-Sysevent-Plugin-8.patch
+
+# https://github.com/redhat-nfvpe/collectd/commit/d8c1f7c86b1323fee1e503d5107720d774f0dc5a.patch
+Patch07: 0007-2705-Notification-nested-metadata-10.patch
+# unification of previously separated patches
+# enable config read from collectd.d
+# disable default plugins
+Patch08: 0008-Include-collectd.d-and-disable-default-loading.patch
+
+Patch09: 0009-Add-lost-check_success.patch
+
+# https://github.com/collectd/collectd/pull/2763 (missing in collectd-5.8 branch,
+# but included in 5.7 and master
+Patch10: 0010-write_prometheus-Set-SO_REUSEADDR-on-listening-socke.patch
+%else
 Patch0: %{name}-include-collectd.d-disable-rrdtool.patch
 Patch1: vserver-ignore-deprecation-warnings.patch
 Patch2: collectd-do-not-load-default-plugins.patch
 Patch3: collectd-comment-about-collectd.d.patch
+%endif
 
-# https://github.com/collectd/collectd/commit/8dba589c3665a3f4925bfca2844e973771bda1cc
-Patch4: collectd-5.8-poll-thread-was-trying.patch
-# https://github.com/collectd/collectd/commit/de05fb53fad6bc998f585b704ca0caeadc14a035.patch
-Patch5: collectd-5.8-ceph.patch
-
+BuildRequires: perl-devel
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
 BuildRequires: python-devel
 BuildRequires: libgcrypt-devel
+BuildRequires: git
+BuildRequires: automake
+
+Requires(post):   systemd
+Requires(preun):  systemd
+Requires(postun): systemd
 
 %if !0%{?enable_lvm}
 Obsoletes: %{name}-lvm < %{version}-%{release}
@@ -104,9 +142,6 @@ Obsoletes: %{name}-notify_desktop < %{version}-%{release}
 Obsoletes: %{name}-web < %{version}-%{release}
 %endif
 
-Requires(post):   systemd
-Requires(preun):  systemd
-Requires(postun): systemd
 
 %description
 collectd is a small daemon written in C for performance.  It reads various
@@ -115,7 +150,26 @@ Since the daemon doesn't need to startup every time it wants to update the
 files it's very fast and easy on the system. Also, the statistics are very
 fine grained since the files are updated every 10 seconds.
 
+%if 0%{?enable_amqp_09}
+%package amqp
+Summary:       AMQP 0.9 plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: librabbitmq-devel
 
+%description amqp
+This plugin can be used to communicate with other instances of collectd
+or third party applications using an AMQP-0.9 message broker.
+%endif
+
+%if 0%{?enable_service_assurance} > 0
+%package amqp1
+Summary:  Sends JSON-encoded data to an Advanced Message Queuing Protocol
+BuildRequires: qpid-proton-c-devel
+%description amqp1
+Sends JSON-encoded data to an Advanced Message Queuing Protocol (AMQP)
+1.0 server, such as Qpid Dispatch Router or Apache Artemis Broker.
+%endif
 
 %package apache
 Summary:       Apache plugin for collectd
@@ -170,6 +224,18 @@ Requires:      libcollectdclient%{?_isa} = %{version}-%{release}
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description -n collectd-utils
 Collectd utilities
+
+
+%if 0%{?enable_service_assurance} > 0
+%package connectivity
+Summary:       Monitors network interface up/down status via netlink library
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+%description connectivity
+Plugin that monitors network interface up/down status via netlink library
+
+%endif
 
 
 %package curl
@@ -275,8 +341,24 @@ This plugin collects data provided by JMX.
 
 %package hugepages
 Summary:       Number of hugepages on Linux
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
 %description hugepages
 This plugin reports the number of used and free hugepages on Linux.
+
+
+%ifarch x86_64
+%if %{?enable_intel_pmu} > 0
+%package pmu
+Summary:    Intel PMU plugin for collectd
+Group:      System Environment/Daemons
+Requires:   %{name}%{?_isa} = %{version}-%{release}
+BuildRequires:  jevents-devel
+%description pmu
+The intel_pmu plugin collects information about system performance
+counters using kernel Linux perf interface.
+%endif
+%endif
 
 %ifarch x86_64
 %if %{?enable_intel_rdt} > 0
@@ -366,8 +448,11 @@ This plugin collects information from lvm
 
 %package mcelog
 Summary:       Machine Check Exceptions notifications
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
 %description mcelog
-Machine Check Exceptions notifications for collectd
+This plugin monitors machine check exceptions reported by mcelog and generates
+appropriate notifications when machine check exceptions are detected.
 
 
 %package memcachec
@@ -407,7 +492,8 @@ called handlers and database traffic.
 Summary:       Netlink plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: iproute-static, libmnl-devel
+BuildRequires: iproute-static
+BuildRequires: libmnl-devel
 %description netlink
 This plugin uses a netlink socket to query the Linux kernel
 about statistics of various interface and routing aspects.
@@ -515,6 +601,16 @@ BuildRequires: postgresql-devel
 PostgreSQL querying plugin. This plugins provides data of issued commands,
 called handlers and database traffic.
 
+%if 0%{?enable_service_assurance} > 0
+%package procevent
+Summary:       Plugin that monitors process starts/stops via netlink library
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+%description procevent
+Plugin that monitors process starts/stops via netlink library
+%endif
+
+
 
 %package python
 Summary:       Python plugin for collectd
@@ -587,6 +683,14 @@ configuration file. To handle SNMP queries the plugin gets data from
 collectd and translates requested values from collectd's internal format
 to SNMP format.
 
+%if 0%{?enable_service_assurance} > 0
+%package sysevent
+Summary:       Plugin that monitors rsyslog for system events
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+%description sysevent
+Plugin that monitors rsyslog for system events
+%endif
 
 %ifarch %ix86 x86_64
 %package turbostat
@@ -632,6 +736,19 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: curl-devel
 %description write_http
 This plugin can send data to Redis.
+
+%if 0%{?enable_prometheus}
+%package write_prometheus
+Summary:       Prometheus output plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: libmicrohttpd-devel
+BuildRequires: protobuf-c-devel
+
+%description write_prometheus
+This plugin exposes collected values using an embedded HTTP
+server, turning the collectd daemon into a Prometheus exporter.
+%endif
 
 %if 0%{?enable_riemann}
 %package write_riemann
@@ -684,22 +801,38 @@ Graphs are generated on-the-fly, so no cron job or similar is necessary.
 
 
 %prep
-%autosetup -v -p1
+%autosetup -v -p1 -S git
 
 # recompile generated files
 touch src/pinba.proto
 
 
 %build
+
+export CFLAGS="$RPM_OPT_FLAGS -fPIE"                                           
+export CPPFLAGS="$RPM_OPT_FLAGS -fPIE"                                         
+export LDFLAGS="-Wl,-z,relro,-z,now -pie" 
+
+# rebuild configure and friends
+autoheader
+aclocal -I m4
+libtoolize --copy --force
+automake --add-missing --copy
+autoconf
+
+export CFLAGS="$RPM_OPT_FLAGS -fPIE"
+export CFLAGS="$RPM_OPT_FLAGS -fPIE"
+export LDFLAGS="-Wl,-z,relro,-z,now -pie"
+
 %configure \
     --disable-dependency-tracking \
     --disable-silent-rules \
+    --disable-barometer \
     --without-included-ltdl \
     --enable-all-plugins \
     --disable-static \
     --disable-apple_sensors \
     --disable-aquaero \
-    --disable-barometer \
     --disable-synproxy \
 %if 0%{?enable_lvm}
     --enable-lvm \
@@ -738,7 +871,7 @@ touch src/pinba.proto
 %else
     --disable-pinba \
 %endif
-    --with-python \
+    --enable-python \
     --with-perl-bindings=INSTALLDIRS=vendor \
     --disable-gmond \
     --disable-xmms \
@@ -747,7 +880,11 @@ touch src/pinba.proto
     --disable-redis \
     --disable-write-redis \
     --disable-varnish \
+%if 0%{?enable_amqp_09} ==0
     --disable-amqp \
+%else
+    --enable-amqp \
+%endif
 %if 0%{?enable_dpdkevents}==0
     --disable-dpdkevents \
 %endif
@@ -758,15 +895,18 @@ touch src/pinba.proto
     --disable-intel-pmu \
 %else
     --enable-intel-pmu \
+    --with-jevents=/usr
 %endif
 %if 0%{?enable_intel_rdt}==0
-    --disable-intel-rtd \
+    --disable-intel-rdt \
 %else
-    --enable-intel-rtd \
+    --enable-intel-rdt \
 %endif
     --disable-xencpu \
 %if 0%{?enable_prometheus}==0
     --disable-write_prometheus \
+%else
+    --enable-write_prometheus \
 %endif
 %if 0%{?enable_ovs_events}==0
     --disable-ovs_events \
@@ -800,7 +940,7 @@ touch src/pinba.proto
 
 %if 0%{?enable_dpdkstat} > 0
 # dpdkstat plugin requires ssse3 instruction set
-make -j CFLAGS+='-mssse3' %{?_smp_mflags}
+make CFLAGS+='-mssse3' %{?_smp_mflags}
 %else
 make %{?_smp_mflags}
 %endif
@@ -844,6 +984,9 @@ cp %{SOURCE12} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-interfac
 cp %{SOURCE13} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-load.conf
 cp %{SOURCE14} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-memory.conf
 cp %{SOURCE15} %{buildroot}%{_sysconfdir}/collectd.d/90-default-plugins-syslog.conf
+cp %{SOURCE83} %{buildroot}%{_sysconfdir}/collectd.d/mcelog.conf
+cp %{SOURCE84} %{buildroot}%{_sysconfdir}/collectd.d/pmu.conf
+cp %{SOURCE85} %{buildroot}%{_sysconfdir}/collectd.d/write_prometheus.conf
 cp %{SOURCE86} %{buildroot}%{_sysconfdir}/collectd.d/libvirt.conf
 cp %{SOURCE87} %{buildroot}%{_sysconfdir}/collectd.d/hugepages.conf
 cp %{SOURCE88} %{buildroot}%{_sysconfdir}/collectd.d/ovs-events.conf
@@ -906,17 +1049,24 @@ make check
 %exclude %{_sysconfdir}/collectd.d/apache.conf
 %exclude %{_sysconfdir}/collectd.d/dns.conf
 %exclude %{_sysconfdir}/collectd.d/email.conf
+%exclude %{_sysconfdir}/collectd.d/hugepages.conf
 %exclude %{_sysconfdir}/collectd.d/ipmi.conf
 %exclude %{_sysconfdir}/collectd.d/libvirt.conf
+%exclude %{_sysconfdir}/collectd.d/mcelog.conf
 %exclude %{_sysconfdir}/collectd.d/mysql.conf
 %exclude %{_sysconfdir}/collectd.d/nginx.conf
+%exclude %{_sysconfdir}/collectd.d/ovs-events.conf
+%exclude %{_sysconfdir}/collectd.d/ovs-stats.conf
 %exclude %{_sysconfdir}/collectd.d/perl.conf
 %exclude %{_sysconfdir}/collectd.d/ping.conf
+%exclude %{_sysconfdir}/collectd.d/pmu.conf
 %exclude %{_sysconfdir}/collectd.d/postgresql.conf
 %exclude %{_datadir}/collectd/postgresql_default.conf
+%exclude %{_sysconfdir}/collectd.d/rdt.conf
 %exclude %{_sysconfdir}/collectd.d/rrdtool.conf
 %exclude %{_sysconfdir}/collectd.d/sensors.conf
 %exclude %{_sysconfdir}/collectd.d/snmp.conf
+%exclude %{_sysconfdir}/collectd.d/write_prometheus.conf
 
 %{_unitdir}/collectd.service
 %{_sbindir}/collectd
@@ -1033,6 +1183,15 @@ make check
 %{_mandir}/man1/collectd-nagios.1*
 %{_mandir}/man1/collectd-tg.1*
 
+%if 0%{?enable_amqp_09}
+%files amqp
+%{_libdir}/collectd/amqp.so
+%endif
+
+%if 0%{?enable_service_assurance} > 0
+%files amqp1
+%{_libdir}/collectd/amqp1.so
+%endif
 
 %files apache
 %{_libdir}/collectd/apache.so
@@ -1054,6 +1213,10 @@ make check
 %files chrony
 %{_libdir}/collectd/chrony.so
 
+%if 0%{?enable_service_assurance} > 0
+%files connectivity
+%{_libdir}/collectd/connectivity.so
+%endif
 
 %files curl
 %{_libdir}/collectd/curl.so
@@ -1136,6 +1299,7 @@ make check
 
 %files mcelog
 %{_libdir}/collectd/mcelog.so
+%config(noreplace) %{_sysconfdir}/collectd.d/mcelog.conf
 
 %files memcachec
 %{_libdir}/collectd/memcachec.so
@@ -1205,10 +1369,20 @@ make check
 %config(noreplace) %{_sysconfdir}/collectd.d/postgresql.conf
 %{_datadir}/collectd/postgresql_default.conf
 
+%if 0%{?enable_service_assurance} > 0
+%files procevent
+%{_libdir}/collectd/procevent.so
+%endif
 
 %files python
 %{_libdir}/collectd/python.so
 %doc %{_mandir}/man5/collectd-python.5*
+
+%if 0%{?enable_intel_pmu} > 0
+%files pmu
+%{_libdir}/collectd/intel_pmu.so
+%config(noreplace) %{_sysconfdir}/collectd.d/pmu.conf
+%endif
 
 %if 0%{?enable_intel_rdt} > 0
 %files rdt
@@ -1244,6 +1418,10 @@ make check
 %files snmp-agent
 %{_libdir}/collectd/snmp_agent.so
 
+%if 0%{?enable_service_assurance} > 0
+%files sysevent
+%{_libdir}/collectd/sysevent.so
+%endif
 
 %ifarch %ix86 x86_64
 %files turbostat
@@ -1270,6 +1448,12 @@ make check
 %files write_http
 %{_libdir}/collectd/write_http.so
 
+%if 0%{?enable_prometheus}
+%files write_prometheus
+%{_libdir}/collectd/write_prometheus.so
+%config(noreplace) %{_sysconfdir}/collectd.d/write_prometheus.conf
+%endif
+
 
 
 %if 0%{?enable_riemann}
@@ -1292,6 +1476,9 @@ make check
 
 
 %changelog
+* Wed Apr 18 2018 Matthias Runge <mrunge@redhat.com> - 5.8.0-5
+- add service assurance patches
+
 * Tue Feb 13 2018 Matthias Runge <mrunge@redhat.com> - 5.8.0-4
 - add ovs-plugins configs
 
