@@ -1,0 +1,31 @@
+From 1d39894520974265c3d1898300e5fa3afb7a6cff Mon Sep 17 00:00:00 2001
+From: Matthias Runge <mrunge@redhat.com>
+Date: Thu, 19 Apr 2018 12:08:06 +0200
+Subject: [PATCH 9/9] Add lost check_success
+
+---
+ src/utils_format_json.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/utils_format_json.c b/src/utils_format_json.c
+index 9cd2e78d..6954abf9 100644
+--- a/src/utils_format_json.c
++++ b/src/utils_format_json.c
+@@ -500,6 +500,14 @@ static int json_add_string(yajl_gen g, char const *str) /* {{{ */
+     }                                                                          \
+   } while (0)
+ 
++#define CHECK_SUCCESS(cmd)                                                     \
++  do {                                                                         \
++    yajl_gen_status s = (cmd);                                                 \
++    if (s != yajl_gen_status_ok) {                                             \
++      return (int)s;                                                           \
++    }                                                                          \
++} while (0)
++
+ static int format_json_meta(yajl_gen g, notification_meta_t *meta) /* {{{ */
+ {
+   if (meta == NULL)
+-- 
+2.17.0
+
