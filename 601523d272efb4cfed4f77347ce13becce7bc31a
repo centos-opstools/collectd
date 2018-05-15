@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bab921fb_c743c86b",
+        "filename": "collectd.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 85
+      },
+      "writtenOn": "2018-05-15T19:14:43Z",
+      "side": 1,
+      "message": "! (not) is missing\nyou need Obsoletes when subpackage is NOT present",
+      "revId": "601523d272efb4cfed4f77347ce13becce7bc31a",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    }
+  ]
+}
