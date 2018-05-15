@@ -91,6 +91,19 @@ BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
 BuildRequires: python-devel
 BuildRequires: libgcrypt-devel
+
+%if !0%{?enable_lvm}
+Obsoletes: %{name}-lvm < %{version}-%{release}
+%endif
+
+%if !0%{?enable_notify_desktop}
+Obsoletes: %{name}-notify_desktop < %{version}-%{release}
+%endif
+
+%if !0%{?enable_web}
+Obsoletes: %{name}-web < %{version}-%{release}
+%endif
+
 Requires(post):   systemd
 Requires(preun):  systemd
 Requires(postun): systemd
