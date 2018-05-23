@@ -33,6 +33,10 @@
 
 %global enable_service_assurance 1
 
+
+%global enable_write_redis 1
+
+
 # mic disabled, MicAccessAPI required
 %global enable_mic 0
 %ifarch x86_64
@@ -753,6 +757,16 @@ This plugin exposes collected values using an embedded HTTP
 server, turning the collectd daemon into a Prometheus exporter.
 %endif
 
+%if 0%{?enable_write_redis}
+%package write_redis
+Summary:       Redis output plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: hiredis-devel
+%description write_redis
+This plugin can send data to Redis.
+%endif
+
 %if 0%{?enable_riemann}
 %package write_riemann
 Summary:       Riemann output plugin for collectd
@@ -881,7 +895,11 @@ export LDFLAGS="-Wl,-z,relro,-z,now -pie"
     --disable-modbus \
     --disable-onewire \
     --disable-redis \
-    --disable-write-redis \
+%if 0%{?enable_write_redis} > 0
+    --enable-write_redis \
+%else
+    --disable-write_redis \
+%endif
     --disable-varnish \
 %if 0%{?enable_amqp_09} ==0
     --disable-amqp \
@@ -1456,6 +1474,12 @@ make check
 %config(noreplace) %{_sysconfdir}/collectd.d/write_prometheus.conf
 %endif
 
+
+
+%if 0%{?enable_write_redis}
+%files write_redis
+%{_libdir}/collectd/write_redis.so
+%endif
 
 
 %if 0%{?enable_riemann}
