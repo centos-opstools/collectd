@@ -25,7 +25,7 @@
 # pinba plugin collects stuff from specific php extension
 %global enable_pinba 0
 
-
+%global enable_redis 1
 
 # requires a very recent kernel (>> 4.10)
 %global enable_intel_pmu 0
@@ -633,6 +633,16 @@ BuildRequires: curl-devel
 %description write_http
 This plugin can send data to Redis.
 
+%if 0%{?enable_redis}
+%package write_redis
+Summary:       Redis output plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: hiredis-devel
+%description write_redis
+This plugin can send data to Redis.
+%endif
+
 %if 0%{?enable_riemann}
 %package write_riemann
 Summary:       Riemann output plugin for collectd
@@ -744,7 +754,11 @@ touch src/pinba.proto
     --disable-xmms \
     --disable-modbus \
     --disable-onewire \
+%if 0%{?enable_redis} > 0
+    --enable-redis \
+%else
     --disable-redis \
+%endif
     --disable-write-redis \
     --disable-varnish \
     --disable-amqp \
@@ -1210,6 +1224,7 @@ make check
 %{_libdir}/collectd/python.so
 %doc %{_mandir}/man5/collectd-python.5*
 
+
 %if 0%{?enable_intel_rdt} > 0
 %files rdt
 %{_libdir}/collectd/intel_rdt.so
@@ -1270,7 +1285,10 @@ make check
 %files write_http
 %{_libdir}/collectd/write_http.so
 
-
+%if 0%{?enable_redis}
+%files write_redis
+%{_libdir}/collectd/write_redis.so
+%endif
 
 %if 0%{?enable_riemann}
 %files write_riemann
