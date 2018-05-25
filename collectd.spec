@@ -51,7 +51,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -116,6 +116,14 @@ files it's very fast and easy on the system. Also, the statistics are very
 fine grained since the files are updated every 10 seconds.
 
 
+%package amqp
+Summary:       AMQP plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: librabbitmq-devel
+%description amqp
+This plugin can be used to communicate with other instances of collectd
+or third party applications using an AMQP message broker.
 
 %package apache
 Summary:       Apache plugin for collectd
@@ -747,7 +755,6 @@ touch src/pinba.proto
     --disable-redis \
     --disable-write-redis \
     --disable-varnish \
-    --disable-amqp \
 %if 0%{?enable_dpdkevents}==0
     --disable-dpdkevents \
 %endif
@@ -1033,6 +1040,8 @@ make check
 %{_mandir}/man1/collectd-nagios.1*
 %{_mandir}/man1/collectd-tg.1*
 
+%files amqp
+%{_libdir}/collectd/amqp.so
 
 %files apache
 %{_libdir}/collectd/apache.so
@@ -1292,6 +1301,9 @@ make check
 
 
 %changelog
+* Fri May 25 2018 Christopher Brown <chris.brown@redhat.com> - 5.8.0-5
+- Enable amqp support
+
 * Tue Feb 13 2018 Matthias Runge <mrunge@redhat.com> - 5.8.0-4
 - add ovs-plugins configs
 
