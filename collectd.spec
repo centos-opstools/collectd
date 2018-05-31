@@ -42,6 +42,7 @@
 %endif
 
 %global enable_libaquaero5 0
+%global enable_write_kafka 1
 %global enable_prometheus 1
 %global enable_riemann 0
 %global enable_web 0
@@ -740,6 +741,16 @@ BuildRequires: curl-devel
 %description write_http
 Write metrics via HTTP POST.
 
+%if 0%{?enable_write_kafka} > 0
+%package write_kafka
+Summary:       Kafka output plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: librdkafka-devel
+%description write_kafka
+This sends values to Kafka, a distributed messaging system.
+%endif
+
 %if 0%{?enable_prometheus}
 %package write_prometheus
 Summary:       Prometheus output plugin for collectd
@@ -865,7 +876,11 @@ export LDFLAGS="-Wl,-z,relro,-z,now -pie"
 %else
     --disable-notify_desktop \
 %endif
+%if 0%{?enable_write_kafka} > 0
+    --enable-write_kafka \
+%else
     --disable-write_kafka \
+%endif
     --disable-write_mongodb \
     --with-libiptc \
     --with-java=%{java_home}/ \
@@ -1449,6 +1464,13 @@ make check
 
 %files write_http
 %{_libdir}/collectd/write_http.so
+
+
+%if 0%{?enable_write_kafka} > 0
+%files write_kafka
+%{_libdir}/%{name}/write_kafka.so
+%endif
+
 
 %if 0%{?enable_prometheus}
 %files write_prometheus
