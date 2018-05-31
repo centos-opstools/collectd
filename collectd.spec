@@ -740,6 +740,14 @@ BuildRequires: curl-devel
 %description write_http
 Write metrics via HTTP POST.
 
+%package write_kafka
+Summary:       Kafka output plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: librdkafka-devel
+%description write_kafka
+This sends values to Kafka, a distributed messaging system.
+
 %if 0%{?enable_prometheus}
 %package write_prometheus
 Summary:       Prometheus output plugin for collectd
@@ -1449,6 +1457,11 @@ make check
 
 %files write_http
 %{_libdir}/collectd/write_http.so
+
+
+%files write_kafka
+%{_libdir}/%{name}/write_kafka.so
+
 
 %if 0%{?enable_prometheus}
 %files write_prometheus
