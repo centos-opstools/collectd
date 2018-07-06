@@ -1,5 +1,6 @@
 %global _hardened_build 1
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
+%undefine _strict_symbol_defs_build
 
 # skip building amqp-0.9
 %global enable_amqp_09 0
@@ -57,7 +58,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.0
-Release: 5%{?dist}
+Release: 6.1%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -560,6 +561,9 @@ Summary:       Open vSwitch events plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: yajl-devel
+
+Provides: %{name}-ovs_events = %{version}-%{release}
+
 %description ovs-events
 This plugin monitors the link status of Open vSwitch (OVS) connected
 interfaces, dispatches the values to collectd and sends notifications
@@ -572,6 +576,9 @@ Summary:       Open vSwitch statsevents plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: yajl-devel
+
+Provides: %{name}-ovs_stats = %{version}-%{release}
+
 %description ovs-stats
 The plugin collects the statistics of OVS connected bridges and interfaces.
 %endif
@@ -750,6 +757,9 @@ Summary:       HTTP output plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: curl-devel
+
+Provides: %{name}-write-http = %{version}-%{release}
+
 %description write_http
 Write metrics via HTTP POST.
 
@@ -759,6 +769,9 @@ Summary:       Kafka output plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: librdkafka-devel
+
+Provides: %{name}-write-kafka = %{version}-%{release}
+
 %description write_kafka
 This sends values to Kafka, a distributed messaging system.
 %endif
@@ -770,6 +783,8 @@ Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libmicrohttpd-devel
 BuildRequires: protobuf-c-devel
+
+Provides: %{name}-write-prometheus = %{version}-%{release}
 
 %description write_prometheus
 This plugin exposes collected values using an embedded HTTP
@@ -794,6 +809,9 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: protobuf-c-devel
 BuildRequires: libtool-ltdl-devel
 BuildRequires: riemann-c-client-devel
+
+Provides: %{name}-write-riemann = %{version}-%{release}
+
 %description write_riemann
 This plugin can send data to Riemann.
 %endif
@@ -803,6 +821,9 @@ This plugin can send data to Riemann.
 Summary:       Sensu output plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+Provides: %{name}-write-sensu = %{version}-%{release}
+
 %description write_sensu
 This plugin can send data to Sensu.
 
@@ -811,6 +832,9 @@ This plugin can send data to Sensu.
 Summary:       OpenTSDB output plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+Provides: %{name}-write-tsdb = %{version}-%{release}
+
 %description write_tsdb
 This plugin can send data to OpenTSDB.
 
@@ -1532,6 +1556,12 @@ make check
 
 
 %changelog
+* Fri Jul 06 2018 Matthias Runge <mrunge@redhat.com> - 5.8.0-6.1
+- add kafka plugin
+- add redis plugin
+- add compatibility provides
+- bump release to trigger build
+
 * Wed Apr 18 2018 Matthias Runge <mrunge@redhat.com> - 5.8.0-5
 - add service assurance patches
 
