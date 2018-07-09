@@ -1,0 +1,29 @@
+From 5a78fe1c3409bab386c6873088119c2f97a5cf0d Mon Sep 17 00:00:00 2001
+From: Ruben Kerkhof <ruben@rubenkerkhof.com>
+Date: Tue, 26 Jun 2018 16:08:22 +0200
+Subject: [PATCH 12/12] Merge pull request #2837 from
+ abays/fix-collectd-tg-dtime
+
+Use CLOCK_REALTIME for collectd-tg times (fixes issue 2219)
+
+(cherry picked from commit 7f07c55bac640c7a50d516248a3152235a14af59)
+---
+ src/collectd-tg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/collectd-tg.c b/src/collectd-tg.c
+index 48f2dc43..511cf5bf 100644
+--- a/src/collectd-tg.c
++++ b/src/collectd-tg.c
+@@ -104,7 +104,7 @@ static double dtime(void) /* {{{ */
+ {
+   struct timespec ts = {0};
+ 
+-  if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
++  if (clock_gettime(CLOCK_REALTIME, &ts) != 0)
+     perror("clock_gettime");
+ 
+   return (double)ts.tv_sec + (double)ts.tv_nsec / 1e9;
+-- 
+2.17.1
+
