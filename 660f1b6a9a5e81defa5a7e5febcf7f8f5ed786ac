@@ -1,0 +1,11 @@
+Verified+1: Jenkins CI <admin@rpmfactory.beta.rdoproject.org>
+Code-Review+2: Pradeep Kilambi <pkilambi@redhat.com>
+Code-Review+1: Aaron Smith <aasmith@redhat.com>
+Code-Review+2: Juan Badia Payno <jbadiapa@redhat.com>
+Workflow+1: Juan Badia Payno <jbadiapa@redhat.com>
+Verified+2: Zuul CI <zuul@review.rdoproject.org>
+Submitted-by: Zuul CI <zuul@review.rdoproject.org>
+Submitted-at: Wed, 11 Jul 2018 07:12:19 +0000
+Reviewed-on: https://review.rdoproject.org/r/13864
+Project: centos-opstools/collectd
+Branch: refs/heads/master
