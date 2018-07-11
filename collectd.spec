@@ -119,6 +119,14 @@ Patch09: 0009-src-utils_format_json.c-Check-return-values-of-yajl_.patch
 # https://github.com/collectd/collectd/pull/2763 (missing in collectd-5.8 branch,
 # but included in 5.7 and master
 Patch10: 0010-write_prometheus-Set-SO_REUSEADDR-on-listening-socke.patch
+
+# https://github.com/collectd/collectd/commit/97967b03d0b7ded714f038cb55ed17b642809d53
+# fixes a warning for collectd-write_prometheus startup
+Patch11: 0011-write_prometheus-Added-MHD_USE_INTERNAL_POLLING_THRE.patch
+
+# https://github.com/collectd/collectd/commit/7f07c55bac640c7a50d516248a3152235a14af59
+# fixes collectd-tg time, otherwise Unix time 0 will be taken.
+Patch12: 0012-Merge-pull-request-2837-from-abays-fix-collectd-tg-d.patch
 %else
 Patch0: %{name}-include-collectd.d-disable-rrdtool.patch
 Patch1: vserver-ignore-deprecation-warnings.patch

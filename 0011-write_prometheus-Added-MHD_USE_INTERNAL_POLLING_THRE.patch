@@ -1,0 +1,36 @@
+From 6bfc51a56722c339644f55cde98c9fba64715eb0 Mon Sep 17 00:00:00 2001
+From: Pavel Rochnyack <pavel2000@ngs.ru>
+Date: Sat, 7 Jul 2018 21:38:07 +0700
+Subject: [PATCH 11/11] write_prometheus: Added MHD_USE_INTERNAL_POLLING_THREAD
+ flag
+
+Since 0.9.53, libmicrohttpd requires explicit setting of this flag.
+
+Closes: #2849
+(cherry picked from commit 2b13220c508c4bb2faa6baf89c8a057b774f4907)
+---
+ src/write_prometheus.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/write_prometheus.c b/src/write_prometheus.c
+index 7c4e59e7..28ab6ce7 100644
+--- a/src/write_prometheus.c
++++ b/src/write_prometheus.c
+@@ -804,8 +804,13 @@ static struct MHD_Daemon *prom_start_daemon() {
+     return NULL;
+   }
+ 
++  unsigned int flags = MHD_USE_THREAD_PER_CONNECTION | MHD_USE_DEBUG;
++#if MHD_VERSION >= 0x00095300
++  flags |= MHD_USE_INTERNAL_POLLING_THREAD;
++#endif
++
+   struct MHD_Daemon *d = MHD_start_daemon(
+-      MHD_USE_THREAD_PER_CONNECTION | MHD_USE_DEBUG, httpd_port,
++      flags, httpd_port,
+       /* MHD_AcceptPolicyCallback = */ NULL,
+       /* MHD_AcceptPolicyCallback arg = */ NULL, http_handler, NULL,
+       MHD_OPTION_LISTEN_SOCKET, fd, MHD_OPTION_EXTERNAL_LOGGER, prom_logger,
+-- 
+2.17.1
+
