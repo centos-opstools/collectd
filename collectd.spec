@@ -994,11 +994,6 @@ export LDFLAGS="-Wl,-z,relro,-z,now -pie"
 %else
     --enable-mic \
 %endif
-%if 0%{?enable_intel_rdt}==0
-    --disable-intel_rdt \
-%else
-    --enable-intel_rdt \
-%endif
     --disable-mqtt \
     --disable-lua \
     --disable-gps \
