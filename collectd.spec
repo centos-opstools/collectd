@@ -129,10 +129,10 @@ Patch11: 0011-write_prometheus-Added-MHD_USE_INTERNAL_POLLING_THRE.patch
 # fixes collectd-tg time, otherwise Unix time 0 will be taken.
 Patch12: 0012-Merge-pull-request-2837-from-abays-fix-collectd-tg-d.patch
 %else
-Patch0: %{name}-include-collectd.d-disable-rrdtool.patch
-Patch1: vserver-ignore-deprecation-warnings.patch
-Patch2: collectd-do-not-load-default-plugins.patch
-Patch3: collectd-comment-about-collectd.d.patch
+Patch03: %{name}-include-collectd.d-disable-rrdtool.patch
+Patch04: vserver-ignore-deprecation-warnings.patch
+Patch05: collectd-do-not-load-default-plugins.patch
+Patch06: collectd-comment-about-collectd.d.patch
 %endif
 
 BuildRequires: perl-devel
