@@ -32,8 +32,6 @@
 %global enable_ovs_events 1
 %global enable_ovs_stats 1
 
-%global enable_service_assurance 1
-
 
 %global enable_write_redis 1
 
@@ -92,7 +90,6 @@ Patch01: 0001-utils_ovs-fix-2574.patch
 # https://github.com/collectd/collectd/commit/de05fb53fad6bc998f585b704ca0caeadc14a035.patch
 Patch02: 0002-ceph-plugin-Fix-2572.patch
 
-%if 0%{?enable_service_assurance} > 0
 # https://github.com/redhat-nfvpe/collectd/commit/ea83311b7e1614a71efd7a68daaae4038eb705f1.patch
 Patch03: 0003-2622-Red-Hat-NFVPE-Connectivity-Plugin-6.patch
 
@@ -128,12 +125,7 @@ Patch11: 0011-write_prometheus-Added-MHD_USE_INTERNAL_POLLING_THRE.patch
 # https://github.com/collectd/collectd/commit/7f07c55bac640c7a50d516248a3152235a14af59
 # fixes collectd-tg time, otherwise Unix time 0 will be taken.
 Patch12: 0012-Merge-pull-request-2837-from-abays-fix-collectd-tg-d.patch
-%else
-Patch03: %{name}-include-collectd.d-disable-rrdtool.patch
-Patch04: vserver-ignore-deprecation-warnings.patch
-Patch05: collectd-do-not-load-default-plugins.patch
-Patch06: collectd-comment-about-collectd.d.patch
-%endif
+
 
 BuildRequires: perl-devel
 BuildRequires: perl(ExtUtils::MakeMaker)
@@ -179,19 +171,20 @@ This plugin can be used to communicate with other instances of collectd
 or third party applications using an AMQP-0.9 message broker.
 %endif
 
-%if 0%{?enable_service_assurance} > 0
 %package amqp1
 Summary:  Sends JSON-encoded data to an Advanced Message Queuing Protocol
 BuildRequires: qpid-proton-c-devel
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
 %description amqp1
 Sends JSON-encoded data to an Advanced Message Queuing Protocol (AMQP)
 1.0 server, such as Qpid Dispatch Router or Apache Artemis Broker.
-%endif
 
 %package apache
 Summary:       Apache plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
+
 %description apache
 This plugin collects data provided by Apache's 'mod_status'.
 
@@ -243,7 +236,6 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 Collectd utilities
 
 
-%if 0%{?enable_service_assurance} > 0
 %package connectivity
 Summary:       Monitors network interface up/down status via netlink library
 Group:         System Environment/Daemons
@@ -252,7 +244,6 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description connectivity
 Plugin that monitors network interface up/down status via netlink library
 
-%endif
 
 
 %package curl
@@ -624,14 +615,12 @@ BuildRequires: postgresql-devel
 PostgreSQL querying plugin. This plugins provides data of issued commands,
 called handlers and database traffic.
 
-%if 0%{?enable_service_assurance} > 0
 %package procevent
 Summary:       Plugin that monitors process starts/stops via netlink library
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description procevent
 Plugin that monitors process starts/stops via netlink library
-%endif
 
 
 
@@ -706,14 +695,12 @@ configuration file. To handle SNMP queries the plugin gets data from
 collectd and translates requested values from collectd's internal format
 to SNMP format.
 
-%if 0%{?enable_service_assurance} > 0
 %package sysevent
 Summary:       Plugin that monitors rsyslog for system events
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description sysevent
 Plugin that monitors rsyslog for system events
-%endif
 
 %ifarch %ix86 x86_64
 %package turbostat
@@ -1250,10 +1237,8 @@ make check
 %{_libdir}/collectd/amqp.so
 %endif
 
-%if 0%{?enable_service_assurance} > 0
 %files amqp1
 %{_libdir}/collectd/amqp1.so
-%endif
 
 %files apache
 %{_libdir}/collectd/apache.so
@@ -1275,10 +1260,8 @@ make check
 %files chrony
 %{_libdir}/collectd/chrony.so
 
-%if 0%{?enable_service_assurance} > 0
 %files connectivity
 %{_libdir}/collectd/connectivity.so
-%endif
 
 %files curl
 %{_libdir}/collectd/curl.so
@@ -1431,10 +1414,8 @@ make check
 %config(noreplace) %{_sysconfdir}/collectd.d/postgresql.conf
 %{_datadir}/collectd/postgresql_default.conf
 
-%if 0%{?enable_service_assurance} > 0
 %files procevent
 %{_libdir}/collectd/procevent.so
-%endif
 
 %files python
 %{_libdir}/collectd/python.so
@@ -1480,10 +1461,8 @@ make check
 %files snmp-agent
 %{_libdir}/collectd/snmp_agent.so
 
-%if 0%{?enable_service_assurance} > 0
 %files sysevent
 %{_libdir}/collectd/sysevent.so
-%endif
 
 %ifarch %ix86 x86_64
 %files turbostat
