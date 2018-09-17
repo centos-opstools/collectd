@@ -183,6 +183,7 @@ or third party applications using an AMQP-0.9 message broker.
 %package amqp1
 Summary:  Sends JSON-encoded data to an Advanced Message Queuing Protocol
 BuildRequires: qpid-proton-c-devel
+Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description amqp1
 Sends JSON-encoded data to an Advanced Message Queuing Protocol (AMQP)
 1.0 server, such as Qpid Dispatch Router or Apache Artemis Broker.
