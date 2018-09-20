@@ -3,14 +3,14 @@
 %undefine _strict_symbol_defs_build
 
 # skip building amqp-0.9
-%global enable_amqp_09 0
+%global enable_amqp_09 1
 
 # x86_64 required for building dpdk
 # dpdkstat feature requires dpdk >= 16.11
 %ifarch x86_64
 # dpdk-* disabled, it's not recommended to use in combintation with
 # ovs https://github.com/collectd/collectd/pull/2613
-%global enable_dpdkstat 0
+%global enable_dpdkstat 1
 %global enable_dpdkevents 0
 %else
 %global enable_dpdkstat 0
