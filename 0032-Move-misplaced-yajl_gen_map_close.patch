@@ -1,0 +1,37 @@
+From 10136d3e52dd63033199b17c4caaf9e8106dae2f Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Wed, 28 Feb 2018 14:48:23 -0500
+Subject: [PATCH 32/53] Move misplaced yajl_gen_map_close
+
+(cherry picked from commit 4613cd79224e68ecd6dc76aaa67f675115a7176d)
+---
+ src/sysevent.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/sysevent.c b/src/sysevent.c
+index 49efe75c..538618c6 100644
+--- a/src/sysevent.c
++++ b/src/sysevent.c
+@@ -344,9 +344,6 @@ static int gen_message_payload(const char *msg, char *sev, int sev_num,
+       yajl_gen_status_ok)
+     goto err;
+ 
+-  if (yajl_gen_map_close(g) != yajl_gen_status_ok)
+-    goto err;
+-
+   // syslogMsg
+   if (msg != NULL) {
+     if (yajl_gen_string(g, (u_char *)SYSEVENT_SYSLOG_MSG_FIELD,
+@@ -389,6 +386,9 @@ static int gen_message_payload(const char *msg, char *sev, int sev_num,
+   if (yajl_gen_string(g, (u_char *)SYSEVENT_SYSLOG_TAG_VALUE,
+                       strlen(SYSEVENT_SYSLOG_TAG_VALUE)) != yajl_gen_status_ok)
+     goto err;
++  
++  if (yajl_gen_map_close(g) != yajl_gen_status_ok)
++    goto err;
+ 
+   // *** END syslog fields ***
+ 
+-- 
+2.17.2
+

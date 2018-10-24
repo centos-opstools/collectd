@@ -1,0 +1,31 @@
+From 000825baa54cf4ba3977141301b920ab32f1463c Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Tue, 27 Feb 2018 13:18:05 -0500
+Subject: [PATCH 29/53] Only declare rsyslog keys if yajl2 present
+
+(cherry picked from commit 0962f3c3926fd1f70683590bc5c01be1c99a754c)
+---
+ src/sysevent.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/sysevent.c b/src/sysevent.c
+index 94e99e9a..6ef79f95 100644
+--- a/src/sysevent.c
++++ b/src/sysevent.c
+@@ -119,10 +119,12 @@ static int buffer_length = 10;
+ 
+ static int monitor_all_messages = 1;
+ 
++#if HAVE_YAJL_V2
+ static const char *rsyslog_keys[3] = {"@timestamp", "@source_host", "@message"};
+ static const char *rsyslog_field_keys[5] = {
+     "facility", "severity", "severity-num", "program", "processid"};
+-
++#endif
++    
+ /*
+  * Private functions
+  */
+-- 
+2.17.2
+

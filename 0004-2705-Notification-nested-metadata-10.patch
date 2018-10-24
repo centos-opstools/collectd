@@ -1,7 +1,7 @@
-From 972329354298b70e56206ad677f3a07335761c1f Mon Sep 17 00:00:00 2001
+From 90edc0a7b72343f574624b67b8c515402cbe1591 Mon Sep 17 00:00:00 2001
 From: Leif Madsen <leif@leifmadsen.com>
 Date: Tue, 17 Apr 2018 18:42:06 -0400
-Subject: [PATCH 06/10] 2705 Notification nested metadata (#10)
+Subject: [PATCH 04/53] 2705 Notification nested metadata (#10)
 
 * Nested metadata for notifications
 
@@ -11,6 +11,7 @@ Subject: [PATCH 06/10] 2705 Notification nested metadata (#10)
 
 (cherry picked from commit d8c1f7c86b1323fee1e503d5107720d774f0dc5a)
 (cherry picked from commit beae2b5a3518cb31de7e785f54a5bf414f906e74)
+(cherry picked from commit 972329354298b70e56206ad677f3a07335761c1f)
 ---
  src/daemon/plugin.c     | 262 +++++++++++++++++++++++++++++++++++++---
  src/daemon/plugin.h     |  24 +++-
@@ -422,10 +423,10 @@ index a9ee72d4..f415e1d7 100644
  int plugin_notification_meta_copy(notification_t *dst,
                                    const notification_t *src);
 diff --git a/src/utils_format_json.c b/src/utils_format_json.c
-index 53a38b89..9cd2e78d 100644
+index 4ecbfbe2..e62e85d1 100644
 --- a/src/utils_format_json.c
 +++ b/src/utils_format_json.c
-@@ -522,6 +522,11 @@ static int format_json_meta(yajl_gen g, notification_meta_t *meta) /* {{{ */
+@@ -530,6 +530,11 @@ static int format_json_meta(yajl_gen g, notification_meta_t *meta) /* {{{ */
    case NM_TYPE_BOOLEAN:
      JSON_ADD(g, meta->nm_value.nm_boolean ? "true" : "false");
      break;
@@ -438,5 +439,5 @@ index 53a38b89..9cd2e78d 100644
      ERROR("format_json_meta: unknown meta data type %d (name \"%s\")",
            meta->type, meta->name);
 -- 
-2.17.0
+2.17.2
 

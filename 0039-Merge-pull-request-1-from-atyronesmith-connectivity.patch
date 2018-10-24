@@ -1,0 +1,43 @@
+From 40c5ea8e50a4053d785d1c7c651df1ba59fc9eb6 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Wed, 13 Dec 2017 12:56:31 -0500
+Subject: [PATCH 39/53] Merge pull request #1 from atyronesmith/connectivity
+
+connectivity plugin initial commit
+
+(cherry picked from commit 20e8c46556ee1e2cb26a3d853c548f9da5031bf4)
+---
+ AUTHORS | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/AUTHORS b/AUTHORS
+index 3dbc9b12..d16d94de 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -61,23 +61,18 @@ Andrew Bays <abays at redhat.com>
+  - sysevent plugin.
+  - connectivity plugin.
+ 
+->>>>>>> eea34da7... connectivity plugin initial commit
+ Andy Parkins <andyp at fussylogic.co.uk>
+  - battery plugin: sysfs code.
+ 
+-<<<<<<< HEAD
+ Andy Smith <ansmith at redhat.com>
+  - AMQP 1.0 plugin.
+ 
+ Aneesh Puttur <aputtur at redhat.com>
+  - connectivity plugin.
+ 
+-||||||| parent of eea34da7... connectivity plugin initial commit
+-=======
+ Aneesh Puttur <aputtur at redhat.com>
+  - connectivity plugin.
+ 
+->>>>>>> eea34da7... connectivity plugin initial commit
+ Anthony Dewhurst <dewhurst at gmail.com>
+  - zfs_arc plugin.
+ 
+-- 
+2.17.2
+

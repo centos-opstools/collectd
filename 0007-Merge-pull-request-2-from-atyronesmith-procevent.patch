@@ -1,0 +1,79 @@
+From 3a356e5a7df14655474224066eff6f7d5adf2ba1 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Wed, 13 Dec 2017 12:59:07 -0500
+Subject: [PATCH 07/53] Merge pull request #2 from atyronesmith/procevent
+
+Merge atyronesmith collectd procevent with abays
+
+(cherry picked from commit a475e65ec3312340bb6391412ff441ed8faa4f3a)
+---
+ Makefile.am           |  7 +++++++
+ src/collectd.conf.pod | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+)
+
+diff --git a/Makefile.am b/Makefile.am
+index f9120ab5..e99ea4b3 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1466,6 +1466,13 @@ procevent_la_CFLAGS = $(AM_CFLAGS)
+ procevent_la_LDFLAGS = $(PLUGIN_LDFLAGS)
+ endif
+ 
++if BUILD_PLUGIN_PROCEVENT
++pkglib_LTLIBRARIES += procevent.la
++procevent_la_SOURCES = src/procevent.c
++procevent_la_CFLAGS = $(AM_CFLAGS)
++procevent_la_LDFLAGS = $(PLUGIN_LDFLAGS)
++endif
++
+ if BUILD_PLUGIN_PROTOCOLS
+ pkglib_LTLIBRARIES += protocols.la
+ protocols_la_SOURCES = src/protocols.c
+diff --git a/src/collectd.conf.pod b/src/collectd.conf.pod
+index f029cc73..8c84e8da 100644
+--- a/src/collectd.conf.pod
++++ b/src/collectd.conf.pod
+@@ -7117,6 +7117,40 @@ regular expression will be monitored for EXECs and EXITs.
+  
+ =back
+ 
++=head2 Plugin C<procevent>
++ 
++The I<procevent> plugin monitors when processes start (EXEC) and stop (EXIT).
++ 
++B<Synopsis:>
++ 
++  <Plugin procevent>
++    BufferLength 10
++    Process "name"
++    RegexProcess "regex"
++  </Plugin>
++ 
++B<Options:>
++ 
++=over 4
++ 
++=item B<BufferLength> I<length>
++ 
++Maximum number of process events that can be stored in plugin's ring buffer.
++By default, this is set to 10.  Once an event has been read, its location
++becomes available for storing a new event.
++ 
++=item B<Process> I<name>
++ 
++Enumerate a process name to monitor.  All processes that match this exact
++name will be monitored for EXECs and EXITs.
++
++=item B<RegexProcess> I<regex>
++ 
++Enumerate a process pattern to monitor.  All processes that match this 
++regular expression will be monitored for EXECs and EXITs.
++ 
++=back
++
+ =head2 Plugin C<protocols>
+ 
+ Collects a lot of information about various network protocols, such as I<IP>,
+-- 
+2.17.2
+

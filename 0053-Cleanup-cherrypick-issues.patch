@@ -1,0 +1,30 @@
+From ff2cc98efdab3691292e53125b0f7d7472889461 Mon Sep 17 00:00:00 2001
+From: Matthias Runge <mrunge@redhat.com>
+Date: Wed, 24 Oct 2018 10:40:24 +0200
+Subject: [PATCH 53/53] Cleanup cherrypick issues
+
+---
+ Makefile.am | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index ff561a17..fcf3b5f1 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1468,13 +1468,6 @@ processes_la_LIBADD += -lkvm
+ endif
+ endif
+ 
+-if BUILD_PLUGIN_PROCEVENT
+-pkglib_LTLIBRARIES += procevent.la
+-procevent_la_SOURCES = src/procevent.c
+-procevent_la_CFLAGS = $(AM_CFLAGS)
+-procevent_la_LDFLAGS = $(PLUGIN_LDFLAGS)
+-endif
+-
+ if BUILD_PLUGIN_PROCEVENT
+ pkglib_LTLIBRARIES += procevent.la
+ procevent_la_SOURCES = src/procevent.c
+-- 
+2.17.2
+

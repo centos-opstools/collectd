@@ -1,18 +1,19 @@
-From a027ab48f98accfddbfc0787f38408e9cac12077 Mon Sep 17 00:00:00 2001
+From 0252523f4148a08277e7b0aa09ae01cb3bd6b446 Mon Sep 17 00:00:00 2001
 From: Matthias Runge <mrunge@redhat.com>
 Date: Thu, 19 Apr 2018 09:51:59 +0200
-Subject: [PATCH 07/10] Include collectd.d and disable default loading
+Subject: [PATCH 01/53] Include collectd.d and disable default loading
 
 This patch will disable plugins loaded by default and will
 aply config read from collectd.d
 
 (cherry picked from commit f680d5522de25a09962c88f5936e0926e03e0e31)
+(cherry picked from commit a027ab48f98accfddbfc0787f38408e9cac12077)
 ---
  src/collectd.conf.in | 17 +++++++++++------
  1 file changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/src/collectd.conf.in b/src/collectd.conf.in
-index 8b308b50..9a7306f9 100644
+index 5eb17c4d..3c96a366 100644
 --- a/src/collectd.conf.in
 +++ b/src/collectd.conf.in
 @@ -4,6 +4,10 @@
@@ -35,8 +36,8 @@ index 8b308b50..9a7306f9 100644
  @LOAD_PLUGIN_LOGFILE@LoadPlugin logfile
  @LOAD_PLUGIN_LOG_LOGSTASH@LoadPlugin log_logstash
  
-@@ -104,7 +108,7 @@
- #@BUILD_PLUGIN_CONNECTIVITY_TRUE@LoadPlugin connectivity
+@@ -103,7 +107,7 @@
+ #@BUILD_PLUGIN_CHRONY_TRUE@LoadPlugin chrony
  #@BUILD_PLUGIN_CONNTRACK_TRUE@LoadPlugin conntrack
  #@BUILD_PLUGIN_CONTEXTSWITCH_TRUE@LoadPlugin contextswitch
 -@BUILD_PLUGIN_CPU_TRUE@@BUILD_PLUGIN_CPU_TRUE@LoadPlugin cpu
@@ -44,7 +45,7 @@ index 8b308b50..9a7306f9 100644
  #@BUILD_PLUGIN_CPUFREQ_TRUE@LoadPlugin cpufreq
  #@BUILD_PLUGIN_CPUSLEEP_TRUE@LoadPlugin cpusleep
  @LOAD_PLUGIN_CSV@LoadPlugin csv
-@@ -132,14 +136,14 @@
+@@ -131,14 +135,14 @@
  #@BUILD_PLUGIN_HUGEPAGES_TRUE@LoadPlugin hugepages
  #@BUILD_PLUGIN_INTEL_PMU_TRUE@LoadPlugin intel_pmu
  #@BUILD_PLUGIN_INTEL_RDT_TRUE@LoadPlugin intel_rdt
@@ -61,7 +62,7 @@ index 8b308b50..9a7306f9 100644
  #@BUILD_PLUGIN_LPAR_TRUE@LoadPlugin lpar
  #@BUILD_PLUGIN_LUA_TRUE@LoadPlugin lua
  #@BUILD_PLUGIN_LVM_TRUE@LoadPlugin lvm
-@@ -149,7 +153,7 @@
+@@ -148,7 +152,7 @@
  #@BUILD_PLUGIN_MD_TRUE@LoadPlugin md
  #@BUILD_PLUGIN_MEMCACHEC_TRUE@LoadPlugin memcachec
  #@BUILD_PLUGIN_MEMCACHED_TRUE@LoadPlugin memcached
@@ -70,7 +71,7 @@ index 8b308b50..9a7306f9 100644
  #@BUILD_PLUGIN_MIC_TRUE@LoadPlugin mic
  #@BUILD_PLUGIN_MODBUS_TRUE@LoadPlugin modbus
  #@BUILD_PLUGIN_MQTT_TRUE@LoadPlugin mqtt
-@@ -185,7 +189,7 @@
+@@ -183,7 +187,7 @@
  #@BUILD_PLUGIN_REDIS_TRUE@LoadPlugin redis
  #@BUILD_PLUGIN_ROUTEROS_TRUE@LoadPlugin routeros
  #@BUILD_PLUGIN_RRDCACHED_TRUE@LoadPlugin rrdcached
@@ -79,11 +80,11 @@ index 8b308b50..9a7306f9 100644
  #@BUILD_PLUGIN_SENSORS_TRUE@LoadPlugin sensors
  #@BUILD_PLUGIN_SERIAL_TRUE@LoadPlugin serial
  #@BUILD_PLUGIN_SIGROK_TRUE@LoadPlugin sigrok
-@@ -1837,3 +1841,4 @@
+@@ -1818,3 +1822,4 @@
  #    </Type>
  #  </Host>
  #</Plugin>
 +Include "/etc/collectd.d"
 -- 
-2.17.0
+2.17.2
 

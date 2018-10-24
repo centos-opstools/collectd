@@ -1,0 +1,26 @@
+From 25744002b84e16d2ca7e8778e8ce87f0a6755f5d Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Tue, 27 Mar 2018 10:06:18 -0400
+Subject: [PATCH 13/53] Check ignorelist during init
+
+(cherry picked from commit 452925ca156165300e517466e814452abb3b6338)
+---
+ src/procevent.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/procevent.c b/src/procevent.c
+index 368e7c41..aba66178 100644
+--- a/src/procevent.c
++++ b/src/procevent.c
+@@ -987,7 +987,7 @@ static int procevent_init(void) /* {{{ */
+     return (-1);
+   }
+ 
+-  if (processlist_head == NULL) {
++  if (ignorelist == NULL) {
+     NOTICE("procevent plugin: No processes have been configured.");
+     return (-1);
+   }
+-- 
+2.17.2
+

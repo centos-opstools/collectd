@@ -1,0 +1,53 @@
+From a45500fd0d7b55b17da69dea1419790543a286e8 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Thu, 8 Feb 2018 16:14:43 -0500
+Subject: [PATCH 45/53] Properly detect which interfaces to monitor
+
+(cherry picked from commit 116944fa0cc487ba8c387da525f7af67a36118ed)
+---
+ src/connectivity.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/src/connectivity.c b/src/connectivity.c
+index e58ffde1..e39bce17 100644
+--- a/src/connectivity.c
++++ b/src/connectivity.c
+@@ -112,7 +112,7 @@ typedef struct interface_list_s interface_list_t;
+ static ignorelist_t *ignorelist = NULL;
+ 
+ static interface_list_t *interface_list_head = NULL;
+-static int monitor_all_interfaces = 0;
++static int monitor_all_interfaces = 1;
+ 
+ static int connectivity_thread_loop = 0;
+ static int connectivity_thread_error = 0;
+@@ -705,10 +705,9 @@ static int stop_thread(int shutdown) /* {{{ */
+ 
+ static int connectivity_init(void) /* {{{ */
+ {
+-  if (interface_list_head == NULL) {
++  if (monitor_all_interfaces) {
+     NOTICE("connectivity plugin: No interfaces have been selected, so all will "
+            "be monitored");
+-    monitor_all_interfaces = 1;
+   }
+ 
+   return (start_thread());
+@@ -716,11 +715,13 @@ static int connectivity_init(void) /* {{{ */
+ 
+ static int connectivity_config(const char *key, const char *value) /* {{{ */
+ {
+-  if (ignorelist == NULL)
++  if (ignorelist == NULL) {
+     ignorelist = ignorelist_create(/* invert = */ 1);
++  }
+ 
+   if (strcasecmp(key, "Interface") == 0) {
+     ignorelist_add(ignorelist, value);
++    monitor_all_interfaces = 0;
+   } else {
+     return (-1);
+   }
+-- 
+2.17.2
+

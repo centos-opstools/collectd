@@ -1,14 +1,15 @@
-From a5fea83c080069b2d69c21fd8d50d542ec08f7ee Mon Sep 17 00:00:00 2001
+From 0b1036ce690993ecd0990e5a659edf4812149b3c Mon Sep 17 00:00:00 2001
 From: Ruben Kerkhof <ruben@rubenkerkhof.com>
 Date: Thu, 24 May 2018 11:06:55 +0200
-Subject: [PATCH 08/10] Merge pull request #2618 from
+Subject: [PATCH 02/53] Merge pull request #2618 from
  ajssmith/amqp1_dev1_branch
 
 Write amqp1 plugin
 
 (cherry picked from commit d486225f89ea52d8ed2b4242eba2ad94c409f837)
+(cherry picked from commit a5fea83c080069b2d69c21fd8d50d542ec08f7ee)
 ---
- AUTHORS                      |   5 +-
+ AUTHORS                      |   8 +-
  Makefile.am                  |  14 +
  README                       |  14 +-
  configure.ac                 |  53 +++
@@ -17,25 +18,28 @@ Write amqp1 plugin
  src/collectd.conf.in         |  24 ++
  src/collectd.conf.pod        | 171 ++++++++-
  src/utils_deq.h              | 214 +++++++++++
- 9 files changed, 1237 insertions(+), 12 deletions(-)
+ 9 files changed, 1243 insertions(+), 9 deletions(-)
  create mode 100644 src/amqp1.c
  create mode 100644 src/utils_deq.h
 
 diff --git a/AUTHORS b/AUTHORS
-index e088fafe..b56886c3 100644
+index 4df743c5..2d668732 100644
 --- a/AUTHORS
 +++ b/AUTHORS
-@@ -67,9 +67,6 @@ Andy Parkins <andyp at fussylogic.co.uk>
- Andy Smith <ansmith at redhat.com>
-  - AMQP 1.0 plugin.
+@@ -59,6 +59,12 @@ Andreas Henriksson <andreas at fatal.se>
+ Andy Parkins <andyp at fussylogic.co.uk>
+  - battery plugin: sysfs code.
  
--Aneesh Puttur <aputtur at redhat.com>
-- - connectivity plugin.
--
++Andy Smith <ansmith at redhat.com>
++ - AMQP 1.0 plugin.
++
++Aneesh Puttur <aputtur at redhat.com>
++ - connectivity plugin.
++
  Anthony Dewhurst <dewhurst at gmail.com>
   - zfs_arc plugin.
  
-@@ -297,7 +294,7 @@ Scott Sanders <scott at jssjr.com>
+@@ -286,7 +292,7 @@ Scott Sanders <scott at jssjr.com>
   - Write-Graphite plugin.
  
  Sebastien Pahl <sebastien.pahl at dotcloud.com>
@@ -45,10 +49,10 @@ index e088fafe..b56886c3 100644
  Serhiy Pshyk <serhiyx.pshyk at intel.com>
   - intel_pmu plugin
 diff --git a/Makefile.am b/Makefile.am
-index 745e93ee..4dc5e961 100644
+index 2ef24427..ecb7eabb 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -541,6 +541,20 @@ amqp_la_LIBADD = \
+@@ -549,6 +549,20 @@ amqp_la_LIBADD = \
  	libformat_json.la
  endif
  
@@ -70,10 +74,10 @@ index 745e93ee..4dc5e961 100644
  pkglib_LTLIBRARIES += apache.la
  apache_la_SOURCES = src/apache.c
 diff --git a/README b/README
-index 4bd0a65d..99628fce 100644
+index ca86c84d..0f378e56 100644
 --- a/README
 +++ b/README
-@@ -468,7 +468,11 @@ Features
+@@ -459,7 +459,11 @@ Features
  
      - amqp
        Sends JSON-encoded data to an Advanced Message Queuing Protocol (AMQP)
@@ -86,7 +90,7 @@ index 4bd0a65d..99628fce 100644
  
      - csv
        Write to comma separated values (CSV) files. This needs lots of
-@@ -911,8 +915,14 @@ Prerequisites
+@@ -902,8 +906,14 @@ Prerequisites
      are supported.
      <http://www.python.org/>
  
@@ -103,7 +107,7 @@ index 4bd0a65d..99628fce 100644
  
    * librdkafka (optional; also called “rdkafka”)
 diff --git a/configure.ac b/configure.ac
-index 329371de..1da18946 100644
+index f39096e7..e8354ca1 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -4680,6 +4680,56 @@ if test "$with_libpython" != "xno"; then
@@ -163,7 +167,7 @@ index 329371de..1da18946 100644
  # --with-librabbitmq {{{
  AC_ARG_WITH([librabbitmq],
    [AS_HELP_STRING([--with-librabbitmq@<:@=PREFIX@:>@], [Path to librabbitmq.])],
-@@ -6505,6 +6555,7 @@ m4_divert_once([HELP_ENABLE], [])
+@@ -6495,6 +6545,7 @@ m4_divert_once([HELP_ENABLE], [])
  
  AC_PLUGIN([aggregation],         [yes],                     [Aggregation plugin])
  AC_PLUGIN([amqp],                [$with_librabbitmq],       [AMQP output plugin])
@@ -171,7 +175,7 @@ index 329371de..1da18946 100644
  AC_PLUGIN([apache],              [$with_libcurl],           [Apache httpd statistics])
  AC_PLUGIN([apcups],              [yes],                     [Statistics of UPSes by APC])
  AC_PLUGIN([apple_sensors],       [$with_libiokit],          [Apple hardware sensors])
-@@ -6896,6 +6947,7 @@ AC_MSG_RESULT([    libpqos . . . . . . . $with_libpqos])
+@@ -6883,6 +6934,7 @@ AC_MSG_RESULT([    libpqos . . . . . . . $with_libpqos])
  AC_MSG_RESULT([    libprotobuf . . . . . $with_libprotobuf])
  AC_MSG_RESULT([    libprotobuf-c . . . . $with_libprotobuf_c])
  AC_MSG_RESULT([    libpython . . . . . . $with_libpython])
@@ -179,7 +183,7 @@ index 329371de..1da18946 100644
  AC_MSG_RESULT([    librabbitmq . . . . . $with_librabbitmq])
  AC_MSG_RESULT([    libriemann-client . . $with_libriemann_client])
  AC_MSG_RESULT([    librdkafka  . . . . . $with_librdkafka])
-@@ -6927,6 +6979,7 @@ AC_MSG_RESULT()
+@@ -6914,6 +6966,7 @@ AC_MSG_RESULT()
  AC_MSG_RESULT([  Modules:])
  AC_MSG_RESULT([    aggregation . . . . . $enable_aggregation])
  AC_MSG_RESULT([    amqp    . . . . . . . $enable_amqp])
@@ -991,7 +995,7 @@ index 00000000..4ba73596
 +  plugin_register_shutdown("amqp1", amqp1_shutdown);
 +} /* void module_register */
 diff --git a/src/collectd.conf.in b/src/collectd.conf.in
-index 9a7306f9..12836a9e 100644
+index 3c96a366..a3fd13f6 100644
 --- a/src/collectd.conf.in
 +++ b/src/collectd.conf.in
 @@ -94,6 +94,7 @@
@@ -1002,7 +1006,7 @@ index 9a7306f9..12836a9e 100644
  #@BUILD_PLUGIN_APACHE_TRUE@LoadPlugin apache
  #@BUILD_PLUGIN_APCUPS_TRUE@LoadPlugin apcups
  #@BUILD_PLUGIN_APPLE_SENSORS_TRUE@LoadPlugin apple_sensors
-@@ -276,6 +277,29 @@
+@@ -273,6 +274,29 @@
  #  </Publish>
  #</Plugin>
  
@@ -1033,7 +1037,7 @@ index 9a7306f9..12836a9e 100644
  #  <Instance "local">
  #    URL "http://localhost/status?auto"
 diff --git a/src/collectd.conf.pod b/src/collectd.conf.pod
-index 2dd84b53..2e4c4405 100644
+index 7600cd38..6e3a6db1 100644
 --- a/src/collectd.conf.pod
 +++ b/src/collectd.conf.pod
 @@ -530,9 +530,9 @@ are disabled by default.
@@ -1442,5 +1446,5 @@ index 00000000..3182baae
 +
 +#endif
 -- 
-2.17.0
+2.17.2
 

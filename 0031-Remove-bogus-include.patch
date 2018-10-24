@@ -1,0 +1,25 @@
+From 807fe4c3402738b9c73bc82fa79ace2b49753196 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Wed, 28 Feb 2018 07:06:00 -0500
+Subject: [PATCH 31/53] Remove bogus include
+
+(cherry picked from commit 126056a3fe3f6f9cc2b8e029362dd19bbafaa33b)
+---
+ src/sysevent.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/sysevent.c b/src/sysevent.c
+index ab4571b0..49efe75c 100644
+--- a/src/sysevent.c
++++ b/src/sysevent.c
+@@ -31,7 +31,6 @@
+ #include "utils_complain.h"
+ #include "utils_ignorelist.h"
+ 
+-#include <asm/types.h>
+ #include <errno.h>
+ #include <netdb.h>
+ #include <netinet/in.h>
+-- 
+2.17.2
+

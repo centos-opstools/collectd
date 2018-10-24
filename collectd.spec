@@ -55,8 +55,8 @@
 
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
-Version: 5.8.0
-Release: 6.1%{?dist}
+Version: 5.8.1
+Release: 1%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -85,46 +85,62 @@ Source95: sensors.conf
 Source96: snmp.conf
 Source97: rrdtool.conf
 
-# https://github.com/collectd/collectd/commit/8dba589c3665a3f4925bfca2844e973771bda1cc
-Patch01: 0001-utils_ovs-fix-2574.patch
-# https://github.com/collectd/collectd/commit/de05fb53fad6bc998f585b704ca0caeadc14a035.patch
-Patch02: 0002-ceph-plugin-Fix-2572.patch
-
-# https://github.com/redhat-nfvpe/collectd/commit/ea83311b7e1614a71efd7a68daaae4038eb705f1.patch
-Patch03: 0003-2622-Red-Hat-NFVPE-Connectivity-Plugin-6.patch
-
-# https://github.com/redhat-nfvpe/collectd/commit/0c6a9a63955dd4efc767a680c334a81c4be515ce.patch
-Patch04: 0004-2623-Red-Hat-NFVPE-Procevent-Plugin-7.patch
 
 
-# https://github.com/redhat-nfvpe/collectd/commit/c63d754a73b0bda09e3cd89d90b2ab26deb06323.patch
-Patch05: 0005-2624-Red-Hat-NFVPE-Sysevent-Plugin-8.patch
-
-# https://github.com/redhat-nfvpe/collectd/commit/d8c1f7c86b1323fee1e503d5107720d774f0dc5a.patch
-Patch06: 0006-2705-Notification-nested-metadata-10.patch
-
-# unification of previously separated patches
-# enable config read from collectd.d
-# disable default plugins
-Patch07: 0007-Include-collectd.d-and-disable-default-loading.patch
-
-# amqp1 plugin, cherry-picked from master branch
-Patch08: 0008-Merge-pull-request-2618-from-ajssmith-amqp1_dev1_bra.patch
-
-#https://github.com/collectd/collectd/commit/419c41409a5c3ba5531008165dff12c6ef5cc819#diff-5d914fa94c37be4a25d9ba2d5190e862
-Patch09: 0009-src-utils_format_json.c-Check-return-values-of-yajl_.patch
-
-# https://github.com/collectd/collectd/pull/2763 (missing in collectd-5.8 branch,
-# but included in 5.7 and master
-Patch10: 0010-write_prometheus-Set-SO_REUSEADDR-on-listening-socke.patch
-
-# https://github.com/collectd/collectd/commit/97967b03d0b7ded714f038cb55ed17b642809d53
-# fixes a warning for collectd-write_prometheus startup
-Patch11: 0011-write_prometheus-Added-MHD_USE_INTERNAL_POLLING_THRE.patch
-
-# https://github.com/collectd/collectd/commit/7f07c55bac640c7a50d516248a3152235a14af59
-# fixes collectd-tg time, otherwise Unix time 0 will be taken.
-Patch12: 0012-Merge-pull-request-2837-from-abays-fix-collectd-tg-d.patch
+Patch0001: 0001-Include-collectd.d-and-disable-default-loading.patch
+Patch0002: 0002-Merge-pull-request-2618-from-ajssmith-amqp1_dev1_bra.patch
+Patch0003: 0003-Merge-pull-request-2837-from-abays-fix-collectd-tg-d.patch
+Patch0004: 0004-2705-Notification-nested-metadata-10.patch
+Patch0005: 0005-procevent-plugin-initial-commit.patch
+Patch0006: 0006-check-fscanf-return-value-in-process_check.patch
+Patch0007: 0007-Merge-pull-request-2-from-atyronesmith-procevent.patch
+Patch0008: 0008-Procevent-plugin-notifications.patch
+Patch0009: 0009-Clarify-wanted-netlink-proc-msgs.patch
+Patch0010: 0010-payload-logic-clean-up-leak-fixes.patch
+Patch0011: 0011-Use-ignorelist_t-and-fix-leaks.patch
+Patch0012: 0012-Fix-mutex-lock-in-read_event.patch
+Patch0013: 0013-Check-ignorelist-during-init.patch
+Patch0014: 0014-Procevent-RPM-specfile.patch
+Patch0015: 0015-Drain-netlink-socket-before-sleeping-then-filter-rep.patch
+Patch0016: 0016-clang-formatting.patch
+Patch0017: 0017-Use-long-type-for-most-PID-values.patch
+Patch0018: 0018-Remove-types.db-entry-and-change-RegexProcess-conf-o.patch
+Patch0019: 0019-Use-a-separate-dequeue-thread-to-dispatch-notificati.patch
+Patch0020: 0020-Additional-mutex-styling-changes.patch
+Patch0021: 0021-More-styling-remove-superfluous-dequeue-thread-error.patch
+Patch0022: 0022-Handled-interrupted-socket-reads.patch
+Patch0023: 0023-sysevent-plugin-initial-commit.patch
+Patch0024: 0024-Use-snprintf-instead-of-sprintf.patch
+Patch0025: 0025-clang-formatting.patch
+Patch0026: 0026-require-libyajl2-to-build-sysevent-plugin.patch
+Patch0027: 0027-require-libyajl2-to-build-sysevent-plugin-part-2.patch
+Patch0028: 0028-VES-enabled-sysvent-plugin.patch
+Patch0029: 0029-Only-declare-rsyslog-keys-if-yajl2-present.patch
+Patch0030: 0030-clang-formatting.patch
+Patch0031: 0031-Remove-bogus-include.patch
+Patch0032: 0032-Move-misplaced-yajl_gen_map_close.patch
+Patch0033: 0033-clang-formatting.patch
+Patch0034: 0034-Sysevent-RPM-specfile.patch
+Patch0035: 0035-Check-for-malloc-failures.patch
+Patch0036: 0036-clang-formatting.patch
+Patch0037: 0037-Add-dequeue-thread-styling-changes.patch
+Patch0038: 0038-connectivity-plugin-initial-commit.patch
+Patch0039: 0039-Merge-pull-request-1-from-atyronesmith-connectivity.patch
+Patch0040: 0040-connectivity-notifications.patch
+Patch0041: 0041-Clarify-wanted-netlink-interface-msgs.patch
+Patch0042: 0042-snake-case-for-iface-list-payload-simplification.patch
+Patch0043: 0043-monitor-all-interfaces-by-default.patch
+Patch0044: 0044-Use-ignorelist-malloc-fix-conf-clarification.patch
+Patch0045: 0045-Properly-detect-which-interfaces-to-monitor.patch
+Patch0046: 0046-Connectivity-RPM-specfile.patch
+Patch0047: 0047-Spec-file-typo-fixes.patch
+Patch0048: 0048-Add-libmnl-devel-req-for-connectivity.patch
+Patch0049: 0049-Use-a-separate-dequeue-thread-to-dispatch-notificati.patch
+Patch0050: 0050-octo-code-review-changes.patch
+Patch0051: 0051-More-styling-remove-superfluous-dequeue-thread-error.patch
+Patch0052: 0052-Handled-interrupted-socket-reads.patch
+Patch0053: 0053-Cleanup-cherrypick-issues.patch
+Patch0054: 0054-daemon-common.h-Add-the-STRERROR-and-STRERRNO-macros.patch
 
 
 BuildRequires: perl-devel
@@ -1530,6 +1546,9 @@ make check
 
 
 %changelog
+* Wed Oct 24 2018 Matthias Runge <mrunge@redhat.com> - 5.8.1-1
+- rebase to 5.8.1
+
 * Fri Jul 06 2018 Matthias Runge <mrunge@redhat.com> - 5.8.0-6.1
 - add kafka plugin
 - add redis plugin
