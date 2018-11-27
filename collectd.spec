@@ -872,8 +872,8 @@ touch src/pinba.proto
 
 %build
 
-export CFLAGS="$RPM_OPT_FLAGS -fPIE"
-export CPPFLAGS="$RPM_OPT_FLAGS -fPIE"
+export CFLAGS="$RPM_OPT_FLAGS -fPIE -Wno-deprecated-declarations"
+export CPPFLAGS="$RPM_OPT_FLAGS -fPIE -Wno-deprecated-declarations"
 export LDFLAGS="-Wl,-z,relro,-z,now -pie"
 
 # rebuild configure and friends
@@ -882,10 +882,6 @@ aclocal -I m4
 libtoolize --copy --force
 automake --add-missing --copy
 autoconf
-
-export CFLAGS="$RPM_OPT_FLAGS -fPIE"
-export CFLAGS="$RPM_OPT_FLAGS -fPIE"
-export LDFLAGS="-Wl,-z,relro,-z,now -pie"
 
 %configure \
     --disable-dependency-tracking \
@@ -1001,6 +997,7 @@ export LDFLAGS="-Wl,-z,relro,-z,now -pie"
     --disable-lua \
     --disable-gps \
     --disable-grpc \
+    --disable-werror \
     AR_FLAGS="-cr"
 
 %if 0%{?enable_dpdkstat} > 0
