@@ -56,7 +56,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -141,6 +141,7 @@ Patch0051: 0051-More-styling-remove-superfluous-dequeue-thread-error.patch
 Patch0052: 0052-Handled-interrupted-socket-reads.patch
 Patch0053: 0053-Cleanup-cherrypick-issues.patch
 Patch0054: 0054-daemon-common.h-Add-the-STRERROR-and-STRERRNO-macros.patch
+Patch0055: 0055-Backport-bonded-devices-plus-add-l-stats.patch
 
 
 BuildRequires: perl-devel
@@ -1543,6 +1544,9 @@ make check
 
 
 %changelog
+* Wed Dec 05 2018 Matthias Runge <mrunge@redhat.com> - 5.8.1-2
+- add additional stats to ovs_stats (rhbz#1544767)
+
 * Wed Oct 24 2018 Matthias Runge <mrunge@redhat.com> - 5.8.1-1
 - rebase to 5.8.1
 
