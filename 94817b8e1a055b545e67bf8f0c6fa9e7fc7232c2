@@ -1,0 +1,9 @@
+Code-Review+2: Martin Mágr <mmagr@redhat.com>
+Code-Review+2: Pradeep Kilambi <pkilambi@redhat.com>
+Workflow+1: Matthias Runge <mrunge@redhat.com>
+Verified+2: Zuul CI <zuul@review.rdoproject.org>
+Submitted-by: Zuul CI <zuul@review.rdoproject.org>
+Submitted-at: Fri, 07 Dec 2018 15:44:14 +0000
+Reviewed-on: https://review.rdoproject.org/r/17694
+Project: centos-opstools/collectd
+Branch: refs/heads/master
