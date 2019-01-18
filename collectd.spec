@@ -35,6 +35,8 @@
 
 %global enable_write_redis 1
 
+%global enable_write_rsyslog 1
+
 
 # mic disabled, MicAccessAPI required
 %global enable_mic 0
@@ -56,7 +58,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -84,7 +86,6 @@ Source94: nginx.conf
 Source95: sensors.conf
 Source96: snmp.conf
 Source97: rrdtool.conf
-
 
 
 Patch0001: 0001-Include-collectd.d-and-disable-default-loading.patch
@@ -142,6 +143,7 @@ Patch0052: 0052-Handled-interrupted-socket-reads.patch
 Patch0053: 0053-Cleanup-cherrypick-issues.patch
 Patch0054: 0054-daemon-common.h-Add-the-STRERROR-and-STRERRNO-macros.patch
 Patch0055: 0055-Backport-bonded-devices-plus-add-l-stats.patch
+Patch0056: 0056-Add-write_rsyslog-output-plugin.patch
 
 
 BuildRequires: perl-devel
@@ -820,6 +822,17 @@ Provides: %{name}-write-riemann = %{version}-%{release}
 This plugin can send data to Riemann.
 %endif
 
+%if 0%{?enable_write_rsyslog}
+%package write_rsyslog
+Summary:       rsyslog output plugin for collectd
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+Provides: %{name}-write-rsyslog = %{version}-%{release}
+
+%description write_rsyslog
+This plugin can send data to rsyslog.
+%endif
 
 %package write_sensu
 Summary:       Sensu output plugin for collectd
@@ -946,6 +959,11 @@ autoconf
     --enable-write_redis \
 %else
     --disable-write_redis \
+%endif
+%if 0%{?enable_write_rsyslog} > 0
+    --enable-write_rsyslog \
+%else
+    --disable-write_rsyslog \
 %endif
     --disable-varnish \
 %if 0%{?enable_amqp_09} ==0
@@ -1530,6 +1548,12 @@ make check
 %endif
 
 
+%if 0%{?enable_write_rsyslog}
+%files write_rsyslog
+%{_libdir}/collectd/write_rsyslog.so
+%endif
+
+
 %files write_sensu
 %{_libdir}/collectd/write_sensu.so
 
@@ -1544,6 +1568,9 @@ make check
 
 
 %changelog
+* Fri Jan 11 2019 Ryan McCabe <rmccabe@redhat.com> - 5.8.1-3
+- enable write_rsyslog plugin.
+
 * Wed Dec 05 2018 Matthias Runge <mrunge@redhat.com> - 5.8.1-2
 - add additional stats to ovs_stats (rhbz#1544767)
 
