@@ -1,7 +1,7 @@
-From fb1eb93ad17b6b33d8c8f3b0d8c5eef81b88c8a4 Mon Sep 17 00:00:00 2001
+From ab62fb70771f5f720c3bad8227e9e1bc509b893d Mon Sep 17 00:00:00 2001
 From: Ryan McCabe <rmccabe@redhat.com>
 Date: Fri, 1 Feb 2019 08:19:37 -0500
-Subject: [PATCH] Add the write_syslog plugin
+Subject: [PATCH 56/56] Add the write_syslog plugin
 
 Renamed instances of write_rsyslog to write_syslog
 
