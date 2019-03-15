@@ -58,7 +58,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -1568,6 +1568,9 @@ make check
 
 
 %changelog
+* Fri Mar 15 2019 Matthias Runge <mrunge@redhat.com> - 5.8.1-4
+- bump release to build against new qpid-proton
+
 * Fri Feb 01 2019 Ryan McCabe <rmccabe@redhat.com> - 5.8.1-3
 - add write_syslog plugin.
 
