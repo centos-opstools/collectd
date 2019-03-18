@@ -1,0 +1,10 @@
+Code-Review+2: Matthias Runge <mrunge@redhat.com>
+Code-Review+1: Alfredo Moralejo <amoralej@redhat.com>
+Code-Review+2: Alan Pevec <alan.pevec@redhat.com>
+Workflow+1: Alan Pevec <alan.pevec@redhat.com>
+Verified+2: Zuul CI <zuul@review.rdoproject.org>
+Submitted-by: Zuul CI <zuul@review.rdoproject.org>
+Submitted-at: Mon, 18 Mar 2019 11:49:43 +0000
+Reviewed-on: https://review.rdoproject.org/r/19411
+Project: centos-opstools/collectd
+Branch: refs/heads/master
