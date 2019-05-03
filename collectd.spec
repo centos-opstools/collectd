@@ -20,8 +20,14 @@
 
 %global enable_ganglia 0
 
+
 # pmu requires libjevents to be available
+# pmu is only available on Intel architectures
+%ifarch x86_64
+%global enable_intel_pmu 1
+%else
 %global enable_intel_pmu 0
+%endif
 
 # lvm uses deprecated interface
 %global enable_lvm 0
@@ -58,7 +64,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.8.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -1568,6 +1574,9 @@ make check
 
 
 %changelog
+* Fri May 03 2019 Matthias Runge <mrunge@redhat.com> - 5.8.1-5
+- enable pmu plugin
+
 * Fri Mar 15 2019 Matthias Runge <mrunge@redhat.com> - 5.8.1-4
 - bump release to build against new qpid-proton
 
