@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7e92c74_d3d9d4c5",
+        "filename": "collectd.spec",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 390
+      },
+      "writtenOn": "2019-05-15T19:58:27Z",
+      "side": 1,
+      "message": "unneeded blank line",
+      "revId": "2e1837861a3be95bc1380c98ec14adafff82e58f",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": false
+    }
+  ]
+}
