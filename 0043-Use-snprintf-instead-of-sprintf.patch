@@ -1,0 +1,43 @@
+From ae7339f5d27286d44e0b1ffb912ff9b8190b293b Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Thu, 14 Dec 2017 08:40:42 -0500
+Subject: [PATCH 43/60] Use snprintf instead of sprintf
+
+---
+ src/sysevent.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/sysevent.c b/src/sysevent.c
+index 4da0fd76..d222e48b 100644
+--- a/src/sysevent.c
++++ b/src/sysevent.c
+@@ -429,7 +429,7 @@ static void submit(const char *message, yajl_val *node,
+ 
+       memset(json_val, '\0', listen_buffer_size);
+ 
+-      sprintf(json_val, "%s%c", YAJL_GET_STRING(v), '\0');
++      snprintf(json_val, listen_buffer_size, "%s%c", YAJL_GET_STRING(v), '\0');
+ 
+       DEBUG("sysevent plugin: adding jsonval: %s", json_val);
+ 
+@@ -445,7 +445,7 @@ static void submit(const char *message, yajl_val *node,
+ 
+       memset(json_val, '\0', listen_buffer_size);
+ 
+-      sprintf(json_val, "%s%c", YAJL_GET_STRING(v), '\0');
++      snprintf(json_val, listen_buffer_size, "%s%c", YAJL_GET_STRING(v), '\0');
+ 
+       DEBUG("sysevent plugin: adding jsonval: %s", json_val);
+ 
+@@ -512,7 +512,7 @@ static int sysevent_read(void) /* {{{ */
+ 
+         memset(json_val, '\0', listen_buffer_size);
+ 
+-        sprintf(json_val, "%s%c", YAJL_GET_STRING(v), '\0');
++        snprintf(json_val, listen_buffer_size, "%s%c", YAJL_GET_STRING(v), '\0');
+ 
+         match_str = (char *)&json_val;
+       }
+-- 
+2.21.0
+

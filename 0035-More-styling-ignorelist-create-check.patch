@@ -1,0 +1,70 @@
+From 4ec8822ab68a9ee942adb70616b38899d1750467 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Mon, 5 Nov 2018 10:17:20 -0500
+Subject: [PATCH 35/60] More styling + ignorelist create check
+
+---
+ src/collectd.conf.pod |  5 -----
+ src/connectivity.c    | 16 +++++++---------
+ 2 files changed, 7 insertions(+), 14 deletions(-)
+
+diff --git a/src/collectd.conf.pod b/src/collectd.conf.pod
+index b4b6e91f..a8467591 100644
+--- a/src/collectd.conf.pod
++++ b/src/collectd.conf.pod
+@@ -1613,11 +1613,6 @@ LoadPlugin connectivity
+ 
+ interface(s) to monitor connect to. 
+ 
+-=item I<Status>
+-
+-If I<Status> is greater than or equal to zero the message indicates interface is up,
+-if I<Status> is less than zero the message indicates interface is down. 
+-
+ =back
+ 
+ =head2 Plugin C<conntrack>
+diff --git a/src/connectivity.c b/src/connectivity.c
+index c470c995..f9edece1 100644
+--- a/src/connectivity.c
++++ b/src/connectivity.c
+@@ -558,8 +558,7 @@ static int read_event(int nl, int (*msg_handler)(struct nlmsghdr *)) {
+         continue;
+       }
+ 
+-      if (errno == EINTR)
+-      {
++      if (errno == EINTR) {
+         // Interrupt, so just return
+         return 0;
+       }
+@@ -614,13 +613,9 @@ static void send_interface_status() {
+   for (interface_list_t *il = interface_list_head; il != NULL;
+        il = il->next) /* {{{ */
+   {
+-    uint32_t status;
+-    uint32_t prev_status;
+-    uint32_t sent;
+-
+-    status = il->status;
+-    prev_status = il->prev_status;
+-    sent = il->sent;
++    uint32_t status = il->status;
++    uint32_t prev_status = il->prev_status;
++    uint32_t sent = il->sent;
+ 
+     if (status != prev_status && sent == 0) {
+       connectivity_dispatch_notification(il->interface, "gauge", status,
+@@ -945,6 +940,9 @@ static int connectivity_config(const char *key, const char *value) /* {{{ */
+ {
+   if (ignorelist == NULL) {
+     ignorelist = ignorelist_create(/* invert = */ 1);
++
++    if (ignorelist == NULL)
++      return -1;
+   }
+ 
+   if (strcasecmp(key, "Interface") == 0) {
+-- 
+2.21.0
+
