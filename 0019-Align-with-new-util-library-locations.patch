@@ -1,0 +1,29 @@
+From f58f5d89e98c9ed0ba5b9bb3992c0fc3f737f8b5 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Tue, 18 Jun 2019 12:29:03 -0400
+Subject: [PATCH 19/60] Align with new util library locations
+
+---
+ src/procevent.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/procevent.c b/src/procevent.c
+index be4509e6..3a5be7a0 100644
+--- a/src/procevent.c
++++ b/src/procevent.c
+@@ -26,10 +26,10 @@
+ 
+ #include "collectd.h"
+ 
+-#include "common.h"
+ #include "plugin.h"
++#include "utils/common/common.h"
++#include "utils/ignorelist/ignorelist.h"
+ #include "utils_complain.h"
+-#include "utils_ignorelist.h"
+ 
+ #include <errno.h>
+ #include <pthread.h>
+-- 
+2.21.0
+

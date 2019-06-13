@@ -1,0 +1,94 @@
+From a37cfa61ce119d98fb889b872f0d5cdcb7bc21de Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Mon, 15 Oct 2018 13:47:17 -0400
+Subject: [PATCH 13/60] Remove types.db entry and change RegexProcess conf
+ option name
+
+---
+ src/collectd.conf.in  | 2 +-
+ src/collectd.conf.pod | 4 ++--
+ src/procevent.c       | 6 +++---
+ src/types.db          | 1 -
+ 4 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/src/collectd.conf.in b/src/collectd.conf.in
+index 79c31f8a..674f2ca0 100644
+--- a/src/collectd.conf.in
++++ b/src/collectd.conf.in
+@@ -1273,7 +1273,7 @@
+ 
+ #<Plugin "procevent">
+ #  BufferLength 10
+-#  RegexProcess "/^ovs.*$/" 
++#  ProcessRegex "/^ovs.*$/" 
+ #  Process tuned
+ #</Plugin>
+ 
+diff --git a/src/collectd.conf.pod b/src/collectd.conf.pod
+index 0922b216..fbd186a5 100644
+--- a/src/collectd.conf.pod
++++ b/src/collectd.conf.pod
+@@ -7323,7 +7323,7 @@ B<Synopsis:>
+   <Plugin procevent>
+     BufferLength 10
+     Process "name"
+-    RegexProcess "regex"
++    ProcessRegex "regex"
+   </Plugin>
+  
+ B<Options:>
+@@ -7341,7 +7341,7 @@ becomes available for storing a new event.
+ Enumerate a process name to monitor.  All processes that match this exact
+ name will be monitored for EXECs and EXITs.
+ 
+-=item B<RegexProcess> I<regex>
++=item B<ProcessRegex> I<regex>
+  
+ Enumerate a process pattern to monitor.  All processes that match this 
+ regular expression will be monitored for EXECs and EXITs.
+diff --git a/src/procevent.c b/src/procevent.c
+index 69174d0c..a7a0107a 100644
+--- a/src/procevent.c
++++ b/src/procevent.c
+@@ -136,7 +136,7 @@ static circbuf_t ring;
+ static processlist_t *processlist_head = NULL;
+ static int event_id = 0;
+ 
+-static const char *config_keys[] = {"BufferLength", "Process", "RegexProcess"};
++static const char *config_keys[] = {"BufferLength", "Process", "ProcessRegex"};
+ static int config_keys_num = STATIC_ARRAY_SIZE(config_keys);
+ 
+ /*
+@@ -1027,7 +1027,7 @@ static int procevent_config(const char *key, const char *value) /* {{{ */
+     buffer_length = atoi(value);
+   } else if (strcasecmp(key, "Process") == 0) {
+     ignorelist_add(ignorelist, value);
+-  } else if (strcasecmp(key, "RegexProcess") == 0) {
++  } else if (strcasecmp(key, "ProcessRegex") == 0) {
+ #if HAVE_REGEX_H
+     status = ignorelist_add(ignorelist, value);
+ 
+@@ -1037,7 +1037,7 @@ static int procevent_config(const char *key, const char *value) /* {{{ */
+     }
+ #else
+     WARNING("procevent plugin: The plugin has been compiled without support "
+-            "for the \"RegexProcess\" option.");
++            "for the \"ProcessRegex\" option.");
+ #endif
+   } else {
+     return (-1);
+diff --git a/src/types.db b/src/types.db
+index 44071a3b..69f59b06 100644
+--- a/src/types.db
++++ b/src/types.db
+@@ -200,7 +200,6 @@ players                 value:GAUGE:0:1000000
+ pools                   value:GAUGE:0:U
+ power                   value:GAUGE:U:U
+ pressure                value:GAUGE:0:U
+-procevent               value:GAUGE:0:1
+ protocol_counter        value:DERIVE:0:U
+ ps_code                 value:GAUGE:0:9223372036854775807
+ ps_count                processes:GAUGE:0:1000000, threads:GAUGE:0:1000000
+-- 
+2.21.0
+

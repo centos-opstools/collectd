@@ -1,0 +1,91 @@
+From f7606f2aecedba0932d00aac54cda0c82cc19353 Mon Sep 17 00:00:00 2001
+From: Matthias Runge <mrunge@redhat.com>
+Date: Thu, 19 Apr 2018 09:51:59 +0200
+Subject: [PATCH 60/60] Include collectd.d and disable default loading
+
+This patch will disable plugins loaded by default and will
+aply config read from collectd.d
+
+(cherry picked from commit f680d5522de25a09962c88f5936e0926e03e0e31)
+(cherry picked from commit a027ab48f98accfddbfc0787f38408e9cac12077)
+(cherry picked from commit 0252523f4148a08277e7b0aa09ae01cb3bd6b446)
+---
+ src/collectd.conf.in | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/src/collectd.conf.in b/src/collectd.conf.in
+index 659c098b..2f59a17f 100644
+--- a/src/collectd.conf.in
++++ b/src/collectd.conf.in
+@@ -4,6 +4,10 @@
+ # http://collectd.org/
+ #
+ 
++# If you edit this file, it will not be updated during updates or upgrades.
++# It might be better to refer to it as an example only, and add your own
++# configuration snippets to new files under /etc/collectd.d.
++
+ ##############################################################################
+ # Global                                                                     #
+ #----------------------------------------------------------------------------#
+@@ -58,7 +62,7 @@
+ # accessed.                                                                  #
+ ##############################################################################
+ 
+-@LOAD_PLUGIN_SYSLOG@LoadPlugin syslog
++#@LOAD_PLUGIN_SYSLOG@LoadPlugin syslog
+ @LOAD_PLUGIN_LOGFILE@LoadPlugin logfile
+ @LOAD_PLUGIN_LOG_LOGSTASH@LoadPlugin log_logstash
+ 
+@@ -105,7 +109,7 @@
+ #@BUILD_PLUGIN_CONNECTIVITY_TRUE@LoadPlugin connectivity
+ #@BUILD_PLUGIN_CONNTRACK_TRUE@LoadPlugin conntrack
+ #@BUILD_PLUGIN_CONTEXTSWITCH_TRUE@LoadPlugin contextswitch
+-@BUILD_PLUGIN_CPU_TRUE@@BUILD_PLUGIN_CPU_TRUE@LoadPlugin cpu
++#@BUILD_PLUGIN_CPU_TRUE@@BUILD_PLUGIN_CPU_TRUE@LoadPlugin cpu
+ #@BUILD_PLUGIN_CPUFREQ_TRUE@LoadPlugin cpufreq
+ #@BUILD_PLUGIN_CPUSLEEP_TRUE@LoadPlugin cpusleep
+ @LOAD_PLUGIN_CSV@LoadPlugin csv
+@@ -133,14 +137,14 @@
+ #@BUILD_PLUGIN_HUGEPAGES_TRUE@LoadPlugin hugepages
+ #@BUILD_PLUGIN_INTEL_PMU_TRUE@LoadPlugin intel_pmu
+ #@BUILD_PLUGIN_INTEL_RDT_TRUE@LoadPlugin intel_rdt
+-@BUILD_PLUGIN_INTERFACE_TRUE@@BUILD_PLUGIN_INTERFACE_TRUE@LoadPlugin interface
++#@BUILD_PLUGIN_INTERFACE_TRUE@@BUILD_PLUGIN_INTERFACE_TRUE@LoadPlugin interface
+ #@BUILD_PLUGIN_IPC_TRUE@LoadPlugin ipc
+ #@BUILD_PLUGIN_IPMI_TRUE@LoadPlugin ipmi
+ #@BUILD_PLUGIN_IPTABLES_TRUE@LoadPlugin iptables
+ #@BUILD_PLUGIN_IPVS_TRUE@LoadPlugin ipvs
+ #@BUILD_PLUGIN_IRQ_TRUE@LoadPlugin irq
+ #@BUILD_PLUGIN_JAVA_TRUE@LoadPlugin java
+-@BUILD_PLUGIN_LOAD_TRUE@@BUILD_PLUGIN_LOAD_TRUE@LoadPlugin load
++#@BUILD_PLUGIN_LOAD_TRUE@@BUILD_PLUGIN_LOAD_TRUE@LoadPlugin load
+ #@BUILD_PLUGIN_LPAR_TRUE@LoadPlugin lpar
+ #@BUILD_PLUGIN_LUA_TRUE@LoadPlugin lua
+ #@BUILD_PLUGIN_LVM_TRUE@LoadPlugin lvm
+@@ -150,7 +154,7 @@
+ #@BUILD_PLUGIN_MD_TRUE@LoadPlugin md
+ #@BUILD_PLUGIN_MEMCACHEC_TRUE@LoadPlugin memcachec
+ #@BUILD_PLUGIN_MEMCACHED_TRUE@LoadPlugin memcached
+-@BUILD_PLUGIN_MEMORY_TRUE@@BUILD_PLUGIN_MEMORY_TRUE@LoadPlugin memory
++#@BUILD_PLUGIN_MEMORY_TRUE@@BUILD_PLUGIN_MEMORY_TRUE@LoadPlugin memory
+ #@BUILD_PLUGIN_MIC_TRUE@LoadPlugin mic
+ #@BUILD_PLUGIN_MODBUS_TRUE@LoadPlugin modbus
+ #@BUILD_PLUGIN_MQTT_TRUE@LoadPlugin mqtt
+@@ -187,7 +191,7 @@
+ #@BUILD_PLUGIN_REDIS_TRUE@LoadPlugin redis
+ #@BUILD_PLUGIN_ROUTEROS_TRUE@LoadPlugin routeros
+ #@BUILD_PLUGIN_RRDCACHED_TRUE@LoadPlugin rrdcached
+-@LOAD_PLUGIN_RRDTOOL@LoadPlugin rrdtool
++#@LOAD_PLUGIN_RRDTOOL@LoadPlugin rrdtool
+ #@BUILD_PLUGIN_SENSORS_TRUE@LoadPlugin sensors
+ #@BUILD_PLUGIN_SERIAL_TRUE@LoadPlugin serial
+ #@BUILD_PLUGIN_SIGROK_TRUE@LoadPlugin sigrok
+@@ -1942,3 +1946,4 @@
+ #    </Type>
+ #  </Host>
+ #</Plugin>
++Include "/etc/collectd.d"
+-- 
+2.21.0
+

@@ -1,0 +1,82 @@
+From cdd8824010894c1374430c7e1a4ef486713c8525 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Tue, 19 Jun 2018 11:23:01 -0400
+Subject: [PATCH 09/60] Procevent RPM specfile
+
+---
+ contrib/redhat/collectd.spec | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/contrib/redhat/collectd.spec b/contrib/redhat/collectd.spec
+index 1ba7d119..0bf712a0 100644
+--- a/contrib/redhat/collectd.spec
++++ b/contrib/redhat/collectd.spec
+@@ -122,6 +122,7 @@
+ %define with_postgresql 0%{!?_without_postgresql:1}
+ %define with_powerdns 0%{!?_without_powerdns:1}
+ %define with_processes 0%{!?_without_processes:1}
++%define with_procevent 0%{!?_without_procevent:1}
+ %define with_protocols 0%{!?_without_protocols:1}
+ %define with_python 0%{!?_without_python:1}
+ %define with_redis 0%{!?_without_redis:1}
+@@ -243,6 +244,7 @@
+ %define with_mqtt 0
+ %define with_ovs_events 0
+ %define with_ovs_stats 0
++%define with_procevent 0
+ %define with_redis 0
+ %define with_rrdcached 0
+ %define with_write_redis 0
+@@ -774,6 +776,16 @@ The PostgreSQL plugin connects to and executes SQL statements on a PostgreSQL
+ database.
+ %endif
+ 
++%if %{with_procevent}
++%package procevent
++Summary:       Processes event plugin for collectd
++Group:         System Environment/Daemons
++Requires:      %{name}%{?_isa} = %{version}-%{release}
++BuildRequires: yajl-devel
++%description procevent
++Monitors process starts/stops via netlink library.
++%endif
++
+ %if %{with_python}
+ %package python
+ Summary:	Python plugin for collectd
+@@ -1589,6 +1601,12 @@ Collectd utilities
+ %define _with_processes --disable-processes
+ %endif
+ 
++%if %{with_procevent}
++%define _with_procevent --enable-procevent
++%else
++%define _with_procevent --disable-procevent
++%endif
++
+ %if %{with_protocols}
+ %define _with_protocols --enable-protocols
+ %else
+@@ -2015,6 +2033,7 @@ Collectd utilities
+ 	%{?_with_postgresql} \
+ 	%{?_with_powerdns} \
+ 	%{?_with_processes} \
++	%{?_with_procevent} \
+ 	%{?_with_protocols} \
+ 	%{?_with_python} \
+ 	%{?_with_redis} \
+@@ -2683,6 +2702,11 @@ fi
+ %{_libdir}/%{name}/postgresql.so
+ %endif
+ 
++%if %{with_procevent}
++%files procevent
++%{_libdir}/%{name}/procevent.so
++%endif
++
+ %if %{with_python}
+ %files python
+ %{_mandir}/man5/collectd-python*
+-- 
+2.21.0
+

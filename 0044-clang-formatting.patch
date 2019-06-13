@@ -1,0 +1,26 @@
+From efe26a1f2b1abbfbfcb2d598d3d1c3ab865fb5d1 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Thu, 14 Dec 2017 08:43:07 -0500
+Subject: [PATCH 44/60] clang formatting
+
+---
+ src/sysevent.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/sysevent.c b/src/sysevent.c
+index d222e48b..7ba2e87d 100644
+--- a/src/sysevent.c
++++ b/src/sysevent.c
+@@ -512,7 +512,8 @@ static int sysevent_read(void) /* {{{ */
+ 
+         memset(json_val, '\0', listen_buffer_size);
+ 
+-        snprintf(json_val, listen_buffer_size, "%s%c", YAJL_GET_STRING(v), '\0');
++        snprintf(json_val, listen_buffer_size, "%s%c", YAJL_GET_STRING(v),
++                 '\0');
+ 
+         match_str = (char *)&json_val;
+       }
+-- 
+2.21.0
+

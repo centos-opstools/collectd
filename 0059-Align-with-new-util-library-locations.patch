@@ -1,0 +1,29 @@
+From 338d88e443ab541be77641c5161bf7d18cc31309 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Tue, 18 Jun 2019 12:53:06 -0400
+Subject: [PATCH 59/60] Align with new util library locations
+
+---
+ src/sysevent.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/sysevent.c b/src/sysevent.c
+index ecbd2eb4..b63767db 100644
+--- a/src/sysevent.c
++++ b/src/sysevent.c
+@@ -26,10 +26,10 @@
+ 
+ #include "collectd.h"
+ 
+-#include "common.h"
+ #include "plugin.h"
++#include "utils/common/common.h"
++#include "utils/ignorelist/ignorelist.h"
+ #include "utils_complain.h"
+-#include "utils_ignorelist.h"
+ 
+ #include <errno.h>
+ #include <netdb.h>
+-- 
+2.21.0
+

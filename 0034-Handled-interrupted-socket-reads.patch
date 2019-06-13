@@ -1,0 +1,29 @@
+From 13aabac0c96920f218a3a4590b15e01949651fdc Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Fri, 19 Oct 2018 10:05:44 -0400
+Subject: [PATCH 34/60] Handled interrupted socket reads
+
+---
+ src/connectivity.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/connectivity.c b/src/connectivity.c
+index ec2f7e38..c470c995 100644
+--- a/src/connectivity.c
++++ b/src/connectivity.c
+@@ -558,6 +558,12 @@ static int read_event(int nl, int (*msg_handler)(struct nlmsghdr *)) {
+         continue;
+       }
+ 
++      if (errno == EINTR)
++      {
++        // Interrupt, so just return
++        return 0;
++      }
++
+       /* Anything else is an error */
+       ERROR("connectivity plugin: read_event: Error recv: %d", status);
+       return status;
+-- 
+2.21.0
+
