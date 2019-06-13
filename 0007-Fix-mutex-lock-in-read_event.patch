@@ -1,0 +1,25 @@
+From 7daa840008281bb72339457bb3f22d4b17efa468 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Fri, 23 Mar 2018 07:08:55 -0400
+Subject: [PATCH 07/60] Fix mutex lock in read_event
+
+---
+ src/procevent.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/procevent.c b/src/procevent.c
+index 7fab6552..368e7c41 100644
+--- a/src/procevent.c
++++ b/src/procevent.c
+@@ -803,7 +803,7 @@ static int read_event() {
+   // in the ring buffer for consumption by the main polling thread.
+ 
+   if (proc_status != -1) {
+-    pthread_mutex_unlock(&procevent_lock);
++    pthread_mutex_lock(&procevent_lock);
+ 
+     int next = ring.head + 1;
+     if (next >= ring.maxLen)
+-- 
+2.21.0
+

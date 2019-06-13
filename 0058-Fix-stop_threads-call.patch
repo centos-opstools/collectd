@@ -1,0 +1,34 @@
+From a48d197cad0f4a581ed6b6c683c50fecbf1566c0 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Mon, 19 Nov 2018 13:16:41 -0500
+Subject: [PATCH 58/60] Fix stop_threads call
+
+---
+ src/sysevent.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/sysevent.c b/src/sysevent.c
+index 83924c8d..ecbd2eb4 100644
+--- a/src/sysevent.c
++++ b/src/sysevent.c
+@@ -1085,7 +1085,7 @@ static int sysevent_read(void) /* {{{ */
+           "Restarting it.",
+           sysevent_socket_thread_error);
+ 
+-    stop_threads(0);
++    stop_threads();
+ 
+     start_threads();
+ 
+@@ -1101,7 +1101,7 @@ static int sysevent_shutdown(void) /* {{{ */
+ {
+   DEBUG("sysevent plugin: Shutting down thread.");
+ 
+-  int status = stop_threads(1);
++  int status = stop_threads();
+   int status2 = 0;
+ 
+   if (sock != -1) {
+-- 
+2.21.0
+

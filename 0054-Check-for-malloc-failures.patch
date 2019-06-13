@@ -1,0 +1,42 @@
+From f0e339e7ca0487803ad37c7dcf0afdc229bdd4f4 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Wed, 18 Jul 2018 13:02:25 -0400
+Subject: [PATCH 54/60] Check for malloc failures
+
+---
+ src/sysevent.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/sysevent.c b/src/sysevent.c
+index e7dfdab7..4948b2b8 100644
+--- a/src/sysevent.c
++++ b/src/sysevent.c
+@@ -400,6 +400,12 @@ static int gen_message_payload(const char *msg, char *sev, int sev_num,
+ 
+   *buf = malloc(strlen((char *)buf2) + 1);
+ 
++  if (*buf == NULL)
++  {
++    ERROR("sysevent plugin: gen_message_payload malloc failed");
++    goto err;
++  }
++
+   sstrncpy(*buf, (char *)buf2, strlen((char *)buf2) + 1);
+ 
+   yajl_gen_free(g);
+@@ -572,6 +578,12 @@ static int sysevent_init(void) /* {{{ */
+   ring.maxLen = buffer_length;
+   ring.buffer = (char **)malloc(buffer_length * sizeof(char *));
+ 
++  if (ring.buffer == NULL)
++  {
++    ERROR("sysevent plugin: sysevent_init malloc failed");
++    return (-1);
++  }
++
+   for (int i = 0; i < buffer_length; i++) {
+     ring.buffer[i] = malloc(listen_buffer_size);
+   }
+-- 
+2.21.0
+

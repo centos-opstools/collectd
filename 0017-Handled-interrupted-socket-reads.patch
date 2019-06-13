@@ -1,0 +1,26 @@
+From 43a4f432a5b177d0643dcc3b75020f900c3a393a Mon Sep 17 00:00:00 2001
+From: Andrew Bays <abays@redhat.com>
+Date: Fri, 19 Oct 2018 10:05:30 -0400
+Subject: [PATCH 17/60] Handled interrupted socket reads
+
+---
+ src/procevent.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/procevent.c b/src/procevent.c
+index 38c3fd1e..850f7742 100644
+--- a/src/procevent.c
++++ b/src/procevent.c
+@@ -789,6 +789,9 @@ static int read_event() {
+       } else if (errno != EINTR) {
+         ERROR("procevent plugin: socket receive error: %d", errno);
+         return -1;
++      } else {
++        // Interrupt, so just return
++        return 0;
+       }
+     }
+ 
+-- 
+2.21.0
+

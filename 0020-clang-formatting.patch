@@ -1,0 +1,51 @@
+From 2ba2d6dc43c39dd531f7761687f40eaafbdcfe07 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Tue, 18 Jun 2019 12:29:47 -0400
+Subject: [PATCH 20/60] clang formatting
+
+---
+ src/procevent.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/src/procevent.c b/src/procevent.c
+index 3a5be7a0..ec7f57a5 100644
+--- a/src/procevent.c
++++ b/src/procevent.c
+@@ -336,8 +336,9 @@ static int gen_message_payload(int state, long pid, char *process,
+     goto err;
+ 
+   if (yajl_gen_string(
+-          g, (u_char *)(state == 0 ? PROCEVENT_EVENT_SEVERITY_CRITICAL_VALUE
+-                                   : PROCEVENT_EVENT_SEVERITY_NORMAL_VALUE),
++          g,
++          (u_char *)(state == 0 ? PROCEVENT_EVENT_SEVERITY_CRITICAL_VALUE
++                                : PROCEVENT_EVENT_SEVERITY_NORMAL_VALUE),
+           strlen((state == 0 ? PROCEVENT_EVENT_SEVERITY_CRITICAL_VALUE
+                              : PROCEVENT_EVENT_SEVERITY_NORMAL_VALUE))) !=
+       yajl_gen_status_ok)
+@@ -388,8 +389,9 @@ static int gen_message_payload(int state, long pid, char *process,
+     goto err;
+ 
+   if (yajl_gen_string(
+-          g, (u_char *)(state == 0 ? PROCEVENT_VF_STATUS_CRITICAL_VALUE
+-                                   : PROCEVENT_VF_STATUS_NORMAL_VALUE),
++          g,
++          (u_char *)(state == 0 ? PROCEVENT_VF_STATUS_CRITICAL_VALUE
++                                : PROCEVENT_VF_STATUS_NORMAL_VALUE),
+           strlen((state == 0 ? PROCEVENT_VF_STATUS_CRITICAL_VALUE
+                              : PROCEVENT_VF_STATUS_NORMAL_VALUE))) !=
+       yajl_gen_status_ok)
+@@ -662,7 +664,9 @@ static int process_map_refresh(void) {
+ 
+ static int nl_connect() {
+   struct sockaddr_nl sa_nl = {
+-      .nl_family = AF_NETLINK, .nl_groups = CN_IDX_PROC, .nl_pid = getpid(),
++      .nl_family = AF_NETLINK,
++      .nl_groups = CN_IDX_PROC,
++      .nl_pid = getpid(),
+   };
+ 
+   nl_sock = socket(PF_NETLINK, SOCK_DGRAM, NETLINK_CONNECTOR);
+-- 
+2.21.0
+

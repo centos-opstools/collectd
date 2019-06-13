@@ -1,0 +1,42 @@
+From f43ac1f505f0c52964cad6bd326dc00d8ddc7c74 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Tue, 19 Jun 2018 11:06:39 -0400
+Subject: [PATCH 29/60] Spec file typo fixes
+
+---
+ contrib/redhat/collectd.spec | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/contrib/redhat/collectd.spec b/contrib/redhat/collectd.spec
+index c5309fcf..c5ac88c5 100644
+--- a/contrib/redhat/collectd.spec
++++ b/contrib/redhat/collectd.spec
+@@ -379,7 +379,7 @@ Chrony plugin for collectd
+ %if %{with_connectivity}
+ %package connectivity
+ Summary:       Connectivity plugin for collectd
+-Group:	       System Environment/Daemons
++Group:         System Environment/Daemons
+ Requires:      %{name}%{?_isa} = %{version}-%{release}
+ BuildRequires: yajl-devel
+ %description connectivity
+@@ -1121,11 +1121,11 @@ Collectd utilities
+ %define _with_chrony --disable-chrony
+ %endif
+ 
+-+%if %{with_connectivity}
+-+%define _with_connectivity --enable-connectivity
+-+%else
+-+%define _with_connectivity --disable-connectivity
+-+%endif
++%if %{with_connectivity}
++%define _with_connectivity --enable-connectivity
++%else
++%define _with_connectivity --disable-connectivity
++%endif
+ 
+ %if %{with_conntrack}
+ %define _with_conntrack --enable-conntrack
+-- 
+2.21.0
+

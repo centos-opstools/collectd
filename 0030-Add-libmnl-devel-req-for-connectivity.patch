@@ -1,0 +1,25 @@
+From 4dfe0e9596de7299cd6fedfde8ab8535fb7e7de9 Mon Sep 17 00:00:00 2001
+From: Andrew Bays <andrew.bays@gmail.com>
+Date: Tue, 19 Jun 2018 11:20:31 -0400
+Subject: [PATCH 30/60] Add libmnl-devel req for connectivity
+
+---
+ contrib/redhat/collectd.spec | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/contrib/redhat/collectd.spec b/contrib/redhat/collectd.spec
+index c5ac88c5..2d4fa6ba 100644
+--- a/contrib/redhat/collectd.spec
++++ b/contrib/redhat/collectd.spec
+@@ -381,7 +381,7 @@ Chrony plugin for collectd
+ Summary:       Connectivity plugin for collectd
+ Group:         System Environment/Daemons
+ Requires:      %{name}%{?_isa} = %{version}-%{release}
+-BuildRequires: yajl-devel
++BuildRequires: libmnl-devel, yajl-devel
+ %description connectivity
+ Monitors network interface up/down status via netlink library.
+ %endif
+-- 
+2.21.0
+
