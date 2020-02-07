@@ -17,7 +17,7 @@
 %global enable_dpdkevents 0
 %endif
 
-
+%global enable_pcie_errors 0
 %global enable_ganglia 0
 
 
@@ -63,8 +63,8 @@
 
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
-Version: 5.8.1
-Release: 5%{?dist}
+Version: 5.10.0
+Release: 1%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -95,62 +95,6 @@ Source97: rrdtool.conf
 
 
 Patch0001: 0001-Include-collectd.d-and-disable-default-loading.patch
-Patch0002: 0002-Merge-pull-request-2618-from-ajssmith-amqp1_dev1_bra.patch
-Patch0003: 0003-Merge-pull-request-2837-from-abays-fix-collectd-tg-d.patch
-Patch0004: 0004-2705-Notification-nested-metadata-10.patch
-Patch0005: 0005-procevent-plugin-initial-commit.patch
-Patch0006: 0006-check-fscanf-return-value-in-process_check.patch
-Patch0007: 0007-Merge-pull-request-2-from-atyronesmith-procevent.patch
-Patch0008: 0008-Procevent-plugin-notifications.patch
-Patch0009: 0009-Clarify-wanted-netlink-proc-msgs.patch
-Patch0010: 0010-payload-logic-clean-up-leak-fixes.patch
-Patch0011: 0011-Use-ignorelist_t-and-fix-leaks.patch
-Patch0012: 0012-Fix-mutex-lock-in-read_event.patch
-Patch0013: 0013-Check-ignorelist-during-init.patch
-Patch0014: 0014-Procevent-RPM-specfile.patch
-Patch0015: 0015-Drain-netlink-socket-before-sleeping-then-filter-rep.patch
-Patch0016: 0016-clang-formatting.patch
-Patch0017: 0017-Use-long-type-for-most-PID-values.patch
-Patch0018: 0018-Remove-types.db-entry-and-change-RegexProcess-conf-o.patch
-Patch0019: 0019-Use-a-separate-dequeue-thread-to-dispatch-notificati.patch
-Patch0020: 0020-Additional-mutex-styling-changes.patch
-Patch0021: 0021-More-styling-remove-superfluous-dequeue-thread-error.patch
-Patch0022: 0022-Handled-interrupted-socket-reads.patch
-Patch0023: 0023-sysevent-plugin-initial-commit.patch
-Patch0024: 0024-Use-snprintf-instead-of-sprintf.patch
-Patch0025: 0025-clang-formatting.patch
-Patch0026: 0026-require-libyajl2-to-build-sysevent-plugin.patch
-Patch0027: 0027-require-libyajl2-to-build-sysevent-plugin-part-2.patch
-Patch0028: 0028-VES-enabled-sysvent-plugin.patch
-Patch0029: 0029-Only-declare-rsyslog-keys-if-yajl2-present.patch
-Patch0030: 0030-clang-formatting.patch
-Patch0031: 0031-Remove-bogus-include.patch
-Patch0032: 0032-Move-misplaced-yajl_gen_map_close.patch
-Patch0033: 0033-clang-formatting.patch
-Patch0034: 0034-Sysevent-RPM-specfile.patch
-Patch0035: 0035-Check-for-malloc-failures.patch
-Patch0036: 0036-clang-formatting.patch
-Patch0037: 0037-Add-dequeue-thread-styling-changes.patch
-Patch0038: 0038-connectivity-plugin-initial-commit.patch
-Patch0039: 0039-Merge-pull-request-1-from-atyronesmith-connectivity.patch
-Patch0040: 0040-connectivity-notifications.patch
-Patch0041: 0041-Clarify-wanted-netlink-interface-msgs.patch
-Patch0042: 0042-snake-case-for-iface-list-payload-simplification.patch
-Patch0043: 0043-monitor-all-interfaces-by-default.patch
-Patch0044: 0044-Use-ignorelist-malloc-fix-conf-clarification.patch
-Patch0045: 0045-Properly-detect-which-interfaces-to-monitor.patch
-Patch0046: 0046-Connectivity-RPM-specfile.patch
-Patch0047: 0047-Spec-file-typo-fixes.patch
-Patch0048: 0048-Add-libmnl-devel-req-for-connectivity.patch
-Patch0049: 0049-Use-a-separate-dequeue-thread-to-dispatch-notificati.patch
-Patch0050: 0050-octo-code-review-changes.patch
-Patch0051: 0051-More-styling-remove-superfluous-dequeue-thread-error.patch
-Patch0052: 0052-Handled-interrupted-socket-reads.patch
-Patch0053: 0053-Cleanup-cherrypick-issues.patch
-Patch0054: 0054-daemon-common.h-Add-the-STRERROR-and-STRERRNO-macros.patch
-Patch0055: 0055-Backport-bonded-devices-plus-add-l-stats.patch
-Patch0056: 0056-Add-the-write_syslog-plugin.patch
-
 
 BuildRequires: perl-devel
 BuildRequires: perl(ExtUtils::MakeMaker)
@@ -233,6 +177,15 @@ BuildRequires: curl-devel
 BuildRequires: libxml2-devel
 %description bind
 This plugin retrieves statistics from the BIND dns server.
+
+%package check-uptime
+Summary:       Check for cache events for uptime metric
+Group:         System Environment/Daemons
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+%description check-uptime
+Checks for cache events for uptime metric, and send notifications
+when metric state changed.
 
 
 %package ceph
@@ -599,6 +552,17 @@ Provides: %{name}-ovs_stats = %{version}-%{release}
 The plugin collects the statistics of OVS connected bridges and interfaces.
 %endif
 
+%if 0%{?enable_pcie_errors} >0
+%package pcie-errors
+Summary:    Read errors from PCI Express Device Status
+
+Provides: %{name}-pcie_errors = %{version}-%{release}
+BuildRequires: kernel-headers
+
+%description pcie-errors
+Read errors from PCI Express Device Status and AER extended capabilities
+%endif
+
 
 %package -n perl-Collectd
 Summary:       Perl bindings for collectd
@@ -913,6 +877,8 @@ autoconf
     --disable-apple_sensors \
     --disable-aquaero \
     --disable-synproxy \
+    --disable-write_stackdriver \
+    --disable-gpu_nvidia \
 %if 0%{?enable_lvm}
     --enable-lvm \
 %else
@@ -949,6 +915,11 @@ autoconf
     --disable-write_mongodb \
     --with-libiptc \
     --with-java=%{java_home}/ \
+%if 0%{?enable_pcie_errors} >0
+    --enable-pcie_errors \
+%else
+    --disable-pcie_errors \
+%endif
 %if 0%{?enable_pinba} > 0
     --with-pinba \
 %else
@@ -1294,6 +1265,8 @@ make check
 %files ceph
 %{_libdir}/collectd/ceph.so
 
+%files check-uptime
+%{_libdir}/collectd/check_uptime.so
 
 %files chrony
 %{_libdir}/collectd/chrony.so
@@ -1425,6 +1398,10 @@ make check
 %config(noreplace) %{_sysconfdir}/collectd.d/ovs-stats.conf
 %endif
 
+%if 0%{?enable_pcie_errors} > 0
+%files pcie-errors
+%{_libdir}/%{name}/pcie_errors.so
+%endif
 
 %files -n perl-Collectd
 %doc perl-examples/*
@@ -1574,6 +1551,9 @@ make check
 
 
 %changelog
+* Fri Feb 07 2020 Matthias Runge <mrunge@redhat.com> - 5.10.0-1
+- rebase to 5.10
+
 * Fri May 03 2019 Matthias Runge <mrunge@redhat.com> - 5.8.1-5
 - enable pmu plugin
 
