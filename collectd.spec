@@ -17,7 +17,7 @@
 %global enable_dpdkevents 0
 %endif
 
-%global enable_pcie_errors 0
+%global enable_pcie_errors 1
 %global enable_ganglia 0
 
 
@@ -64,7 +64,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.10.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -1551,6 +1551,9 @@ make check
 
 
 %changelog
+* Thu Feb 13 2020 Piotr Rabiega <piotrx.rabiega@intel.com> - 5.10.0-2
+- enable pcie_errors plugin
+
 * Fri Feb 07 2020 Matthias Runge <mrunge@redhat.com> - 5.10.0-1
 - rebase to 5.10
 
