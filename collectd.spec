@@ -64,7 +64,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.10.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -99,7 +99,6 @@ Patch0001: 0001-Include-collectd.d-and-disable-default-loading.patch
 BuildRequires: perl-devel
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
-BuildRequires: python-devel
 BuildRequires: libgcrypt-devel
 BuildRequires: git
 BuildRequires: automake
@@ -552,7 +551,7 @@ Provides: %{name}-ovs_stats = %{version}-%{release}
 The plugin collects the statistics of OVS connected bridges and interfaces.
 %endif
 
-%if 0%{?enable_pcie_errors} >0
+%if 0%{?enable_pcie_errors} > 0
 %package pcie-errors
 Summary:    Read errors from PCI Express Device Status
 
@@ -605,8 +604,8 @@ PostgreSQL querying plugin. This plugins provides data of issued commands,
 called handlers and database traffic.
 
 %package procevent
-Summary:       Plugin that monitors process starts/stops via netlink library
-Requires:      %{name}%{?_isa} = %{version}-%{release}
+Summary:   Plugin that monitors process starts/stops via netlink library
+Requires:  %{name}%{?_isa} = %{version}-%{release}
 
 %description procevent
 Plugin that monitors process starts/stops via netlink library
@@ -614,10 +613,16 @@ Plugin that monitors process starts/stops via netlink library
 
 
 %package python
-Summary:       Python plugin for collectd
-Group:         System Environment/Daemons
+Summary:   Python plugin for collectd
+Group:     System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+%if 0%{?rhel} > 7
+BuildRequires: python3-devel
+%else
 BuildRequires: python-devel
+%endif
+
 %description python
 The Python plugin embeds a Python interpreter into Collectd and exposes the
 application programming interface (API) to Python-scripts.
@@ -677,6 +682,9 @@ Summary:       SNMP agent module for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: net-snmp-devel
+
+Provides: %{name}-snmp_agent = %{version}-%{release}
+
 %description snmp-agent
 Receives and handles queries from SNMP master agent and returns the data
 collected by read plugins. Handles requests only for OIDs specified in
@@ -1551,6 +1559,9 @@ make check
 
 
 %changelog
+* Fri Mar 06 2020 Matthias Runge <mrunge@redhat.com> - 5.10.0-3
+- add provides for snmp_agent to make it compatible with EPEL
+
 * Thu Feb 13 2020 Piotr Rabiega <piotrx.rabiega@intel.com> - 5.10.0-2
 - enable pcie_errors plugin
 
