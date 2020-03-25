@@ -341,7 +341,6 @@ This plugin collects data provided by spamassassin.
 
 %package generic-jmx
 Summary:       Generic JMX plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description generic-jmx
 This plugin collects data provided by JMX.
@@ -355,10 +354,10 @@ This plugin reports the number of used and free hugepages on Linux.
 
 
 %ifarch x86_64
-%if %{?enable_intel_pmu} > 0
+%if 0%{?enable_intel_pmu} > 0
 %package pmu
 Summary:    Intel PMU plugin for collectd
-Group:      System Environment/Daemons
+
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  jevents-devel
 %description pmu
@@ -368,10 +367,10 @@ counters using kernel Linux perf interface.
 %endif
 
 %ifarch x86_64
-%if %{?enable_intel_rdt} > 0
+%if 0%{?enable_intel_rdt} > 0
 %package rdt
 Summary:    Intel RDT plugin for collectd
-Group:      System Environment/Daemons
+
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  intel-cmt-cat-devel
 %description rdt
@@ -383,7 +382,6 @@ Intel Resource Director Technology (Intel(R) RDT).
 
 %package ipmi
 Summary:       IPMI plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: OpenIPMI-devel
 %description ipmi
@@ -393,7 +391,6 @@ This plugin for collectd provides IPMI support.
 %ifnarch aarch64
 %package iptables
 Summary:       Iptables plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: iptables-devel
 %description iptables
@@ -403,7 +400,6 @@ This plugin collects data from iptables counters.
 
 %package ipvs
 Summary:       IPVS plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description ipvs
 This plugin collects data from IPVS.
@@ -411,7 +407,6 @@ This plugin collects data from IPVS.
 
 %package java
 Summary:       Java bindings for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: java-devel
 BuildRequires: jpackage-utils
@@ -421,14 +416,12 @@ These are the Java bindings for collectd.
 
 %package -n libcollectdclient
 Summary:       Collectd client library
-Group:         System Environment/Daemons
 %description -n libcollectdclient
 Collectd client library.
 
 
 %package -n libcollectdclient-devel
 Summary:       Development files for libcollectdclient
-Group:         System Environment/Daemons
 Requires:      libcollectdclient%{?_isa} = %{version}-%{release}
 %description -n libcollectdclient-devel
 Development files for libcollectdclient.
@@ -447,7 +440,6 @@ notification containing all fetched values.
 
 %package log_logstash
 Summary:       Logstash plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: yajl-devel
 %description log_logstash
@@ -475,7 +467,6 @@ appropriate notifications when machine check exceptions are detected.
 
 %package memcachec
 Summary:       Memcachec plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libmemcached-devel
 %description memcachec
@@ -508,7 +499,6 @@ called handlers and database traffic.
 
 %package netlink
 Summary:       Netlink plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: iproute-static
 BuildRequires: libmnl-devel
@@ -519,7 +509,6 @@ about statistics of various interface and routing aspects.
 
 %package nginx
 Summary:       Nginx plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description nginx
 This plugin collects data provided by Nginx.
@@ -527,7 +516,6 @@ This plugin collects data provided by Nginx.
 %if 0%{?enable_notify_desktop} > 0
 %package notify_desktop
 Summary:       Notify desktop plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libnotify-devel
 %description notify_desktop
@@ -539,7 +527,6 @@ as defined in the Desktop Notification Specification.
 
 %package notify_email
 Summary:       Notify email plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libesmtp-devel
 %description notify_email
@@ -548,7 +535,6 @@ notifications to a configured email address.
 
 %package openldap
 Summary:       OpenLDAP plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: openldap-devel
 %description openldap
@@ -559,7 +545,6 @@ from OpenLDAP's cn=Monitor subtree.
 %if 0%{?enable_ovs_events} > 0
 %package ovs-events
 Summary:       Open vSwitch events plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: yajl-devel
 
@@ -574,7 +559,7 @@ whenever a link state change occurs in the OVS database.
 %if 0%{?enable_ovs_stats} > 0
 %package ovs-stats
 Summary:       Open vSwitch statsevents plugin for collectd
-Group:         System Environment/Daemons
+
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: yajl-devel
 
@@ -598,7 +583,6 @@ Read errors from PCI Express Device Status and AER extended capabilities
 
 %package -n perl-Collectd
 Summary:       Perl bindings for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 %description -n perl-Collectd
@@ -620,7 +604,6 @@ an extension for the PHP interpreter.
 
 %package ping
 Summary:       Ping plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: liboping-devel
 %description ping
@@ -629,7 +612,6 @@ This plugin for collectd provides network latency statistics.
 
 %package postgresql
 Summary:       PostgreSQL plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: postgresql-devel
 %description postgresql
@@ -663,7 +645,6 @@ application programming interface (API) to Python-scripts.
 
 %package rrdcached
 Summary:       RRDCacheD plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: rrdtool-devel
 %description rrdcached
@@ -673,7 +654,6 @@ to store values to RRD files in an efficient manner.
 
 %package rrdtool
 Summary:       RRDTool plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: rrdtool-devel
 %description rrdtool
@@ -683,7 +663,6 @@ This plugin for collectd provides rrdtool support.
 %ifnarch ppc sparc sparc64
 %package sensors
 Summary:       Libsensors module for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: lm_sensors-devel
 %description sensors
@@ -694,7 +673,6 @@ lm_sensors.
 
 %package smart
 Summary:       SMART plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libatasmart-devel
 %description smart
@@ -704,7 +682,6 @@ notably load cycle count, temperature and bad sectors.
 
 %package snmp
 Summary:       SNMP module for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: net-snmp-devel
 %description snmp
@@ -747,7 +724,6 @@ on modern Intel turbo-capable processors.
 %ifnarch ppc sparc sparc64
 %package virt
 Summary:       Libvirt plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libvirt-devel
 BuildRequires: libxml2-devel
@@ -771,7 +747,6 @@ collectd.
 
 %package write_http
 Summary:       HTTP output plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: curl-devel
 
@@ -783,7 +758,6 @@ Write metrics via HTTP POST.
 %if 0%{?enable_write_kafka} > 0
 %package write_kafka
 Summary:       Kafka output plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: librdkafka-devel
 
@@ -796,7 +770,6 @@ This sends values to Kafka, a distributed messaging system.
 %if 0%{?enable_prometheus}
 %package write_prometheus
 Summary:       Prometheus output plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libmicrohttpd-devel
 BuildRequires: protobuf-c-devel
@@ -811,7 +784,7 @@ server, turning the collectd daemon into a Prometheus exporter.
 %if 0%{?enable_write_redis}
 %package write_redis
 Summary:       Redis output plugin for collectd
-Group:         System Environment/Daemons
+
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: hiredis-devel
 %description write_redis
@@ -821,10 +794,8 @@ This plugin can send data to Redis.
 %if 0%{?enable_riemann}
 %package write_riemann
 Summary:       Riemann output plugin for collectd
-Group:         System Environment/Daemons
+
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: protobuf-c-devel
-BuildRequires: libtool-ltdl-devel
 BuildRequires: riemann-c-client-devel
 
 Provides: %{name}-write-riemann = %{version}-%{release}
