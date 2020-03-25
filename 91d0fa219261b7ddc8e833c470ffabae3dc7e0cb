@@ -1,0 +1,8 @@
+Code-Review+2: Matthias Runge <mrunge@matthias-runge.de>
+Workflow+1: Matthias Runge <mrunge@matthias-runge.de>
+Verified+2: Zuul CI <zuul@review.rdoproject.org>
+Submitted-by: Zuul CI <zuul@review.rdoproject.org>
+Submitted-at: Wed, 25 Mar 2020 06:46:14 +0000
+Reviewed-on: https://review.rdoproject.org/r/26093
+Project: centos-opstools/collectd
+Branch: refs/heads/master
