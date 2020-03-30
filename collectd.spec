@@ -27,7 +27,7 @@
 # pmu requires libjevents to be available
 # pmu is only available on Intel architectures
 %ifarch x86_64
-%global enable_intel_pmu 0
+%global enable_intel_pmu 1
 %else
 %global enable_intel_pmu 0
 %endif
