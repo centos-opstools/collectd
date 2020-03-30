@@ -27,7 +27,7 @@
 # pmu requires libjevents to be available
 # pmu is only available on Intel architectures
 %ifarch x86_64
-%global enable_intel_pmu 0
+%global enable_intel_pmu 1
 %else
 %global enable_intel_pmu 0
 %endif
@@ -67,7 +67,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.11.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -1601,6 +1601,9 @@ make check
 
 
 %changelog
+* Tue Apr 07 2020 Piotr Rabiega <piotrx.rabiega@intel.com> - 5.11.0-2
+- enable pmu plugin
+
 * Thu Mar 19 2020 Piotr Rabiega <piotrx.rabiega@intel.com> - 5.11.0-1
 - rebase to 5.11
 
