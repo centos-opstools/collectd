@@ -29,7 +29,7 @@
 # pmu requires libjevents to be available
 # pmu is only available on Intel architectures
 %ifarch x86_64
-%global enable_intel_pmu 0
+%global enable_intel_pmu 1
 %else
 %global enable_intel_pmu 0
 %endif
@@ -392,14 +392,12 @@ BuildRequires: OpenIPMI-devel
 This plugin for collectd provides IPMI support.
 
 
-%ifnarch aarch64
 %package iptables
 Summary:       Iptables plugin for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: iptables-devel
 %description iptables
 This plugin collects data from iptables counters.
-%endif
 
 
 %package ipvs
@@ -1376,10 +1374,8 @@ make check
 %config(noreplace) %{_sysconfdir}/collectd.d/ipmi.conf
 
 
-%ifnarch aarch64
 %files iptables
 %{_libdir}/collectd/iptables.so
-%endif
 
 
 %files ipvs
@@ -1604,6 +1600,9 @@ make check
 %changelog
 * Fri Sep 18 2020 Matthuas Runge <mrunge@redhat.com> - 5.11.0-3
 - drop mysql, jmx-devel
+
+* Mon Jun 29 2020 Yaakov Selkowitz <yselkowi@redhat.com> - 5.11.0-3
+- Enable iptables plugin on aarch64 for RHEL 8
 
 * Tue Apr 07 2020 Matthias Runge <mrunge@redhat.com> - 5.11.0-2
 - re-enable the pmu plugin
