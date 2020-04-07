@@ -27,7 +27,7 @@
 # pmu requires libjevents to be available
 # pmu is only available on Intel architectures
 %ifarch x86_64
-%global enable_intel_pmu 0
+%global enable_intel_pmu 1
 %else
 %global enable_intel_pmu 0
 %endif
@@ -67,7 +67,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.11.0
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -388,14 +388,12 @@ BuildRequires: OpenIPMI-devel
 This plugin for collectd provides IPMI support.
 
 
-%ifnarch aarch64
 %package iptables
 Summary:       Iptables plugin for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: iptables-devel
 %description iptables
 This plugin collects data from iptables counters.
-%endif
 
 
 %package ipvs
@@ -903,9 +901,6 @@ autoconf
 %else
     --disable-lvm \
 %endif
-%ifarch aarch64
-    --disable-iptables \
-%endif
     --disable-lpar \
     --disable-netapp \
     --disable-nut \
@@ -1374,10 +1369,8 @@ make check
 %config(noreplace) %{_sysconfdir}/collectd.d/ipmi.conf
 
 
-%ifnarch aarch64
 %files iptables
 %{_libdir}/collectd/iptables.so
-%endif
 
 
 %files ipvs
@@ -1601,6 +1594,12 @@ make check
 
 
 %changelog
+* Mon Jun 29 2020 Yaakov Selkowitz <yselkowi@redhat.com> - 5.11.0-3
+- Enable iptables plugin on aarch64 for RHEL 8
+
+* Tue Apr 07 2020 Matthias Runge <mrunge@redhat.com> - 5.11.0-2
+- re-enable the pmu plugin
+
 * Thu Mar 19 2020 Piotr Rabiega <piotrx.rabiega@intel.com> - 5.11.0-1
 - rebase to 5.11
 
