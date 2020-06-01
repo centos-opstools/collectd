@@ -1,3 +1,4 @@
+# DNM
 %global _hardened_build 1
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
 %undefine _strict_symbol_defs_build
