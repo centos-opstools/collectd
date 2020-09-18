@@ -10,7 +10,7 @@
 %ifarch x86_64
 # dpdk-* disabled, it's not recommended to use in combintation with
 # ovs https://github.com/collectd/collectd/pull/2613
-%global enable_dpdkstat 1
+%global enable_dpdkstat 0
 %global enable_dpdkevents 0
 %else
 %global enable_dpdkstat 0
@@ -18,10 +18,11 @@
 %endif
 
 %global enable_dcpmm 0
-%global enable_dpdk_telemetry 1
-%global enable_logparser 1
-%global enable_pcie_errors 1
+%global enable_dpdk_telemetry 0
 %global enable_ganglia 0
+%global enable_logparser 1
+%global enable_mysql 0
+%global enable_pcie_errors 1
 
 
 # pmu requires libjevents to be available
@@ -486,15 +487,16 @@ consumption from Intel Many Integrated Core (MIC) CPUs.
 %endif
 
 
-
+%if 0%{?with_mysql} > 0
 %package mysql
 Summary:       MySQL plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: mysql-devel
+BuildRequires: mariadb-connector-c-devel
 %description mysql
 MySQL querying plugin. This plugin provides data of issued commands,
 called handlers and database traffic.
+%endif
 
 
 %package netlink
@@ -888,12 +890,20 @@ autoconf
     --disable-static \
     --disable-apple_sensors \
     --disable-aquaero \
+    --disable-buddyinfo \
+    --disable-capabilities \
+%if 0%{?with_mysql}
+    --enable-mysql \
+%else
+    --disable-mysql \
+%endif
     --disable-synproxy \
     --disable-write_stackdriver \
     --disable-gpu_nvidia \
-    --disable-buddyinfo \
-    --disable-capabilities \
     --disable-ipstats \
+%ifarch aarch64
+    --disable-iptables \
+%endif
     --disable-redfish \
     --disable-slurm \
     --disable-ubi \
@@ -902,9 +912,6 @@ autoconf
     --enable-lvm \
 %else
     --disable-lvm \
-%endif
-%ifarch aarch64
-    --disable-iptables \
 %endif
     --disable-lpar \
     --disable-netapp \
@@ -1411,9 +1418,11 @@ make check
 %{_libdir}/collectd/memcachec.so
 
 
+%if 0%{?with_mysql} > 0
 %files mysql
 %{_libdir}/collectd/mysql.so
 %config(noreplace) %{_sysconfdir}/collectd.d/mysql.conf
+%endif
 
 
 %files netlink
