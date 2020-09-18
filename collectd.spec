@@ -10,7 +10,7 @@
 %ifarch x86_64
 # dpdk-* disabled, it's not recommended to use in combintation with
 # ovs https://github.com/collectd/collectd/pull/2613
-%global enable_dpdkstat 1
+%global enable_dpdkstat 0
 %global enable_dpdkevents 0
 %else
 %global enable_dpdkstat 0
@@ -18,10 +18,12 @@
 %endif
 
 %global enable_dcpmm 0
-%global enable_dpdk_telemetry 1
-%global enable_logparser 1
-%global enable_pcie_errors 1
+%global enable_dpdk_telemetry 0
 %global enable_ganglia 0
+%global enable_java 0
+%global enable_logparser 1
+%global enable_mysql 1
+%global enable_pcie_errors 1
 
 
 # pmu requires libjevents to be available
@@ -67,7 +69,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.11.0
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -339,11 +341,13 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 This plugin collects data provided by spamassassin.
 
 
+%if 0%{?enable_java}
 %package generic-jmx
 Summary:       Generic JMX plugin for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description generic-jmx
 This plugin collects data provided by JMX.
+%endif
 
 %package hugepages
 Summary:       Number of hugepages on Linux
@@ -405,6 +409,7 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 This plugin collects data from IPVS.
 
 
+%if 0%{?enable_java}
 %package java
 Summary:       Java bindings for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
@@ -412,6 +417,7 @@ BuildRequires: java-devel
 BuildRequires: jpackage-utils
 %description java
 These are the Java bindings for collectd.
+%endif
 
 
 %package -n libcollectdclient
@@ -445,17 +451,6 @@ BuildRequires: yajl-devel
 %description log_logstash
 This plugin formats messages as JSON events for Logstash
 
-
-%if 0%{?enable_lvm}
-%package lvm
-Summary:       LVM plugin for collectd
-Group:         System Environment/Daemons
-Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: lvm2-devel
-%description lvm
-This plugin collects information from lvm
-%endif
-
 %package mcelog
 Summary:       Machine Check Exceptions notifications
 Requires:      %{name}%{?_isa} = %{version}-%{release}
@@ -486,15 +481,16 @@ consumption from Intel Many Integrated Core (MIC) CPUs.
 %endif
 
 
-
+%if 0%{?enable_mysql} > 0
 %package mysql
 Summary:       MySQL plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: mysql-devel
+BuildRequires: mariadb-connector-c-devel
 %description mysql
 MySQL querying plugin. This plugin provides data of issued commands,
 called handlers and database traffic.
+%endif
 
 
 %package netlink
@@ -888,24 +884,19 @@ autoconf
     --disable-static \
     --disable-apple_sensors \
     --disable-aquaero \
+    --disable-buddyinfo \
+    --disable-capabilities \
     --disable-synproxy \
     --disable-write_stackdriver \
     --disable-gpu_nvidia \
-    --disable-buddyinfo \
-    --disable-capabilities \
     --disable-ipstats \
+%ifarch aarch64
+    --disable-iptables \
+%endif
     --disable-redfish \
     --disable-slurm \
     --disable-ubi \
     --disable-write_influxdb_udp \
-%if 0%{?enable_lvm}
-    --enable-lvm \
-%else
-    --disable-lvm \
-%endif
-%ifarch aarch64
-    --disable-iptables \
-%endif
     --disable-lpar \
     --disable-netapp \
     --disable-nut \
@@ -933,7 +924,11 @@ autoconf
 %endif
     --disable-write_mongodb \
     --with-libiptc \
+%if 0%{?enable_java}
     --with-java=%{java_home}/ \
+%else
+    --disable-java \
+%endif
 %if 0%{?enable_pcie_errors} >0
     --enable-pcie_errors \
 %else
@@ -1109,6 +1104,11 @@ rm -f %{buildroot}/%{_libdir}/{collectd/,}*.la
 
 # we do not distribute lua bindings currently
 rm %{buildroot}%{_mandir}/man5/%{name}-lua*
+
+# remove java manpage if not built
+%if 0%{?enable_java} == 0
+rm %{buildroot}%{_mandir}/man5/%{name}-java*
+%endif
 
 
 %check
@@ -1362,8 +1362,10 @@ make check
 %doc %{_mandir}/man5/collectd-email.5*
 
 
+%if 0%{?enable_java}
 %files generic-jmx
 %{_datadir}/collectd/java/generic-jmx.jar
+%endif
 
 %files hugepages
 %{_libdir}/collectd/hugepages.so
@@ -1384,11 +1386,13 @@ make check
 %{_libdir}/collectd/ipvs.so
 
 
+%if 0%{?enable_java}
 %files java
 %{_libdir}/collectd/java.so
 %dir %{_datadir}/collectd/java/
 %{_datadir}/collectd/java/collectd-api.jar
 %doc %{_mandir}/man5/collectd-java.5*
+%endif
 
 %if 0%{?enable_logparser} > 0
 %files logparser
@@ -1398,11 +1402,6 @@ make check
 %files log_logstash
 %{_libdir}/collectd/log_logstash.so
 
-%if 0%{?enable_lvm}
-%files lvm
-%{_libdir}/collectd/lvm.so
-%endif
-
 %files mcelog
 %{_libdir}/collectd/mcelog.so
 %config(noreplace) %{_sysconfdir}/collectd.d/mcelog.conf
@@ -1411,9 +1410,11 @@ make check
 %{_libdir}/collectd/memcachec.so
 
 
+%if 0%{?with_mysql} > 0
 %files mysql
 %{_libdir}/collectd/mysql.so
 %config(noreplace) %{_sysconfdir}/collectd.d/mysql.conf
+%endif
 
 
 %files netlink
@@ -1601,6 +1602,12 @@ make check
 
 
 %changelog
+* Fri Sep 18 2020 Matthuas Runge <mrunge@redhat.com> - 5.11.0-3
+- drop mysql, jmx-devel
+
+* Tue Apr 07 2020 Matthias Runge <mrunge@redhat.com> - 5.11.0-2
+- re-enable the pmu plugin
+
 * Thu Mar 19 2020 Piotr Rabiega <piotrx.rabiega@intel.com> - 5.11.0-1
 - rebase to 5.11
 
