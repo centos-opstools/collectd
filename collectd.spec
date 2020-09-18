@@ -491,7 +491,7 @@ consumption from Intel Many Integrated Core (MIC) CPUs.
 Summary:       MySQL plugin for collectd
 Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-BuildRequires: mysql-devel
+BuildRequires: mariadb-connector-c-devel
 %description mysql
 MySQL querying plugin. This plugin provides data of issued commands,
 called handlers and database traffic.
