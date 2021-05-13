@@ -1,18 +1,6 @@
-From d06cb7b77f1c6855459f82810c509b70bea344d2 Mon Sep 17 00:00:00 2001
-From: Piotr Rabiega <piotrx.rabiega@intel.com>
-Date: Mon, 2 Mar 2020 08:13:37 +0000
-Subject: [PATCH] Include collectd.d and disable default loading
-
-This patch will disable plugins loaded by default and will
-aply config read from collectd.d
----
- src/collectd.conf.in | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/src/collectd.conf.in b/src/collectd.conf.in
-index 9e30358..9d658e7 100644
---- a/src/collectd.conf.in
-+++ b/src/collectd.conf.in
+diff -ur collectd-5.12.0/src/collectd.conf.in src/src/collectd.conf.in
+--- collectd-5.12.0/src/collectd.conf.in	2020-09-03 07:09:35.141575028 -0400
++++ src/src/collectd.conf.in	2021-05-13 15:14:33.376306538 -0400
 @@ -4,6 +4,10 @@
  # http://collectd.org/
  #
@@ -42,8 +30,8 @@ index 9e30358..9d658e7 100644
  #@BUILD_PLUGIN_CPUFREQ_TRUE@LoadPlugin cpufreq
  #@BUILD_PLUGIN_CPUSLEEP_TRUE@LoadPlugin cpusleep
  @LOAD_PLUGIN_CSV@LoadPlugin csv
-@@ -138,7 +142,7 @@
- #@BUILD_PLUGIN_HUGEPAGES_TRUE@LoadPlugin hugepages
+@@ -140,7 +144,7 @@
+ #@BUILD_PLUGIN_INFINIBAND_TRUE@LoadPlugin infiniband
  #@BUILD_PLUGIN_INTEL_PMU_TRUE@LoadPlugin intel_pmu
  #@BUILD_PLUGIN_INTEL_RDT_TRUE@LoadPlugin intel_rdt
 -@BUILD_PLUGIN_INTERFACE_TRUE@@BUILD_PLUGIN_INTERFACE_TRUE@LoadPlugin interface
@@ -51,7 +39,7 @@ index 9e30358..9d658e7 100644
  #@BUILD_PLUGIN_IPC_TRUE@LoadPlugin ipc
  #@BUILD_PLUGIN_IPMI_TRUE@LoadPlugin ipmi
  #@BUILD_PLUGIN_IPSTATS_TRUE@LoadPlugin ipstats
-@@ -146,7 +150,7 @@
+@@ -148,7 +152,7 @@
  #@BUILD_PLUGIN_IPVS_TRUE@LoadPlugin ipvs
  #@BUILD_PLUGIN_IRQ_TRUE@LoadPlugin irq
  #@BUILD_PLUGIN_JAVA_TRUE@LoadPlugin java
@@ -60,8 +48,8 @@ index 9e30358..9d658e7 100644
  #@BUILD_PLUGIN_LPAR_TRUE@LoadPlugin lpar
  #@BUILD_PLUGIN_LOGPARSER_TRUE@LoadPlugin logparser
  #@BUILD_PLUGIN_LUA_TRUE@LoadPlugin lua
-@@ -156,7 +160,7 @@
- #@BUILD_PLUGIN_MD_TRUE@LoadPlugin md
+@@ -159,7 +163,7 @@
+ #@BUILD_PLUGIN_MDEVENTS_TRUE@LoadPlugin mdevents
  #@BUILD_PLUGIN_MEMCACHEC_TRUE@LoadPlugin memcachec
  #@BUILD_PLUGIN_MEMCACHED_TRUE@LoadPlugin memcached
 -@BUILD_PLUGIN_MEMORY_TRUE@@BUILD_PLUGIN_MEMORY_TRUE@LoadPlugin memory
@@ -69,7 +57,7 @@ index 9e30358..9d658e7 100644
  #@BUILD_PLUGIN_MIC_TRUE@LoadPlugin mic
  #@BUILD_PLUGIN_MODBUS_TRUE@LoadPlugin modbus
  #@BUILD_PLUGIN_MQTT_TRUE@LoadPlugin mqtt
-@@ -194,7 +198,7 @@
+@@ -197,7 +201,7 @@
  #@BUILD_PLUGIN_REDIS_TRUE@LoadPlugin redis
  #@BUILD_PLUGIN_ROUTEROS_TRUE@LoadPlugin routeros
  #@BUILD_PLUGIN_RRDCACHED_TRUE@LoadPlugin rrdcached
@@ -78,11 +66,8 @@ index 9e30358..9d658e7 100644
  #@BUILD_PLUGIN_SENSORS_TRUE@LoadPlugin sensors
  #@BUILD_PLUGIN_SERIAL_TRUE@LoadPlugin serial
  #@BUILD_PLUGIN_SIGROK_TRUE@LoadPlugin sigrok
-@@ -2089,3 +2093,4 @@
+@@ -2209,3 +2213,4 @@
  #    </Type>
  #  </Host>
  #</Plugin>
 +Include "/etc/collectd.d"
--- 
-1.8.3.1
-
