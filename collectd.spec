@@ -105,7 +105,7 @@ BuildRequires: perl-devel
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
 BuildRequires: libgcrypt-devel
-BuildRequires: git
+BuildRequires: git-core
 BuildRequires: automake
 
 Requires(post):   systemd
@@ -888,9 +888,6 @@ autoconf
     --disable-write_stackdriver \
     --disable-gpu_nvidia \
     --disable-ipstats \
-%ifarch aarch64
-    --disable-iptables \
-%endif
     --disable-redfish \
     --disable-slurm \
     --disable-ubi \
