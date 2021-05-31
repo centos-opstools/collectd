@@ -105,7 +105,7 @@ BuildRequires: perl-devel
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
 BuildRequires: libgcrypt-devel
-BuildRequires: git
+BuildRequires: git-core
 BuildRequires: automake
 
 Requires(post):   systemd
@@ -888,9 +888,6 @@ autoconf
     --disable-write_stackdriver \
     --disable-gpu_nvidia \
     --disable-ipstats \
-%ifarch aarch64
-    --disable-iptables \
-%endif
     --disable-redfish \
     --disable-slurm \
     --disable-ubi \
@@ -1110,7 +1107,7 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 
 
 %check
-make check
+make -d check
 
 
 %post
