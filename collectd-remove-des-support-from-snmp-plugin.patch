@@ -1,0 +1,31 @@
+From 926b4764602bde6980da83858d24c4beafb2c12c Mon Sep 17 00:00:00 2001
+From: Ruben Kerkhof <ruben@rubenkerkhof.com>
+Date: Tue, 6 Jul 2021 10:22:36 +0200
+Subject: [PATCH] Remove DES support in snmp plugin
+
+Signed-off-by: Ruben Kerkhof <ruben@rubenkerkhof.com>
+---
+ src/snmp.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/src/snmp.c b/src/snmp.c
+index 17e4b4cf..f4579596 100644
+--- a/src/snmp.c
++++ b/src/snmp.c
+@@ -704,12 +704,8 @@ static int csnmp_config_add_host_priv_protocol(host_definition_t *hd,
+   if (strcasecmp("AES", buffer) == 0) {
+     hd->priv_protocol = usmAESPrivProtocol;
+     hd->priv_protocol_len = sizeof(usmAESPrivProtocol) / sizeof(oid);
+-  } else if (strcasecmp("DES", buffer) == 0) {
+-    hd->priv_protocol = usmDESPrivProtocol;
+-    hd->priv_protocol_len = sizeof(usmDESPrivProtocol) / sizeof(oid);
+   } else {
+-    WARNING("snmp plugin: The `PrivProtocol' config option must be `AES' or "
+-            "`DES'.");
++    WARNING("snmp plugin: The `PrivProtocol' config option must be `AES'.");
+     return -1;
+   }
+
+--
+2.32.0
+
