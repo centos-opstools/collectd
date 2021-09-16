@@ -24,12 +24,13 @@
 %global enable_logparser 1
 %global enable_mysql 1
 %global enable_pcie_errors 1
-
+%global enable_iptables 0
+%global enable_snmp 1
 
 # pmu requires libjevents to be available
 # pmu is only available on Intel architectures
 %ifarch x86_64
-%global enable_intel_pmu 1
+%global enable_intel_pmu 0
 %else
 %global enable_intel_pmu 0
 %endif
@@ -100,8 +101,11 @@ Source97: rrdtool.conf
 
 
 Patch0001: 0001-Include-collectd.d-and-disable-default-loading.patch
+Patch0002: %{name}-remove-des-support-from-snmp-plugin.patch
 
 BuildRequires: perl-devel
+BuildRequires: perl-generators
+BuildRequires: perl-interpreter
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: perl(ExtUtils::Embed)
 BuildRequires: libgcrypt-devel
@@ -368,6 +372,7 @@ Collect metrics about infiniband ports
 Summary:    Intel PMU plugin for collectd
 
 Requires:   %{name}%{?_isa} = %{version}-%{release}
+# jevents-devel is part of the PMU-tools package
 BuildRequires:  jevents-devel
 %description pmu
 The intel_pmu plugin collects information about system performance
@@ -397,12 +402,14 @@ BuildRequires: OpenIPMI-devel
 This plugin for collectd provides IPMI support.
 
 
+%if 0%{?enable_iptables}
 %package iptables
 Summary:       Iptables plugin for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: iptables-devel
 %description iptables
 This plugin collects data from iptables counters.
+%endif
 
 
 %package ipvs
@@ -595,6 +602,7 @@ Read errors from PCI Express Device Status and AER extended capabilities
 %package -n perl-Collectd
 Summary:       Perl bindings for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
+BuildRequires: perl-srpm-macros
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 %description -n perl-Collectd
 This package contains the Perl bindings and plugin for collectd.
@@ -671,7 +679,7 @@ BuildRequires: rrdtool-devel
 This plugin for collectd provides rrdtool support.
 
 
-%ifnarch ppc sparc sparc64
+%ifnarch ppc sparc sparc64 ppc64le
 %package sensors
 Summary:       Libsensors module for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
@@ -691,6 +699,7 @@ This plugin for collectd collects SMART statistics,
 notably load cycle count, temperature and bad sectors.
 
 
+%if 0%{?enable_snmp}
 %package snmp
 Summary:       SNMP module for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
@@ -706,12 +715,14 @@ BuildRequires: net-snmp-devel
 
 Provides: %{name}-snmp_agent = %{version}-%{release}
 
+
 %description snmp-agent
 Receives and handles queries from SNMP master agent and returns the data
 collected by read plugins. Handles requests only for OIDs specified in
 configuration file. To handle SNMP queries the plugin gets data from
 collectd and translates requested values from collectd's internal format
 to SNMP format.
+%endif
 
 %package sysevent
 Summary:       Plugin that monitors rsyslog for system events
@@ -916,7 +927,7 @@ autoconf
     --disable-oracle \
     --disable-pf \
     --disable-routeros \
-%ifarch ppc sparc sparc64
+%ifarch ppc sparc sparc64 ppc64le
     --disable-sensors \
 %endif
     --disable-sigrok \
@@ -936,7 +947,13 @@ autoconf
     --disable-write_kafka \
 %endif
     --disable-write_mongodb \
+%if 0%{?enable_iptables}
     --with-libiptc \
+    --enable-iptables \
+%else
+    --without-libiptc \
+    --disable-iptables \
+%endif
 %if 0%{?enable_java}
     --with-java=%{java_home}/ \
 %else
@@ -959,6 +976,13 @@ autoconf
     --disable-modbus \
     --disable-onewire \
     --disable-redis \
+%if 0%{?enable_snmp} > 0
+    --enable-snmp \
+    --enable-snmp_agent \
+%else
+    --disable-snmp \
+    --disable-snmp_agent \
+%endif
 %if 0%{?enable_write_redis} > 0
     --enable-write_redis \
 %else
@@ -1396,8 +1420,10 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 %config(noreplace) %{_sysconfdir}/collectd.d/ipmi.conf
 
 
+%if 0%{?enable_iptables}
 %files iptables
 %{_libdir}/collectd/iptables.so
+%endif
 
 
 %files ipvs
@@ -1529,7 +1555,7 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 %config(noreplace) %{_sysconfdir}/collectd.d/rrdtool.conf
 
 
-%ifnarch ppc sparc sparc64
+%ifnarch ppc sparc sparc64 ppc64le
 %files sensors
 %{_libdir}/collectd/sensors.so
 %config(noreplace) %{_sysconfdir}/collectd.d/sensors.conf
@@ -1539,7 +1565,7 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 %files smart
 %{_libdir}/collectd/smart.so
 
-
+%if 0%{?enable_snmp}
 %files snmp
 %{_libdir}/collectd/snmp.so
 %config(noreplace) %{_sysconfdir}/collectd.d/snmp.conf
@@ -1547,6 +1573,7 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 
 %files snmp-agent
 %{_libdir}/collectd/snmp_agent.so
+%endif
 
 %files sysevent
 %{_libdir}/collectd/sysevent.so
