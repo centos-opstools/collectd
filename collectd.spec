@@ -27,6 +27,7 @@
 %global enable_iptables 0
 %global enable_snmp 1
 
+
 # pmu requires libjevents to be available
 # pmu is only available on Intel architectures
 %ifarch x86_64
@@ -45,7 +46,7 @@
 %global enable_ovs_stats 1
 
 
-%global enable_write_redis 1
+%global enable_write_redis 0
 
 %global enable_write_syslog 1
 
