@@ -45,7 +45,7 @@
 %global enable_ovs_stats 1
 
 
-%global enable_write_redis 1
+%global enable_write_redis 0
 
 %global enable_write_syslog 1
 
@@ -70,7 +70,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.12.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -1650,6 +1650,9 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 
 
 %changelog
+* Sat Nov 13 2021 Matthias Runge <mrunge@redhat.com> - 5.12.0-1
+- drop hiredis/write_redis
+
 * Thu May 13 2021 Ryan McCabe <rmccabe@redhat.com> - 5.12.0-1
 - rebase to 5.12
 
