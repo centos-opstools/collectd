@@ -22,6 +22,7 @@
 %global enable_ganglia 0
 %global enable_java 0
 %global enable_logparser 1
+%global enable_memcachec 0
 %global enable_mysql 1
 %global enable_pcie_errors 1
 %global enable_iptables 0
@@ -70,7 +71,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.12.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -482,6 +483,7 @@ collectd notification or not.
 Mdevents needs the syslog and mdadm to be present on a platform that
 collectd is launched.
 
+%if 0%{?enable_memcachec}
 %package memcachec
 Summary:       Memcachec plugin for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
@@ -489,6 +491,7 @@ BuildRequires: libmemcached-devel
 %description memcachec
 This plugin connects to a memcached server, queries one or more
 given pages and parses the returned data according to user specification.
+%endif
 
 
 %if 0%{?enable_mic} > 0
@@ -1453,9 +1456,10 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 %files mdevents
 %{_libdir}/collectd/mdevents.so
 
+%if 0%{?enable_memcachec}
 %files memcachec
 %{_libdir}/collectd/memcachec.so
-
+%endif
 
 %if 0%{?enable_mysql} > 0
 %files mysql
@@ -1650,7 +1654,10 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 
 
 %changelog
-* Sat Nov 13 2021 Matthias Runge <mrunge@redhat.com> - 5.12.0-1
+* Wed Nov 17 2021 Matthias Runge <mrunge@redhat.com> - 5.12.0-3
+- drop libmemcachec/memcachec plugin
+
+* Sat Nov 13 2021 Matthias Runge <mrunge@redhat.com> - 5.12.0-2
 - drop hiredis/write_redis
 
 * Thu May 13 2021 Ryan McCabe <rmccabe@redhat.com> - 5.12.0-1
