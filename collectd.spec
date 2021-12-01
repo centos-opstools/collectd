@@ -20,18 +20,20 @@
 %global enable_dcpmm 0
 %global enable_dpdk_telemetry 0
 %global enable_ganglia 0
+# there is no java in centos9s atm
 %global enable_java 0
 %global enable_logparser 1
 %global enable_memcachec 0
 %global enable_mysql 1
 %global enable_pcie_errors 1
+# iptables does not provide iptc anymore
 %global enable_iptables 0
 %global enable_snmp 1
 
 # pmu requires libjevents to be available
 # pmu is only available on Intel architectures
 %ifarch x86_64
-%global enable_intel_pmu 0
+%global enable_intel_pmu 1
 %else
 %global enable_intel_pmu 0
 %endif
@@ -71,7 +73,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.12.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -912,7 +914,6 @@ autoconf
     --disable-dependency-tracking \
     --disable-silent-rules \
     --disable-barometer \
-    --without-included-ltdl \
     --enable-all-plugins \
     --disable-static \
     --disable-apple_sensors \
@@ -1663,6 +1664,9 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 
 
 %changelog
+* Wed Dec 1 2021 Matthias Runge <mrunge@redhat.com> - 5.12-0-4
+- enable PMU
+
 * Wed Nov 17 2021 Matthias Runge <mrunge@redhat.com> - 5.12.0-3
 - drop libmemcachec/memcachec plugin
 
