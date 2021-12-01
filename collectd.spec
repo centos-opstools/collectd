@@ -71,7 +71,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.12.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT and GPLv2
 Group: System Environment/Daemons
 URL: https://collectd.org/
@@ -103,6 +103,7 @@ Source97: rrdtool.conf
 
 Patch0001: 0001-Include-collectd.d-and-disable-default-loading.patch
 Patch0002: %{name}-remove-des-support-from-snmp-plugin.patch
+Patch0003: %{name}-virt-Add-hugetlb_-metrics.patch
 
 BuildRequires: perl-devel
 BuildRequires: perl-generators
@@ -1663,6 +1664,9 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 
 
 %changelog
+* Wed Dec 01 2021 Emma Foley <efoley@redhat.com> - 5.12.0-4
+- add hugetbl stats to libvirt (rhbz#2015543)
+
 * Wed Nov 17 2021 Matthias Runge <mrunge@redhat.com> - 5.12.0-3
 - drop libmemcachec/memcachec plugin
 
