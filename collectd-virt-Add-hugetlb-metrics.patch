@@ -1,0 +1,36 @@
+From 29ad94a0882d86ed8226fa0733e0fe24b2150ed4 Mon Sep 17 00:00:00 2001
+From: Emma Foley <efoley@redhat.com>
+Date: Mon, 29 Nov 2021 14:59:59 -0500
+Subject: [PATCH] virt: Add hugetlb_ metrics
+
+ChangeLog: virt plugin: Add hugetlb_ metrics
+
+Resolves #3932
+Co-authored-by: Matthias Runge <mrunge@redhat.com>
+---
+ src/virt.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/src/virt.c b/src/virt.c
+index 01c7c777..2d2ed760 100644
+--- a/src/virt.c
++++ b/src/virt.c
+@@ -937,10 +937,11 @@ static void memory_submit(virDomainPtr dom, gauge_t value) {
+
+ static void memory_stats_submit(gauge_t value, virDomainPtr dom,
+                                 int tag_index) {
+-  static const char *tags[] = {"swap_in",        "swap_out",   "major_fault",
+-                               "minor_fault",    "unused",     "available",
+-                               "actual_balloon", "rss",        "usable",
+-                               "last_update",    "disk_caches"};
++  static const char *tags[] = {
++      "swap_in",        "swap_out",    "major_fault",    "minor_fault",
++      "unused",         "available",   "actual_balloon", "rss",
++      "usable",         "last_update", "disk_caches",    "hugetlb_pgalloc",
++      "hugetlb_pgfail"};
+
+   if ((tag_index < 0) || (tag_index >= (int)STATIC_ARRAY_SIZE(tags))) {
+     ERROR(PLUGIN_NAME " plugin: Array index out of bounds: tag_index = %d",
+--
+2.27.0
+
