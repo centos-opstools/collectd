@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36401d13_f0013846",
+        "filename": "collectd.spec",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 718
+      },
+      "writtenOn": "2022-01-04T18:53:36Z",
+      "side": 1,
+      "message": "Should this be enable_write_redis?\n\nI suspect a typo, and enable_write_syslog should be included on L75",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 1
+      },
+      "revId": "bce967081c60b8c3b891e4b0caae7f3496191382",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": true
+    }
+  ]
+}
