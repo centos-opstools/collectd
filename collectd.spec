@@ -21,13 +21,32 @@
 %global enable_dpdk_telemetry 0
 %global enable_ganglia 0
 # there is no java in centos9s atm
+
+%if 0%{?rhel} > 8
 %global enable_java 0
+%else
+%global enable_java 1
+%endif
+
 %global enable_logparser 1
+
+%if 0%{?rhel} > 8
 %global enable_memcachec 0
+%else
+%global enable_memcachec 1
+%endif
+
 %global enable_mysql 1
 %global enable_pcie_errors 1
+
+%if 0%{?rhel} > 8
 # iptables does not provide iptc anymore
 %global enable_iptables 0
+%else
+%global enable_iptables 1
+%endif
+
+
 %global enable_snmp 1
 
 # pmu requires libjevents to be available
@@ -48,9 +67,11 @@
 %global enable_ovs_stats 1
 
 
+%if 0%{?rhel} > 8
 %global enable_write_redis 0
-
+%else
 %global enable_write_syslog 1
+%endif
 
 
 # mic disabled, MicAccessAPI required
@@ -64,7 +85,12 @@
 %global enable_libaquaero5 0
 %global enable_write_kafka 1
 %global enable_prometheus 1
+%if 0%{?rhel} > 8
 %global enable_riemann 0
+%else
+%global enable_riemann 1
+%endif
+
 %global enable_web 0
 
 # pulls in X as dep
@@ -73,9 +99,8 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.12.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: MIT and GPLv2
-Group: System Environment/Daemons
 URL: https://collectd.org/
 
 Source: https://github.com/collectd/collectd/releases/download/%{name}-%{version}/%{name}-%{version}.tar.bz2
@@ -147,7 +172,6 @@ fine grained since the files are updated every 10 seconds.
 %if 0%{?enable_amqp_09}
 %package amqp
 Summary:       AMQP 0.9 plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: librabbitmq-devel
 
@@ -167,7 +191,6 @@ Sends JSON-encoded data to an Advanced Message Queuing Protocol (AMQP)
 
 %package apache
 Summary:       Apache plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description apache
@@ -176,7 +199,6 @@ This plugin collects data provided by Apache's 'mod_status'.
 
 %package ascent
 Summary:       Ascent plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: curl-devel
 BuildRequires: libxml2-devel
@@ -187,7 +209,6 @@ a free server for the "World of Warcraft" game.
 
 %package bind
 Summary:       Bind plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: curl-devel
 BuildRequires: libxml2-devel
@@ -196,7 +217,6 @@ This plugin retrieves statistics from the BIND dns server.
 
 %package check-uptime
 Summary:       Check for cache events for uptime metric
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description check-uptime
@@ -206,7 +226,6 @@ when metric state changed.
 
 %package ceph
 Summary:       Ceph plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: yajl-devel
 %description ceph
@@ -215,7 +234,6 @@ This plugin collects data from Ceph.
 
 %package chrony
 Summary:       Chrony plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description chrony
 Chrony plugin for collectd
@@ -223,7 +241,6 @@ Chrony plugin for collectd
 
 %package -n collectd-utils
 Summary:       Collectd utilities
-Group:         System Environment/Daemons
 Requires:      libcollectdclient%{?_isa} = %{version}-%{release}
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description -n collectd-utils
@@ -232,7 +249,6 @@ Collectd utilities
 
 %package connectivity
 Summary:       Monitors network interface up/down status via netlink library
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description connectivity
@@ -242,7 +258,6 @@ Plugin that monitors network interface up/down status via netlink library
 
 %package curl
 Summary:       Curl plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: curl-devel
 %description curl
@@ -251,7 +266,6 @@ This plugin reads webpages with curl
 
 %package curl_json
 Summary:       Curl JSON plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: curl-devel
 BuildRequires: yajl-devel
@@ -261,7 +275,6 @@ This plugin retrieves JSON data via curl.
 
 %package curl_xml
 Summary:       Curl XML plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: curl-devel
 BuildRequires: libxml2-devel
@@ -280,7 +293,6 @@ Collect performance and health statistics from Intel Optane DC Persistent Memory
 
 %package dbi
 Summary:       DBI plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libdbi-devel
 %description dbi
@@ -290,7 +302,6 @@ execute SQL statements and read back the results.
 
 %package disk
 Summary:       Disk plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: systemd-devel
 %description disk
@@ -299,7 +310,6 @@ This plugin collects statistics of harddisk and, where supported, partitions.
 
 %package dns
 Summary:       DNS traffic analysis plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libpcap-devel
 %description dns
@@ -339,7 +349,6 @@ Provides an easy way to use the DPDK telemetry API to query ethernet device metr
 
 %package drbd
 Summary:       DRBD plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description drbd
 This plugin collects data from DRBD.
@@ -347,7 +356,6 @@ This plugin collects data from DRBD.
 
 %package email
 Summary:       Email plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description email
 This plugin collects data provided by spamassassin.
@@ -381,6 +389,7 @@ Summary:    Intel PMU plugin for collectd
 
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 # jevents-devel is part of the PMU-tools package
+Requires:   pmu-data
 BuildRequires:  jevents-devel
 %description pmu
 The intel_pmu plugin collects information about system performance
@@ -504,7 +513,6 @@ given pages and parses the returned data according to user specification.
 %if 0%{?enable_mic} > 0
 %package mic
 Summary:    mic plugin for collectd
-Group:      System Environment/Daemons
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 # BuildRequires: MicAccessApi
 %description mic
@@ -516,7 +524,6 @@ consumption from Intel Many Integrated Core (MIC) CPUs.
 %if 0%{?enable_mysql} > 0
 %package mysql
 Summary:       MySQL plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: mariadb-connector-c-devel
 %description mysql
@@ -621,7 +628,6 @@ This package contains the Perl bindings and plugin for collectd.
 %if 0%{?enable_pinba} > 0
 %package pinba
 Summary:       Pinba plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: protobuf-c-devel
 %description pinba
@@ -658,7 +664,6 @@ Plugin that monitors process starts/stops via netlink library
 
 %package python
 Summary:   Python plugin for collectd
-Group:     System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %if 0%{?rhel} > 7
@@ -719,7 +724,6 @@ This plugin for collectd provides querying of net-snmp.
 
 %package snmp-agent
 Summary:       SNMP agent module for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: net-snmp-devel
 
@@ -744,7 +748,6 @@ Plugin that monitors rsyslog for system events
 %ifarch %ix86 x86_64
 %package turbostat
 Summary:       Turbostat module for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 BuildRequires: libcap-devel
 %description turbostat
@@ -767,7 +770,6 @@ This plugin collects information from virtualized guests.
 %if 0%{?enable_web}
 %package web
 Summary:       Contrib web interface to viewing rrd files
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      collectd-rrdtool = %{version}-%{release}
 Requires:      perl-HTML-Parser, perl-Regexp-Common, rrdtool-perl, httpd
@@ -839,7 +841,6 @@ This plugin can send data to Riemann.
 %if 0%{?enable_write_syslog}
 %package write_syslog
 Summary:       syslog output plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 Provides: %{name}-write-syslog = %{version}-%{release}
@@ -850,7 +851,6 @@ This plugin can send data to syslog.
 
 %package write_sensu
 Summary:       Sensu output plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 Provides: %{name}-write-sensu = %{version}-%{release}
@@ -861,7 +861,6 @@ This plugin can send data to Sensu.
 
 %package write_tsdb
 Summary:       OpenTSDB output plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 Provides: %{name}-write-tsdb = %{version}-%{release}
@@ -872,7 +871,6 @@ This plugin can send data to OpenTSDB.
 
 %package zookeeper
 Summary:       Zookeeper plugin for collectd
-Group:         System Environment/Daemons
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 %description zookeeper
 This is a collectd plugin that reads data from Zookeeper's MNTR command.
@@ -880,7 +878,6 @@ This is a collectd plugin that reads data from Zookeeper's MNTR command.
 %if 0%{?enable_web}
 %package collection3
 Summary:    Web-based viewer for collectd
-Group:      System Environment/Daemons
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires: httpd
 %description collection3
