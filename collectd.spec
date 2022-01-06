@@ -2,7 +2,6 @@
 %global __provides_exclude_from ^%{_libdir}/collectd/.*\\.so$
 %undefine _strict_symbol_defs_build
 
-# skip building amqp-0.9
 %global enable_amqp_09 1
 
 # x86_64 required for building dpdk
@@ -20,8 +19,8 @@
 %global enable_dcpmm 0
 %global enable_dpdk_telemetry 0
 %global enable_ganglia 0
-# there is no java in centos9s atm
 
+# there is no java in centos9s atm
 %if 0%{?rhel} > 8
 %global enable_java 0
 %else
@@ -37,7 +36,12 @@
 %endif
 
 %global enable_mysql 1
+
+%ifarch x86_64
 %global enable_pcie_errors 1
+%else
+%global enable_pcie_errors 0
+%endif
 
 %if 0%{?rhel} > 8
 # iptables does not provide iptc anymore
@@ -45,7 +49,6 @@
 %else
 %global enable_iptables 1
 %endif
-
 
 %global enable_snmp 1
 
@@ -66,6 +69,11 @@
 %global enable_ovs_events 1
 %global enable_ovs_stats 1
 
+%ifnarch ppc sparc sparc64 ppc64le
+%global enable_sensors 1
+%else
+%global enable_sensors 0
+%endif
 
 %if 0%{?rhel} > 8
 %global enable_write_redis 0
@@ -101,7 +109,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.12.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: MIT and GPLv2
 URL: https://collectd.org/
 
@@ -131,7 +139,16 @@ Source97: rrdtool.conf
 
 
 Patch0001: 0001-Include-collectd.d-and-disable-default-loading.patch
+
+# DES support was removed from openssl3.0 in rhel/centos 9
+%if 0%{?rhel} > 8
+# Remove DES support in snmp plugin
+# https://github.com/collectd/collectd/commit/1483ef8e03603bb8e1f89745325a17ba50fbbedf
 Patch0002: %{name}-remove-des-support-from-snmp-plugin.patch
+%endif
+
+# virt plugin: Add hugetlb_ metrics
+# https://github.com/collectd/collectd/commit/8c781279e9c4789936323670b729f9a979c976db
 Patch0003: %{name}-virt-Add-hugetlb-metrics.patch
 
 BuildRequires: perl-devel
@@ -147,13 +164,16 @@ Requires(post):   systemd
 Requires(preun):  systemd
 Requires(postun): systemd
 
+%if !0%{?enable_dpdk_telemetry}
+Obsoletes: %{name}-dpdk_telemetry < %{version}-%{release}
+%endif
 
-%if 0%{enable_iptables}
+%if !0%{?enable_iptables}
 Obsoletes: %{name}-iptables < %{version}-%{release}
 %endif
 
 # generic-gmx depends on availability of -java.
-%if 0%{enable_java}
+%if !0%{?enable_java}
 Obsoletes: %{name}-java < %{version}-%{release}
 Obsoletes: %{name}-generic-jmx < %{version}-%{release}
 %endif
@@ -166,12 +186,25 @@ Obsoletes: %{name}-lvm < %{version}-%{release}
 Obsoletes: %{name}-memcachec < %{version}-%{release}
 %endif
 
+%if !0%{?enable_mysql}
+Obsoletes: %{name}-mysql < %{version}-%{release}
+%endif
+
 %if !0%{?enable_notify_desktop}
 Obsoletes: %{name}-notify_desktop < %{version}-%{release}
 %endif
 
 %if !0%{?enable_pinba}
 Obsoletes: %{name}-pinba < %{version}-%{release}
+%endif
+
+%if !0%{?enable_snmp}
+Obsoletes: %{name}-snmp < %{version}-%{release}
+Obsoletes: %{name}-snmp-agent < %{version}-%{release}
+%endif
+
+%if !0%{?enable_write_redis}
+Obsoletes: %{name}-write_redis < %{version}-%{release}
 %endif
 
 %if !0%{?enable_riemann}
@@ -303,7 +336,7 @@ BuildRequires: libxml2-devel
 This plugin retrieves XML data via curl.
 
 
-%if 0%{?enable_dcpmm} >0
+%if 0%{?enable_dcpmm} > 0
 %package dcpmm
 Summary:       Plugin for Intel Optane DC Presistent Memory (DCPMM)
 Provides:      %{name}-dcpmm = %{version}-%{release}
@@ -358,7 +391,7 @@ applications:
 %endif
 
 
-%if 0%{?enable_dpdk_telemetry} >0
+%if 0%{?enable_dpdk_telemetry} > 0
 %package dpdk_telemetry
 Summary:       Plugin to fetch DPDK metrics
 Provides:      %{name}-dpdk_telemetry = %{version}-%{release}
@@ -481,7 +514,7 @@ Requires:      libcollectdclient%{?_isa} = %{version}-%{release}
 Development files for libcollectdclient.
 
 
-%if 0%{?enable_logparser} >0
+%if 0%{?enable_logparser} > 0
 %package logparser
 Summary:  Parse different kinds of logs
 Provides: %{name}-logparser = %{version}-%{release}
@@ -715,7 +748,7 @@ BuildRequires: rrdtool-devel
 This plugin for collectd provides rrdtool support.
 
 
-%ifnarch ppc sparc sparc64 ppc64le
+%if 0%{?enable_sensors}
 %package sensors
 Summary:       Libsensors module for collectd
 Requires:      %{name}%{?_isa} = %{version}-%{release}
@@ -954,7 +987,7 @@ autoconf
     --disable-oracle \
     --disable-pf \
     --disable-routeros \
-%ifarch ppc sparc sparc64 ppc64le
+%if 0%{?enable_sensors} == 0
     --disable-sensors \
 %endif
     --disable-sigrok \
@@ -1177,6 +1210,11 @@ rm %{buildroot}%{_mandir}/man5/%{name}-lua*
 # remove java manpage if not built
 %if 0%{?enable_java} == 0
 rm %{buildroot}%{_mandir}/man5/%{name}-java*
+%endif
+
+# remove snmp manpage if not built
+%if 0%{?enable_snmp} == 0
+%doc %{_mandir}/man5/collectd-snmp.5*
 %endif
 
 %ifnarch s390 s390x
@@ -1588,7 +1626,7 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 %config(noreplace) %{_sysconfdir}/collectd.d/rrdtool.conf
 
 
-%ifnarch ppc sparc sparc64 ppc64le
+%if 0%{?enable_sensors}
 %files sensors
 %{_libdir}/collectd/sensors.so
 %config(noreplace) %{_sysconfdir}/collectd.d/sensors.conf
@@ -1683,6 +1721,10 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 
 
 %changelog
+* Thu Jan 06 2022 Emma Foley <efoley@redhat.com> - 5.12.0-7
+- Update guarding for dpdk_telemetry, mysql, pcie_errors,
+  sensors, snmp, snmp_agent, write_redis
+
 * Wed Dec 01 2021 Emma Foley <efoley@redhat.com> - 5.12.0-5
 - add hugetbl stats to libvirt (rhbz#2015543)
 
