@@ -93,6 +93,30 @@
       "revId": "139776c47b9117a2cc2b9f59dd13d4881ea571af",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0684328_9211b479",
+        "filename": "collectd.spec",
+        "patchSetId": 5
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 718
+      },
+      "writtenOn": "2022-01-07T12:50:00Z",
+      "side": 1,
+      "message": "I think autosetup expected sequentially numbered patches. I am running this locally and going to use an alternative as suggested in [1]. \n\nHowever, the error seems to indicate that the Patch0002 is recognised, but the file is not copied. The puzzling part is that it shouldn\u0027t be part of the build, if this guard is doing what you\u0027d expect.\n\nIt might have something to do with looking for the sequentially numbered patches, but that also doesn\u0027t make sense. I\u0027ll try some rearranging locally and see what I can learn about this behaviour.\n\n[1] https://rpm-software-management.github.io/rpm/manual/autosetup.html",
+      "parentUuid": "7b6f5057_e0068fb8",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 1
+      },
+      "revId": "139776c47b9117a2cc2b9f59dd13d4881ea571af",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": true
     }
   ]
 }
