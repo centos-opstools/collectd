@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3f333f0d_02cb6dd7",
+        "filename": "collectd.spec",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 80
+      },
+      "writtenOn": "2022-01-07T10:52:01Z",
+      "side": 1,
+      "message": "My fear here is that the spec file becomes less and less readable.",
+      "parentUuid": "0cc01803_7865c1e2",
+      "range": {
+        "startLine": 124,
+        "startChar": 0,
+        "endLine": 138,
+        "endChar": 22
+      },
+      "revId": "139776c47b9117a2cc2b9f59dd13d4881ea571af",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7e9f77b8_b130d82b",
         "filename": "collectd.spec",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2022-01-06T17:31:35Z",
       "side": 1,
       "message": "It seems like this is why the build is failing, with this patch not being available in centos 9 build.\n\nhttps://cbs.centos.org/kojifiles/work/tasks/6348/2636348/mock_output.log",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 1
+      },
+      "revId": "139776c47b9117a2cc2b9f59dd13d4881ea571af",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b6f5057_e0068fb8",
+        "filename": "collectd.spec",
+        "patchSetId": 5
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 80
+      },
+      "writtenOn": "2022-01-07T10:52:01Z",
+      "side": 1,
+      "message": "I believe you are running into an rpm issue here, so that the autosetup expansion in %prep still references the patch somehow.?",
+      "parentUuid": "7e9f77b8_b130d82b",
       "range": {
         "startLine": 144,
         "startChar": 0,
