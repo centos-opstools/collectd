@@ -1,6 +1,18 @@
-diff -ur collectd-5.12.0/src/collectd.conf.in src/src/collectd.conf.in
---- collectd-5.12.0/src/collectd.conf.in	2020-09-03 07:09:35.141575028 -0400
-+++ src/src/collectd.conf.in	2021-05-13 15:14:33.376306538 -0400
+From 9671d86e80a26b56b8c24f62a1c3210d3e5b5b7b Mon Sep 17 00:00:00 2001
+From: Emma Foley <efoley@redhat.com>
+Date: Tue, 11 Jan 2022 09:17:53 +0000
+Subject: [PATCH] Include collectd.d and disable default loading
+
+This patch will disable plugins loaded by default and will
+apply config read from collectd.d
+---
+ src/collectd.conf.in | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/src/collectd.conf.in b/src/collectd.conf.in
+index 562a55d9..028635d8 100644
+--- a/src/collectd.conf.in
++++ b/src/collectd.conf.in
 @@ -4,6 +4,10 @@
  # http://collectd.org/
  #
@@ -12,7 +24,7 @@ diff -ur collectd-5.12.0/src/collectd.conf.in src/src/collectd.conf.in
  ##############################################################################
  # Global                                                                     #
  #----------------------------------------------------------------------------#
-@@ -58,7 +62,7 @@
+@@ -58,7 +61,7 @@
  # accessed.                                                                  #
  ##############################################################################
  
@@ -21,7 +33,7 @@ diff -ur collectd-5.12.0/src/collectd.conf.in src/src/collectd.conf.in
  @LOAD_PLUGIN_LOGFILE@LoadPlugin logfile
  @LOAD_PLUGIN_LOG_LOGSTASH@LoadPlugin log_logstash
  
-@@ -108,7 +112,7 @@
+@@ -108,7 +111,7 @@
  #@BUILD_PLUGIN_CONNECTIVITY_TRUE@LoadPlugin connectivity
  #@BUILD_PLUGIN_CONNTRACK_TRUE@LoadPlugin conntrack
  #@BUILD_PLUGIN_CONTEXTSWITCH_TRUE@LoadPlugin contextswitch
@@ -30,7 +42,7 @@ diff -ur collectd-5.12.0/src/collectd.conf.in src/src/collectd.conf.in
  #@BUILD_PLUGIN_CPUFREQ_TRUE@LoadPlugin cpufreq
  #@BUILD_PLUGIN_CPUSLEEP_TRUE@LoadPlugin cpusleep
  @LOAD_PLUGIN_CSV@LoadPlugin csv
-@@ -140,7 +144,7 @@
+@@ -140,7 +143,7 @@
  #@BUILD_PLUGIN_INFINIBAND_TRUE@LoadPlugin infiniband
  #@BUILD_PLUGIN_INTEL_PMU_TRUE@LoadPlugin intel_pmu
  #@BUILD_PLUGIN_INTEL_RDT_TRUE@LoadPlugin intel_rdt
@@ -39,7 +51,7 @@ diff -ur collectd-5.12.0/src/collectd.conf.in src/src/collectd.conf.in
  #@BUILD_PLUGIN_IPC_TRUE@LoadPlugin ipc
  #@BUILD_PLUGIN_IPMI_TRUE@LoadPlugin ipmi
  #@BUILD_PLUGIN_IPSTATS_TRUE@LoadPlugin ipstats
-@@ -148,7 +152,7 @@
+@@ -148,7 +151,7 @@
  #@BUILD_PLUGIN_IPVS_TRUE@LoadPlugin ipvs
  #@BUILD_PLUGIN_IRQ_TRUE@LoadPlugin irq
  #@BUILD_PLUGIN_JAVA_TRUE@LoadPlugin java
@@ -71,3 +83,6 @@ diff -ur collectd-5.12.0/src/collectd.conf.in src/src/collectd.conf.in
  #  </Host>
  #</Plugin>
 +Include "/etc/collectd.d"
+-- 
+1.8.3.1
+
