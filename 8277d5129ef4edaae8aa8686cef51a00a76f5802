@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2293c50_0c0e4fd3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 718
+      },
+      "writtenOn": "2022-01-13T19:02:03Z",
+      "side": 1,
+      "message": "This won\u0027t work because the job I\u0027m trying to override is in zuul\u0027s designated config repo, so speculative merging is disabled.\n\nI could move it to the rdo jobs repo instead, but that seems like overkill and might take much longer to get merged.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 1
+      },
+      "revId": "8277d5129ef4edaae8aa8686cef51a00a76f5802",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7",
+      "unresolved": true
+    }
+  ]
+}
