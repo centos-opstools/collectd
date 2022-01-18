@@ -50,6 +50,24 @@
       "message": "recheck",
       "revId": "6d04a8c9bf2c530d55c6fe88a5f03917d5c111e8",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8d739d0_177d57e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 718
+      },
+      "writtenOn": "2022-01-18T18:29:25Z",
+      "side": 1,
+      "message": "Error: \n Problem: package riemann-c-client-devel-1.9.0-17.el8s.x86_64 requires riemann-c-client(x86-64) \u003d 1.9.0-17.el8s, but none of the providers can be installed\n  - cannot install the best candidate for the job\n  - nothing provides libjson-c.so.4(JSONC_0.14)(64bit) needed by riemann-c-client-1.9.0-17.el8s.x86_64\n(try to add \u0027--skip-broken\u0027 to skip uninstallable packages or \u0027--nobest\u0027 to use not only best candidate packages)",
+      "parentUuid": "ca4694a5_e2dfa5d5",
+      "revId": "6d04a8c9bf2c530d55c6fe88a5f03917d5c111e8",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
     }
   ]
 }
