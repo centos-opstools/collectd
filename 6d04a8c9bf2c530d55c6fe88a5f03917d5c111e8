@@ -68,6 +68,41 @@
       "parentUuid": "ca4694a5_e2dfa5d5",
       "revId": "6d04a8c9bf2c530d55c6fe88a5f03917d5c111e8",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82b4854d_854d3e1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 80
+      },
+      "writtenOn": "2022-01-18T19:14:06Z",
+      "side": 1,
+      "message": "I don\u0027t get the reason for the error message, the package is available at build time when building riemann-c-client",
+      "parentUuid": "e8d739d0_177d57e0",
+      "revId": "6d04a8c9bf2c530d55c6fe88a5f03917d5c111e8",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ef30c5a_feee63e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 80
+      },
+      "writtenOn": "2022-01-18T19:14:06Z",
+      "side": 1,
+      "message": "The verify step fails with\n```\nDEBUG util.py:444:  No matching package to install: \u0027qpid-proton-c-devel\u0027\nDEBUG util.py:444:  Not all dependencies satisfied\nDEBUG util.py:444:  Error: Some packages could not be found.\n```\nWhich seems odd too",
+      "revId": "6d04a8c9bf2c530d55c6fe88a5f03917d5c111e8",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
     }
   ]
 }
