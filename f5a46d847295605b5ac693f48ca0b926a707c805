@@ -50,6 +50,23 @@
       "message": "recheck\n\nAll the CI updates are merged",
       "revId": "f5a46d847295605b5ac693f48ca0b926a707c805",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2008cc3_e44acc3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 718
+      },
+      "writtenOn": "2022-01-24T11:58:44Z",
+      "side": 1,
+      "message": "For the centos8s build, this issue is in\n\nhttps://cbs.centos.org/kojifiles/work/tasks/6942/2656942/mock_output.log\n\n``No matching package to install: \u0027qpid-proton-c-devel\u0027`` \n\nI\u0027m still looking for the issues with 9s, but the fact that the src rpm is named collectd-*.el8.src.rpm, might point to the issue.\nI need to take a better look though",
+      "revId": "f5a46d847295605b5ac693f48ca0b926a707c805",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
     }
   ]
 }
