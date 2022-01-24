@@ -67,6 +67,23 @@
       "message": "For the centos8s build, this issue is in\n\nhttps://cbs.centos.org/kojifiles/work/tasks/6942/2656942/mock_output.log\n\n``No matching package to install: \u0027qpid-proton-c-devel\u0027`` \n\nI\u0027m still looking for the issues with 9s, but the fact that the src rpm is named collectd-*.el8.src.rpm, might point to the issue.\nI need to take a better look though",
       "revId": "f5a46d847295605b5ac693f48ca0b926a707c805",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91cf1e07_79c160a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 718
+      },
+      "writtenOn": "2022-01-24T12:11:27Z",
+      "side": 1,
+      "message": "For the CentOS9Stream job, mock_output.log[1] indicates that one of the patches is missing.\n\nAt [2], TARGET\u003d8 is set, which might explain the collectd-*.el8.src.rpm, and also why this el9 only patch is omitted.\n\nI was assuming that the parameters to pkg.validate.sh were selecting the target OS, however, it seems that there is some ``contamination`` (for want of a better word) from the job running on a CentOS 8 Stream node.\nI\u0027ll take a look at where this is set, in rdo/gating_scripts, I suspect.\n\n[1] https://cbs.centos.org/kojifiles/work/tasks/6942/2656942/mock_output.log\n[2] https://review.rdoproject.org/zuul/build/5494ccc8eec54ee68a4af51ce9ce2273/log/job-output.txt#719",
+      "revId": "f5a46d847295605b5ac693f48ca0b926a707c805",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
     }
   ]
 }
