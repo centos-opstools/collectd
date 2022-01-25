@@ -16,6 +16,23 @@
       "message": "PS17 is a test using %dump and %{echo:message} to see what\u0027s going on with the defined macros, which will hopefully give more info on what\u0027s going on",
       "revId": "63a35e0f63077270e7259b789309574eccc80541",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4069cc10_e4a8f9f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 718
+      },
+      "writtenOn": "2022-01-25T14:51:07Z",
+      "side": 1,
+      "message": "\u003e Patch Set 17: Verified-1\n\u003e \n\u003e Build failed.\n\u003e \n\u003e - centos-opstools-rpmlint https://review.rdoproject.org/zuul/build/c0686174747e4bfba3902d63dbbc8039 : SUCCESS in 2m 12s\n\u003e - centos-opstools-rpmbuild https://review.rdoproject.org/zuul/build/aab2bcf410144588b9847bd603121f80 : SUCCESS in 6m 11s\n\u003e - centos-opstools-collectd-5-distgit-cbs-validate-centos8s https://review.rdoproject.org/zuul/build/e613658f0dd943f292904948fc28602b : SUCCESS in 27m 22s\n\u003e - centos-opstools-collectd-5-distgit-cbs-validate-centos9s https://review.rdoproject.org/zuul/build/89881ad881ad4b9c8517e71980160645 : FAILURE in 4m 07s\n\nThe CentOS 8 job is passing because I disabled the amqp1 plugin, since it was failing locally when I was using ``fedpkg mockbuild``",
+      "revId": "63a35e0f63077270e7259b789309574eccc80541",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
     }
   ]
 }
