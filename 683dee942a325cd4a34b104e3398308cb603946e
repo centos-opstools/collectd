@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c88182da_80b97531",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 718
+      },
+      "writtenOn": "2022-01-25T11:53:50Z",
+      "side": 1,
+      "message": "\u003e Patch Set 16: Verified-1\n\u003e \n\u003e Build failed.\n\u003e \n\u003e - centos-opstools-rpmlint https://review.rdoproject.org/zuul/build/17abf70a77ca4289a893105e37e4f4ff : SUCCESS in 2m 25s\n\u003e - centos-opstools-rpmbuild https://review.rdoproject.org/zuul/build/36541aa5799547da941d23b6f344cfa7 : SUCCESS in 6m 36s\n\u003e - centos-opstools-collectd-5-distgit-cbs-validate-centos8s https://review.rdoproject.org/zuul/build/7ced29022ed14fcf9d720dcc4d2238b3 : FAILURE in 6m 16s\n\u003e - centos-opstools-collectd-5-distgit-cbs-validate-centos9s https://review.rdoproject.org/zuul/build/14f0a32b2f6f4e6a83e6c88b8544abdb : FAILURE in 4m 27s\n\nPerhaps we should extend rpmbuild to use centos9s too. At this point, I think the issue is with teh distgit-* jobs, rather than in the specfile itself. At least with a centos-opstools-rpmbuild-centos9s, we can make some progress in figuring out what is happening.\n\nThe distgit jobs are running on koji, so I suspect if the rpmbuild jobs run, then I can narrow the search to the koji environment.",
+      "revId": "683dee942a325cd4a34b104e3398308cb603946e",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
+    }
+  ]
+}
