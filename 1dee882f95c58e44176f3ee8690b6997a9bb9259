@@ -16,6 +16,29 @@
       "message": "failure in cs9 seems related to distgit content\n\nDEBUG util.py:444:  error: Bad file: /chroot_tmpdir/srpm_unpacked/SOURCES/collectd-remove-des-support-from-snmp-plugin.patch: No such file or directory",
       "revId": "1dee882f95c58e44176f3ee8690b6997a9bb9259",
       "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "364679d2_0f3689cd",
+        "filename": "collectd.spec",
+        "patchSetId": 18
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 128
+      },
+      "writtenOn": "2022-01-26T14:54:40Z",
+      "side": 1,
+      "message": "it\u0027s missing this patch",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 1
+      },
+      "revId": "1dee882f95c58e44176f3ee8690b6997a9bb9259",
+      "serverId": "270e2033-b340-4cff-9539-693957ebf0e7"
     }
   ]
 }
