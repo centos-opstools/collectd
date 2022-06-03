@@ -112,7 +112,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.12.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: MIT and GPLv2
 URL: https://collectd.org/
 
@@ -153,6 +153,9 @@ Patch0002: %{name}-remove-des-support-from-snmp-plugin.patch
 # virt plugin: Add hugetlb_ metrics
 # https://github.com/collectd/collectd/commit/8c781279e9c4789936323670b729f9a979c976db
 Patch0003: %{name}-virt-Add-hugetlb-metrics.patch
+
+# virt plugin does not return names of VMs for nova
+Patch0004: 3acf3440e76734401bb61d58b98f033449f827e7.patch
 
 BuildRequires: perl-devel
 BuildRequires: perl-generators
@@ -1733,6 +1736,9 @@ rm %{buildroot}%{_mandir}/man5/%{name}-java*
 
 
 %changelog
+* Fri Jun 03 2022 Matthias Runge <mrunge@redhat.com> - 5.12.0-8
+- use Nova/1.1 instead of 1.0 namespace
+
 * Thu Jan 06 2022 Emma Foley <efoley@redhat.com> - 5.12.0-7
 - Update guarding for dpdk_telemetry, mysql, pcie_errors,
   sensors, snmp, snmp_agent, write_redis

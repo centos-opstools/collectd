@@ -1,0 +1,24 @@
+From 3acf3440e76734401bb61d58b98f033449f827e7 Mon Sep 17 00:00:00 2001
+From: Matthias Runge <mrunge@redhat.com>
+Date: Fri, 3 Jun 2022 14:58:13 +0200
+Subject: [PATCH] Later OpenStack versions use Nova version 1.1
+
+In later OpenStack versions, the namespace for Nova changed, reflecting
+in a change for the XML description for the virtual machine.
+---
+ src/virt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/virt.c b/src/virt.c
+index 3c5fd8ec0b..4ba0d07cd6 100644
+--- a/src/virt.c
++++ b/src/virt.c
+@@ -736,7 +736,7 @@ static void set_field_from_metadata(value_list_t *vl, virDomainPtr dom,
+ 
+   const char *namespace = NULL;
+   if (hm_ns == NULL) {
+-    namespace = "http://openstack.org/xmlns/libvirt/nova/1.0";
++    namespace = "http://openstack.org/xmlns/libvirt/nova/1.1";
+   } // namespace =hm_ns;
+   else {
+     namespace = hm_ns;
