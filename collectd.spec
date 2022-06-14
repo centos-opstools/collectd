@@ -56,7 +56,7 @@
 # pmu requires libjevents to be available
 # pmu is only available on Intel architectures
 %ifarch x86_64
-%global enable_intel_pmu 1
+%global enable_intel_pmu 0
 %else
 %global enable_intel_pmu 0
 %endif
@@ -112,7 +112,7 @@
 Summary: Statistics collection daemon for filling RRD files
 Name: collectd
 Version: 5.12.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: MIT and GPLv2
 URL: https://collectd.org/
 
@@ -144,7 +144,7 @@ Source97: rrdtool.conf
 Patch0001: 0001-Include-collectd.d-and-disable-default-loading.patch
 
 # DES support was removed from openssl3.0 in rhel/centos 9
-%if 0%{?rhel} > 8
+%if 0%{?rhel} > 8 || 0%{?fedora}
 # Remove DES support in snmp plugin
 # https://github.com/collectd/collectd/commit/1483ef8e03603bb8e1f89745325a17ba50fbbedf
 Patch0002: %{name}-remove-des-support-from-snmp-plugin.patch
@@ -156,6 +156,8 @@ Patch0003: %{name}-virt-Add-hugetlb-metrics.patch
 
 # virt plugin does not return names of VMs for nova
 Patch0004: 3acf3440e76734401bb61d58b98f033449f827e7.patch
+
+Patch0005: 0001-Fix-compile-of-the-prometheus-plugin.patch
 
 BuildRequires: perl-devel
 BuildRequires: perl-generators
