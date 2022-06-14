@@ -1,0 +1,27 @@
+From 4f8da264dba31ed491779a9ba33617bd53f8592d Mon Sep 17 00:00:00 2001
+From: Matthias Runge <mrunge@redhat.com>
+Date: Wed, 8 Jun 2022 16:44:07 +0200
+Subject: [PATCH] Fix compile of the prometheus plugin
+
+---
+ src/write_prometheus.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/write_prometheus.c b/src/write_prometheus.c
+index 7596b555..6e519bc8 100644
+--- a/src/write_prometheus.c
++++ b/src/write_prometheus.c
+@@ -246,8 +246,8 @@ static MHD_RESULT http_handler(void *cls, struct MHD_Connection *connection,
+    * Apparently not everything has been initialized yet or so; the docs are not
+    * very specific on the issue. */
+   if (*connection_state == NULL) {
+-    /* set to a random non-NULL pointer. */
+-    *connection_state = &(int){42};
++    /* keep track of connection state */
++    *connection_state = &"called";
+     return MHD_YES;
+   }
+ 
+-- 
+2.36.1
+
